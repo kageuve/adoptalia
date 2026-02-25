@@ -6,8 +6,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE: adoptalia_db
+      MYSQL_USER: adoptalia_user
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
@@ -24,10 +24,10 @@ services:
       - "3000:3000"
     environment:
       - DB_HOST=db
-      - DB_USER=${MYSQL_USER}
+      - DB_USER=asoptalia_user
       - DB_PASSWORD=${MYSQL_PASSWORD}
-      - DB_NAME=${MYSQL_DATABASE}
-      - PORT=${PORT}
+      - DB_NAME=adoptalia_db
+      - PORT=3000
     depends_on:
       - db
 
@@ -50,7 +50,7 @@ services:
       - "8080:80"
     environment:
       - PMA_HOST=db
-      - PMA_USER=${MYSQL_USER}
+      - PMA_USER=adoptalia_user
       - PMA_PASSWORD=${MYSQL_PASSWORD}
     depends_on:
       - db
