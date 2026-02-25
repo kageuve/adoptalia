@@ -40,13 +40,8 @@ Crea un archivo llamado .env y añade esta configuración básica:
 
 ```
 # Configuración de MySQL
-MYSQL_ROOT_PASSWORD=TuPasswordRoot123
-MYSQL_DATABASE=adoptalia_db
-MYSQL_USER=adoptalia_user
-MYSQL_PASSWORD=TuPasswordUser123
-
-# Configuración del Backend
-PORT=3000
+MYSQL_ROOT_PASSWORD=TUPASSWORDROOT123
+MYSQL_PASSWORD=TUPASSWORDUSER123
 ```
 
 ### 3. Levantar los contenedores
