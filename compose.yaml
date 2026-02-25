@@ -24,7 +24,7 @@ services:
       - "3000:3000"
     environment:
       - DB_HOST=db
-      - DB_USER=asoptalia_user
+      - DB_USER=adoptalia_user
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_NAME=adoptalia_db
       - PORT=3000
