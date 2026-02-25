@@ -1,0 +1,42 @@
+services:
+  # 1. Base de Datos
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/mysql:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+
+  # 2. Backend (Node.js)
+  backend:
+    build: ./backend
+    container_name: node-backend
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - DB_HOST=db
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+      - PORT=${PORT}
+    depends_on:
+      - db
+
+  # 3. Frontend (Angular)
+  frontend:
+    build: ./frontend
+    container_name: angular-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
