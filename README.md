@@ -30,7 +30,7 @@ Sigue estos pasos para arrancar el proyecto desde cero:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone [https://github.com/kageuve/adoptalia.git](https://github.com/kageuve/adoptalia.git)
+git clone https://github.com/kageuve/adoptalia.git
 cd adoptalia
 ```
 ### 2. Configurar las Variables de Entorno
@@ -38,8 +38,7 @@ El archivo que contiene las contraseñas (.env) no se sube al repositorio por se
 
 Crea un archivo llamado .env y añade esta configuración básica:
 
----
-Fragmento de código
+```
 # Configuración de MySQL
 MYSQL_ROOT_PASSWORD=TuPasswordRoot123
 MYSQL_DATABASE=adoptalia_db
@@ -48,15 +47,16 @@ MYSQL_PASSWORD=TuPasswordUser123
 
 # Configuración del Backend
 PORT=3000
----
+```
 
 ### 3. Levantar los contenedores
 Ejecuta el siguiente comando para construir las imágenes y levantar toda la infraestructura en segundo plano:
 
 ```bash
 docker compose up -d --build
-(Nota: La primera vez tardará un par de minutos mientras descarga las imágenes base y compila el proyecto de Angular).
 ```
+(Nota: La primera vez tardará un par de minutos mientras descarga las imágenes base y compila el proyecto de Angular).
+
 🧪 Comprobar el funcionamiento
 Una vez que los contenedores estén corriendo (docker ps), abre tu navegador web:
 
