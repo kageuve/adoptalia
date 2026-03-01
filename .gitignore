@@ -2,3 +2,5 @@ node_modules/
 dist/
 .env
 db/mysql/
+# Pantallas de prueba
+backend/public/pruebas/
