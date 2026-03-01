@@ -1,21 +1,25 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
-// 🔹 Importar rutas
+// Rutas
 const animalRoutes = require('./routes/animalRoutes');
+const authRoutes = require('./routes/authRoutes');
 
-// 🔹 Montar rutas
 app.use('/api/animales', animalRoutes);
+app.use('/api/auth', authRoutes);
 
-// Ruta test
+// Test
 app.get('/api/test', (req, res) => {
   res.json({ mensaje: "Backend funcionando 🚀" });
 });
