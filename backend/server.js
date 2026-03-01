@@ -1,24 +1,25 @@
 const express = require('express');
-const mysql = require('mysql2/promise');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
-app.use(cors());
 const port = process.env.PORT || 3000;
 
-app.get('/api/usuarios', async (req, res) => {
-    try {
-        const connection = await mysql.createConnection({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME
-        });
-        const [rows] = await connection.execute('SELECT * FROM usuarios');
-        res.json(rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 🔹 Importar rutas
+const animalRoutes = require('./routes/animalRoutes');
+
+// 🔹 Montar rutas
+app.use('/api/animales', animalRoutes);
+
+// Ruta test
+app.get('/api/test', (req, res) => {
+  res.json({ mensaje: "Backend funcionando 🚀" });
 });
 
-app.listen(port, () => console.log(`Backend corriendo en el puerto ${port}`));
+app.listen(port, () => {
+  console.log(`Backend corriendo en el puerto ${port}`);
+});
