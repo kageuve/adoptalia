@@ -1,0 +1,35 @@
+.card-animal {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-animal img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover; // recorta si es necesario para mantener proporción
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0.5rem;
+}
+
+// estilos del botón
+.card-animal button {
+  background-color: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.card-animal button:hover {
+  background-color: #ff4a3d;
+}
