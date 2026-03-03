@@ -12,14 +12,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Rutas
+// Importar rutas
 const animalRoutes = require('./routes/animalRoutes');
 const authRoutes = require('./routes/authRoutes');
+const importRoutes = require('./routes/importRoutes');
 
+// Montar rutas
 app.use('/api/animales', animalRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/import', importRoutes);
 
-// Test
+// Ruta test
 app.get('/api/test', (req, res) => {
   res.json({ mensaje: "Backend funcionando 🚀" });
 });

@@ -1,4 +1,5 @@
 const db = require('../db');
+const bcrypt = require('bcryptjs');
 
 async function crearProtectora(datos) {
 
@@ -8,10 +9,13 @@ async function crearProtectora(datos) {
 
     await connection.beginTransaction();
 
+    // 🔐 Hashear contraseña
+    const hash = await bcrypt.hash(datos.password, 10);
+
     const [usuarioResult] = await connection.execute(
       `INSERT INTO usuario (email, password, rol)
        VALUES (?, ?, 'protectora')`,
-      [datos.email, datos.password]
+      [datos.email, hash]
     );
 
     const usuarioId = usuarioResult.insertId;
@@ -41,6 +45,21 @@ async function crearProtectora(datos) {
   }
 }
 
+// 🔹 NUEVA FUNCIÓN
+async function obtenerPorUsuarioId(usuarioId) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      'SELECT * FROM protectora WHERE usuario_id = ?',
+      [usuarioId]
+    );
+    return rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
-  crearProtectora
+  crearProtectora,
+  obtenerPorUsuarioId
 };
