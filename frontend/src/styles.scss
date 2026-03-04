@@ -1,0 +1,21 @@
+// Estilos globales
+:root {
+  --color-primary: #344e41; //fondo botones
+  --color-primary-dark: #dad7cd;
+  --color-accent: #E67E22;
+
+  --color-bg: #a3b18a; //fondo general web
+  --color-bg-light: #FEFAE0; //fondo componentes
+
+  --color-text-primary: #F5EBD9;
+  --color-text-secondary: #CFC8B8;
+
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--color-bg);
+}

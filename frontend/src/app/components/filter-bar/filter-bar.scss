@@ -1,0 +1,24 @@
+.filter-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: -40px;
+}
+
+.filters {
+  background: var(--color-bg-light);
+  padding: 30px;
+  border-radius: var(--radius-xl);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  width: 80%;
+  max-width: 1000px;
+}
+
+select {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+}
