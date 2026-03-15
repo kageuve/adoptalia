@@ -1,9 +1,15 @@
 import { Routes } from '@angular/router';
 import { Home } from './pages/home/home';
+import { Adoptar } from './pages/adoptar/adoptar';
+import { Protectoras } from './pages/protectoras/protectoras';
+import { ComoFunciona } from './pages/como-funciona/como-funciona';
+import { Impacto } from './pages/impacto/impacto';
 
+// Routing
 export const routes: Routes = [
-    {
-        path: '',
-        loadComponent: () => import('./pages/home/home').then(m => m.Home)
-    },
+  { path: '', component: Home },
+  { path: 'adoptar', component: Adoptar },
+  { path: 'protectoras', component: Protectoras },
+  { path: 'como-funciona', component: ComoFunciona },
+  { path: 'impacto', component: Impacto }
 ];

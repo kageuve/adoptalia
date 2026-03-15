@@ -1,39 +1,52 @@
 .categories {
-    padding: 100px 60px;
+    padding: var(--space-lg);
     text-align: center;
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    margin-bottom: var(--space-md)
 }
 
 .title h2 {
     color: var(--color-text-primary);
-    font-size: 42px;
+    font-size: var(--font-xxl);
 }
 
 .title p {
-    color: var(--color-text-secondary);
-    margin-top: 16px;
+    color: var(--color-button-secondary);
+    margin-top: var(--space-xxs);
+    margin-bottom: var(--space-lg);
 }
 
-.cards-fila {
-    margin-top: 60px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 800px;
+    margin: 40px auto 0 auto;
 }
 
 .card {
+    display: flex;
+    flex-direction: column;
     background: var(--color-bg-light);
-    padding: 40px;
+    padding: var(--space-lg);
     border-radius: var(--radius-xl);
-    width: 250px;
-    transition: 0.3s ease;
+    box-sizing: border-box;
     cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: 
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
 
 .card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+}
+
+.card:hover .card-icon {
+    transform: scale(1.05);
 }
 
 .card-icon {
@@ -42,8 +55,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 60px;
-    margin-bottom: 20px;
+    font-size: var(--font-xxxl);
+    margin-bottom: var(--space-sm);
+    aspect-ratio: 1 / 1;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    transition: transform 0.2s ease;
 }
 
 .green {
@@ -56,4 +72,24 @@
 
 .card h3 {
     color: var(--color-text-primary);
+    font-weight: var(--font-bold);
+    font-size: var(--font-lg);
+}
+
+
+@media (max-width: 800px) {
+
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    padding: var(--space-md);
+  }
+
+  .card-icon {
+    height: 120px;
+    font-size: 36px;
+  }
 }

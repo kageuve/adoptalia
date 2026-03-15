@@ -1,23 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Navbar } from './components/navbar/navbar';
+import { Footer } from './components/footer/footer';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, Navbar, Footer],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  title = 'Adoptalia';
-  usuarios: any[] = [];
 
-  private apiUrl = '/api/usuarios';
+export class AppComponent{
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit() {
-    this.http.get<any[]>(this.apiUrl).subscribe({
-      next: (data) => this.usuarios = data,
-      error: (err) => console.error('Error al cargar usuarios:', err)
-    });
-  }
 }
