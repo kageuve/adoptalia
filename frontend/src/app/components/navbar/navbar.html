@@ -1,17 +1,40 @@
 <nav class="navbar">
-  <div class="logo">
-    <div class="logo-icon"></div>
+
+  <div class="logo" routerLink="/" routerLinkActive="active-logo">
+    <div class="logo-icon">
+      <img src="/img/logo3.png" alt="Logo Adoptalia">
+    </div>
     <span>Adoptalia</span>
   </div>
+
+    <!-- burguer menu -->
+  <div class="burger-menu" (click)="toggleMenu()" [class.open]="menuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
   
-  <ul class="links-container">
-    <li><a href="#">Adoptar</a></li>
-    <li><a href="#">Protectoras</a></li>
-    <li><a href="#">Cómo funciona</a></li>
-    <li><a href="#">Impacto</a></li>
+  <ul class="links-container" [class.open]="menuOpen">
+    <li>
+      <a routerLink="/" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }" 
+      (click)="closeMenu()">
+      Inicio
+    </a></li>
+    <li><a routerLink="/adoptar" routerLinkActive="active" (click)="closeMenu()">Adoptar</a></li>
+    <li><a routerLink="/protectoras" routerLinkActive="active" (click)="closeMenu()">Protectoras</a></li>
+    <li><a routerLink="/como-funciona" routerLinkActive="active" (click)="closeMenu()">Cómo funciona</a></li>
+    <li><a routerLink="/impacto" routerLinkActive="active" (click)="closeMenu()">Impacto</a></li>
+
+    <li class="mobile-actions">
+      <button class="btn-session">Iniciar sesión</button>
+      <button class="btn-login">Registrarse</button>
+    </li>
+
   </ul>
 
-  <div class="actions">
+  <div class="dsk-actions">
     <button class="btn-session">Iniciar sesión</button>
     <button class="btn-login">Registrarse</button>
   </div>

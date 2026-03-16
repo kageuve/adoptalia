@@ -1,27 +1,102 @@
 .hero {
+  width: 100%;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
   text-align: center;
-  padding: 120px 20px 80px;
+
+  background-image: url(/img/hero2.png);
+  background-size: cover;
+  background-position: center 70%;
+  background-repeat: no-repeat;
 }
 
-.hero h1 {
-  font-size: 56px;
-  max-width: 900px;
-  margin: 0 auto;
-  color: var(--color-text-primary);
+// Difuminado suave para texto
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.9) 0%,
+    rgba(255,255,255,0.5) 35%,
+    rgba(255,255,255,0) 70%
+  );
 }
 
-.hero p {
-  margin-top: 24px;
-  color: var(--color-text-secondary);
-  font-size: 18px;
+.hero-wave {
+  position: absolute;
+  bottom: -7px;
+  width: 100%;
 }
+
+.hero-content {
+  position: relative;
+  margin-bottom: 1%;
+  z-index: 2;
+  max-width: 700px;
+}
+
+.hero-title {
+  font-size: var(--font-hero);
+  font-weight: var(--font-bold);
+  color: var(--color-primary-dark);
+  margin-bottom: var(--space-md);
+}
+
+.hero-slogan {
+  font-size: var(--font-lg);
+  font-weight: var(--font-medium);
+  color: var(--color-primary);
+}
+
+/* BOTONES */
 
 .hero-buttons {
-  margin-top: 40px;
+  position: relative;
+  z-index: 2;
+  margin-top: var(--space-xs);
   display: flex;
-  justify-content: center;
-  gap: 24px;
-  padding: 14px 32px;
-  font-size: 16px;
+  gap: var(--space-md);
+}
+
+
+/* botón adoptar */
+
+.btn-adopt {
+  background: var(--color-primary-dark);
+  color: var(--color-text-secondary);
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.btn-adopt:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-4px);
+}
+
+/* botón protectora */
+
+.btn-protect {
+  background: #E3DBBB;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary-dark);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.btn-protect:hover {
+  background: var(--color-primary-light);
+  transform: translateY(-2px);
 }
 
