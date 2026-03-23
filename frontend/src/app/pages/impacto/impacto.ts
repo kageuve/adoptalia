@@ -1,10 +1,11 @@
 import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { RouterLink } from "@angular/router";
 
 type CounterKeys = 'adoptions' | 'shelters' | 'animals' | 'users';
 
 @Component({
   selector: 'app-impacto',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './impacto.html',
   styleUrls: ['./impacto.scss'],
 })
@@ -19,7 +20,7 @@ export class Impacto implements AfterViewInit {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
-    this.animateCounter('adoptions', 55);
+    this.animateCounter('adoptions', 26);
     this.animateCounter('shelters', 12);
     this.animateCounter('animals', 90);
     this.animateCounter('users', 25);
@@ -49,6 +50,13 @@ export class Impacto implements AfterViewInit {
 
     }, stepTime);
 
+  }
+
+  // Barra de progreso animada
+  goalAdoptions = 100;
+
+  get progress(): number {
+    return (this.adoptions / this.goalAdoptions) * 100;
   }
 
 }

@@ -49,11 +49,17 @@
 
   <p>Queremos alcanzar 100 adopciones este año.</p>
 
-  <div class="progress-bar">
-    <div class="progress"></div>
-  </div>
+  <!-- barra de progreso -->
+  <div class="progress-container">
+    <div class="progress-bar">
 
-  <span>{{adoptions}} / 100 adopciones</span>
+      <div class="progress-fill" [style.width.%]="progress">
+        {{progress}}%
+      </div>
+    </div>
+
+  <p>{{ adoptions }} / {{ goalAdoptions }} adopciones</p>
+</div>
 
 </section>
 
@@ -65,8 +71,7 @@
     Adoptar salva dos vidas. Descubre los animales que buscan un hogar.
   </p>
 
-  <a routerLink="/adoptar" class="button-primary">
+  <button routerLink="/adoptar">
     Ver animales en adopción
-  </a>
-
+  </button>
 </section>
