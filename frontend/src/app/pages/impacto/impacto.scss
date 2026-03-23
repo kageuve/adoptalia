@@ -75,20 +75,35 @@
 .impact-goal {
   margin-top: var(--space-xl);
   text-align: center;
+  padding: 0 var(--space-md);
+}
+
+.progress-container {
+  margin-bottom: var(--space-xl);
+  width: 100%;
 }
 
 .progress-bar {
-  height: 12px;
-  background: #ddd;
-  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 600px;
+  height: 20px;
+  background: var(--color-primary);
+  border-radius: 10px;
   overflow: hidden;
-  margin: var(--space-xl);
+  margin: 0 auto;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.progress {
+.progress-fill {
   height: 100%;
-  width: 55%;
-  background: var(--color-primary);
+  background: var(--color-button-primary);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 5px;
+  color: var(--color-primary-superlight);
+  font-size: 12px;
+  transition: width 0.8s ease;
 }
 
 //section 4
@@ -103,22 +118,51 @@
   color: var(--color-primary-dark);
 }
 
-.impact-action p {
+.impact-action {
+  width: 100%;
+  height: 300px;
   margin: var(--space-sm) 0 var(--space-md);
+  background-image: url(/img/img-impact.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  button {
+    background: var(--color-primary);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-text-secondary);
+    border-radius: var(--radius-lg);
+    padding: 12px 26px;
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      background: var(--color-button-primary);
+      color: var(--color-primary-dark);
+    }
+  }
 }
+
+
 
 @media (max-width: 800px) {
 
   .impact-container {
     grid-template-columns: repeat(2, 1fr);
   }
-
 }
 
 @media (max-width: 480px) {
 
   .impact-container {
     grid-template-columns: 1fr;
+  }
+
+  .progress-bar {
+    height: 14px;
   }
 
 }

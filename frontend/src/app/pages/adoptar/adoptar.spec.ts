@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Adoptar } from './adoptar';
+import { Adoptar } from "./adoptar";
 
 describe('Adoptar', () => {
   let component: Adoptar;

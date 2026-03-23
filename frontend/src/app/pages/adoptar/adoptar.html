@@ -1,1 +1,23 @@
-<p>adoptar works!</p>
+<div class="adoptar-container">
+
+  <div class="filter-bar-container">
+    <app-filter-bar (filtrosChange)="onFiltrosChange($event)"></app-filter-bar>
+  </div>
+
+  <div class="animals-grid">
+    <div class="card" *ngFor="let animal of animalesFiltrados">
+      
+      <div class="image-wrapper">
+        <img [src]="animal.imagen" [alt]="animal.nombre">
+      </div>
+
+      <div class="card-content">
+        <h3>{{ animal.nombre }}</h3>
+        <p>{{ animal.raza }} · {{ animal.edad }} años</p>
+        <span class="location">{{ animal.provincia }}</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
