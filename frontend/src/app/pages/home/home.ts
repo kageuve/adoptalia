@@ -27,4 +27,12 @@ export class Home {
       this.animales = data;
     });
   }
+
+  // Asegura que la página se desplace al inicio cada vez que se carga
+  ngAfterViewInit() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }  
 }

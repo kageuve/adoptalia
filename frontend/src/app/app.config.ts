@@ -1,11 +1,10 @@
-import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 
 export const appConfig = {
   providers: [
     provideRouter(routes, withInMemoryScrolling({
-      scrollPositionRestoration: 'top', 
+      scrollPositionRestoration: 'top',
       anchorScrolling: 'enabled'
     }))
   ]
