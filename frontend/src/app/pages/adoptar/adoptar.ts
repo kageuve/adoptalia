@@ -21,7 +21,7 @@ export class Adoptar implements OnInit {
   filtros = {
     especie: '',
     provincia: '',
-    tamaño: '',
+    tamano: '',
     edad: ''
   };
 
@@ -45,7 +45,7 @@ ngOnInit(): void {
       return (
         (!this.filtros.especie || animal.especie === this.filtros.especie) &&
         (!this.filtros.provincia || animal.provincia === this.filtros.provincia) &&
-        (!this.filtros.tamaño || animal.tamaño === this.filtros.tamaño) &&
+        (!this.filtros.tamano || animal.tamano === this.filtros.tamano) &&
         (!this.filtros.edad || this.filtrarPorEdad(animal.edad))
       );
     });
@@ -57,16 +57,17 @@ ngOnInit(): void {
       case 'joven':
         return edad <= 2;
       case 'adulto':
-        return edad > 2 && edad <= 6;
+        return edad > 2 && edad <= 8;
       case 'senior':
-        return edad > 6;
+        return edad > 8;
       default:
         return true;
     }
   }
 
-    // Recibir filtros del filter-bar
-  onFiltrosChange(filtros: any): void {
+  // Recibir filtros del filter-bar
+  onFiltrosChange(filtros: any) {
+    console.log('FILTROS RECIBIDOS:', filtros); // borraaaar
     this.filtros = filtros;
     this.aplicarFiltros();
   }
@@ -76,7 +77,7 @@ ngOnInit(): void {
     this.filtros = {
       especie: '',
       provincia: '',
-      tamaño: '',
+      tamano: '',
       edad: ''
     };
     this.animalesFiltrados = this.animales;

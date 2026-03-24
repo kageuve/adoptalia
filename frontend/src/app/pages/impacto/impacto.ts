@@ -24,6 +24,11 @@ export class Impacto implements AfterViewInit {
     this.animateCounter('shelters', 12);
     this.animateCounter('animals', 90);
     this.animateCounter('users', 25);
+
+    window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+    });
   }
 
   animateCounter(counter: CounterKeys, target: number) {
@@ -58,7 +63,6 @@ export class Impacto implements AfterViewInit {
   get progress(): number {
     return (this.adoptions / this.goalAdoptions) * 100;
   }
-
 }
 
 

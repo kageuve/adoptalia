@@ -1,0 +1,82 @@
+.shelters-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+}
+
+.shelter-card {
+  display: flex;
+  gap: var(--space-md);
+  background: var(--color-primary-superlight);
+  border-radius: 16px;
+  padding: var(--space-md);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  align-items: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.shelter-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--color-primary);
+  transform: scaleY(0);
+  transition: transform 0.25s ease;
+}
+
+.shelter-card:hover::before {
+  transform: scaleY(1);
+}
+
+.shelter-card h3 {
+  transition: color 0.2s ease;
+}
+
+.shelter-card:hover h3 {
+  color: var(--color-primary-dark)
+}
+
+.shelter-card img {
+  width: 150px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.shelter-card:hover img {
+  transform: scale(1.05);
+}
+
+.info {
+  flex: 1;
+}
+
+.info h3 {
+  margin: 0;
+}
+
+.city {
+  font-size: 14px;
+  color: var(--color-primary);
+}
+
+.desc {
+  font-size: 14px;
+  color: #666;
+}
+
+.contact {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #444;
+  display: flex;
+  gap: 15px;
+}

@@ -97,6 +97,8 @@
 
 // scroll suave en toda la web
 html {
+  height: auto;
+  overflow: auto;
   scroll-behavior: smooth;
 }
 

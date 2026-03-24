@@ -4,7 +4,7 @@ export interface Animal {
   especie: 'Perro' | 'Gato';
   raza: string;
   edad: number;
-  tamaño: 'Pequeño' | 'Mediano' | 'Grande';
+  tamano: 'Pequeño' | 'Mediano' | 'Grande';
   provincia: string;
   imagen: string;
 }

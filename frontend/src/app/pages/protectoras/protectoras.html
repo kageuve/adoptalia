@@ -1,1 +1,20 @@
-<p>protectoras works!</p>
+<div class="shelters-list">
+
+  <div class="shelter-card" *ngFor="let shelter of shelters">
+
+    <img [src]="shelter.imagen" [alt]="shelter.nombre">
+
+    <div class="info">
+      <h3>{{ shelter.nombre }}</h3>
+      <p class="city">{{ shelter.ciudad }}</p>
+      <p class="desc">{{ shelter.descripcion }}</p>
+
+      <div class="contact">
+        <span>{{ shelter.telefono }}</span>
+        <span>{{ shelter.email }}</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

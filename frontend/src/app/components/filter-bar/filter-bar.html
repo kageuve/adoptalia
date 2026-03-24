@@ -1,44 +1,47 @@
 <div class="filter-wrapper">
-<!-- Expecie, Provincias, Tamaño, Edad viene de la BD -->
   <div class="filters">
 
     <div class="filter-group">
       <label>Especie</label>
-      <select>
-        <option>Todas</option>
-        <option>Perros</option>
-        <option>Gatos</option>
+      <select [(ngModel)]="filtros.especie">
+        <option value="">Todas</option>
+        <option value="Perro">Perro</option>
+        <option value="Gato">Gato</option>
       </select>
     </div>
 
     <div class="filter-group">
       <label>Provincia</label>
-      <select>
-        <option>Todas</option>
+      <select [(ngModel)]="filtros.provincia">
+        <option value="">Todas</option>
+        <option value="Madrid">Madrid</option>
+        <option value="Barcelona">Barcelona</option>
+        <option value="Valencia">Valencia</option>
+        <option value="Sevilla">Sevilla</option>
       </select>
     </div>
 
     <div class="filter-group">
       <label>Tamaño</label>
-      <select>
-        <option>Mini</option>
-        <option>Pequeño</option>
-        <option>Mediano</option>
-        <option>Grande</option>
+      <select [(ngModel)]="filtros.tamano">
+        <option value="">Todos</option>
+        <option value="Pequeño">Pequeño</option>
+        <option value="Mediano">Mediano</option>
+        <option value="Grande">Grande</option>
       </select>
     </div>
 
     <div class="filter-group">
       <label>Edad</label>
-      <select>
-        <option>Cachorro</option>
-        <option>Adulto</option>
-        <option>Senior</option>
+      <select [(ngModel)]="filtros.edad">
+        <option value="">Todas</option>
+        <option value="joven">Joven</option>
+        <option value="adulto">Adulto</option>
+        <option value="senior">Senior</option>
       </select>
     </div>
 
-    <button class="btn-search">Buscar</button>
+    <button class="btn-search" (click)="aplicarFiltros()">Buscar</button>
 
   </div>
-
 </div>
