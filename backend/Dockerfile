@@ -1,20 +1,16 @@
-# Usamos una imagen ligera de Node
-FROM node:18-alpine
+FROM node:20-alpine
 
-# Directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copiamos package.json primero (optimiza caché de Docker)
+# Solo dependencias primero (cache)
 COPY package*.json ./
 
-# Instalamos dependencias
-RUN npm install
+# Instalación reproducible
+RUN npm ci --omit=dev
 
-# Copiamos el resto del código
+# Copiar código
 COPY . .
 
-# Exponemos el puerto
 EXPOSE 3000
 
-# Comando para iniciar
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

@@ -1,6 +1,23 @@
-node_modules/
-dist/
-.env
+# Dependencias
+**/node_modules/
+
+# Builds
+**/dist/
+.angular/
+
+# Entorno
+.env*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Base de datos
 db/mysql/
-# Pantallas de prueba
+
+# Archivos temporales
+*.tmp
+*.swp
+
+# Pruebas locales
 backend/public/pruebas/
