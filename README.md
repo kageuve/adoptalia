@@ -1,62 +1,247 @@
-# 🐾 Adoptalia - Plataforma de Gestión
+# 🚀 Adoptalia - Guía de despliegue y desarrollo
 
-Adoptalia es una aplicación web completa (Full-Stack) diseñada como proyecto para el ciclo de Desarrollo de Aplicaciones Web (DAW). Su objetivo es gestionar usuarios y protectoras, para que se pongan en contacto y puedan gestionar adopciones mediante una arquitectura de microservicios.
+## 📦 Requisitos previos
 
-## 🏗️ Arquitectura y Tecnologías
+Antes de empezar, necesitas tener instalado:
 
-El proyecto está completamente dockerizado e incluye los siguientes servicios:
+-   Docker\
+-   Docker Compose (v2 recomendado)
 
-* **Frontend:** Angular 20.3.0 (Servido a través de Nginx actuando como Reverse Proxy).
-* **Backend:** Node.js con Express (API RESTful).
-* **Base de Datos:** MySQL 8.0.
-* **Orquestación:** Docker Compose.
+### Comprobar instalación
 
-Todo el tráfico externo entra por el puerto `80` a Nginx, que se encarga de servir la web de Angular o redirigir las peticiones `/api/*` al backend de Node de forma transparente (evitando problemas de CORS).
+``` bash
+docker -v
+docker compose version
+```
 
----
+------------------------------------------------------------------------
 
-## ⚙️ Requisitos Previos
+## 📥 1. Clonar el repositorio
 
-Para levantar este proyecto en tu máquina local, necesitas tener instalado:
-* [Docker](https://docs.docker.com/get-docker/)
-* [Docker Compose](https://docs.docker.com/compose/install/)
-* Git
-
----
-
-## 🚀 Instalación y Despliegue Local
-
-Sigue estos pasos para arrancar el proyecto desde cero:
-
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/kageuve/adoptalia.git
+``` bash
+git clone https://github.com/TU_USUARIO/adoptalia.git
 cd adoptalia
 ```
-### 2. Configurar las Variables de Entorno
-El archivo que contiene las contraseñas (.env) no se sube al repositorio por seguridad. Debes crear uno en la raíz del proyecto:
 
-Crea un archivo llamado .env y añade esta configuración básica:
+------------------------------------------------------------------------
 
+## ⚙️ 2. Configurar variables de entorno
+
+El archivo `.env` **NO está incluido por seguridad**, debes crearlo
+manualmente en la raíz del proyecto:
+
+``` bash
+nano .env
 ```
-# Configuración de MySQL
-MYSQL_ROOT_PASSWORD=TUPASSWORDROOT123
-MYSQL_PASSWORD=TUPASSWORDUSER123
+
+### Contenido mínimo:
+
+``` env
+# MySQL
+MYSQL_ROOT_PASSWORD=tu_password_root
+MYSQL_DATABASE=adoptalia_db
+MYSQL_USER=adoptalia_user
+MYSQL_PASSWORD=tu_password_user
+
+# Backend
+PORT=3000
+JWT_SECRET=clave_super_secreta
 ```
 
-### 3. Levantar los contenedores
-Ejecuta el siguiente comando para construir las imágenes y levantar toda la infraestructura en segundo plano:
+------------------------------------------------------------------------
 
-```bash
+## 🐳 3. Construir y levantar los contenedores
+
+``` bash
 docker compose up -d --build
 ```
-(Nota: La primera vez tardará un par de minutos mientras descarga las imágenes base y compila el proyecto de Angular).
 
-🧪 Comprobar el funcionamiento
-Una vez que los contenedores estén corriendo (docker ps), abre tu navegador web:
+👉 La primera vez puede tardar varios minutos: - descarga imágenes base\
+- instala dependencias\
+- compila Angular
 
-Frontend (Angular): http://localhost
+------------------------------------------------------------------------
 
-Backend API (Datos de prueba): http://localhost/api/usuarios
+## 🔍 4. Verificar estado
 
-La base de datos se inicializa automáticamente con datos de prueba gracias al script ubicado en db/init/init.sql.
+``` bash
+docker ps
+```
+
+Deberías ver al menos:
+
+-   frontend (nginx)\
+-   backend (node)\
+-   mysql
+
+------------------------------------------------------------------------
+
+## 🌐 5. Acceso a la aplicación
+
+-   **Frontend:**\
+    http://localhost
+
+-   **API backend:**\
+    http://localhost/api/usuarios
+
+------------------------------------------------------------------------
+
+## 🧪 6. Base de datos
+
+La base de datos se inicializa automáticamente con datos de prueba
+desde:
+
+    db/init/init.sql
+
+------------------------------------------------------------------------
+
+# 🛠️ Desarrollo (modificar la aplicación)
+
+## 🔁 Opción A --- desarrollo con rebuild (simple)
+
+Cada vez que hagas cambios:
+
+``` bash
+docker compose build
+docker compose up -d
+```
+
+------------------------------------------------------------------------
+
+## ⚡ Opción B --- desarrollo en caliente (recomendado)
+
+### Backend (Node.js)
+
+Editar `docker-compose.yml`:
+
+``` yaml
+backend:
+  volumes:
+    - ./backend:/app
+```
+
+Instalar nodemon:
+
+``` bash
+npm install nodemon
+```
+
+------------------------------------------------------------------------
+
+### Frontend (Angular en vivo)
+
+``` yaml
+frontend:
+  image: node:20
+  working_dir: /app
+  volumes:
+    - ./frontend:/app
+  command: sh -c "npm install && npm start"
+  ports:
+    - "4200:4200"
+```
+
+👉 Acceso en:
+
+    http://localhost:4200
+
+------------------------------------------------------------------------
+
+# 🧰 Comandos útiles
+
+## Ver logs
+
+``` bash
+docker compose logs -f
+```
+
+------------------------------------------------------------------------
+
+## Entrar a un contenedor
+
+``` bash
+docker exec -it angular-frontend sh
+docker exec -it node-backend sh
+```
+
+------------------------------------------------------------------------
+
+## Parar servicios
+
+``` bash
+docker compose down
+```
+
+------------------------------------------------------------------------
+
+## Reinicio limpio
+
+``` bash
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+```
+
+------------------------------------------------------------------------
+
+# ⚠️ Problemas comunes
+
+## 1. Se ve la página de Nginx
+
+👉 El build de Angular no se copió correctamente
+
+``` bash
+docker compose build --no-cache frontend
+```
+
+------------------------------------------------------------------------
+
+## 2. Error de Node o Angular
+
+👉 Revisar versiones (Angular 20 requiere Node 20+)
+
+------------------------------------------------------------------------
+
+## 3. Problemas de permisos o cache
+
+``` bash
+docker system prune -a
+```
+
+------------------------------------------------------------------------
+
+## 4. API no responde
+
+👉 Verificar que el backend está corriendo:
+
+``` bash
+docker compose logs backend
+```
+
+------------------------------------------------------------------------
+
+# 🔐 Seguridad
+
+-   Nunca subir `.env` al repositorio\
+-   Usar `.env.example` como plantilla\
+-   Cambiar contraseñas en producción
+
+------------------------------------------------------------------------
+
+# 📁 Estructura del proyecto
+
+    adoptalia/
+    ├── backend/
+    ├── frontend/
+    ├── db/
+    ├── docker-compose.yml
+    └── .env
+
+------------------------------------------------------------------------
+
+# 🚀 Notas finales
+
+-   El frontend se sirve con Nginx\
+-   El backend corre en Node.js\
+-   Angular se compila en build (no en runtime)\
+-   Todo se conecta mediante red interna de Docker
