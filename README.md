@@ -6,7 +6,7 @@ Adoptalia es una aplicación web completa (Full-Stack) diseñada como proyecto p
 
 El proyecto está completamente dockerizado e incluye los siguientes servicios:
 
-* **Frontend:** Angular 16 (Servido a través de Nginx actuando como Reverse Proxy).
+* **Frontend:** Angular 20.3.0 (Servido a través de Nginx actuando como Reverse Proxy).
 * **Backend:** Node.js con Express (API RESTful).
 * **Base de Datos:** MySQL 8.0.
 * **Orquestación:** Docker Compose.
