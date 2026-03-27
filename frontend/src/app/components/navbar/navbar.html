@@ -35,7 +35,7 @@
   </ul>
 
   <div class="dsk-actions">
-    <button class="btn-session">Iniciar sesión</button>
-    <button class="btn-login">Registrarse</button>
+    <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
+    <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
   </div>
 </nav>
