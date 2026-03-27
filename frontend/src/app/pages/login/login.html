@@ -1,0 +1,99 @@
+<div class="login-page">
+  <div class="login-card">
+
+    <!-- TABS USUARIO -->
+    <div class="top-tabs">
+      <button
+        [class.active]="userType === 'adoptante'"
+        (click)="setUserType('adoptante')">
+        Adoptante
+      </button>
+
+      <button
+        [class.active]="userType === 'protectora'"
+        (click)="setUserType('protectora')">
+        Protectora
+      </button>
+    </div>
+
+    <h2>
+      {{ isLogin ? 'Iniciar sesión' : 'Crear cuenta' }}
+    </h2>
+
+    <p class="subtitle">
+      {{ userType === 'adoptante'
+        ? 'Encuentra tu compañero ideal'
+        : 'Gestiona tu protectora y sigue salvando vidas' }}
+    </p>
+
+    <!-- LOGIN -->
+    <form *ngIf="isLogin && loginForm"
+          [formGroup]="loginForm"
+          (ngSubmit)="onLogin()"
+          class="form">
+
+      <div class="input-group">
+        <input type="email" formControlName="email" placeholder=" " />
+        <label>Email</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" formControlName="password" placeholder=" " />
+        <label>Contraseña</label>
+      </div>
+
+      <button class="btn-primary" type="submit">
+        Entrar
+      </button>
+
+      <p class="switch">
+        ¿No tienes cuenta?
+        <span (click)="toggleMode()">Regístrate</span>
+      </p>
+
+    </form>
+
+    <!-- REGISTER -->
+    <form *ngIf="!isLogin && registerForm"
+          [formGroup]="registerForm"
+          (ngSubmit)="onRegister()"
+          class="form">
+
+      <div class="input-group">
+        <input type="text" formControlName="name" placeholder=" " />
+        <label>Nombre</label>
+      </div>
+
+      <div class="input-group">
+        <input type="email" formControlName="email" placeholder=" " />
+        <label>Email</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" formControlName="password" placeholder=" " />
+        <label>Contraseña</label>
+      </div>
+
+      <!-- SOLO PROTECTORA -->
+      <div *ngIf="userType === 'protectora'" class="extra-fields">
+
+        <div class="input-group">
+          <input type="text" formControlName="phone" placeholder=" " />
+          <label>Teléfono</label>
+        </div>
+
+      </div>
+
+      <button class="btn-primary" type="submit">
+        Crear cuenta
+      </button>
+
+      <p class="switch">
+        ¿Ya tienes cuenta?
+        <span (click)="toggleMode()">Inicia sesión</span>
+      </p>
+
+    </form>
+
+  </div>
+</div>
