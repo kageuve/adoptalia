@@ -143,42 +143,6 @@ docker compose up -d
 
 ------------------------------------------------------------------------
 
-# ⚠️ Problemas comunes
-
-## 1. Se ve la página de Nginx
-
-👉 El build de Angular no se copió correctamente
-
-``` bash
-docker compose build --no-cache frontend
-```
-
-------------------------------------------------------------------------
-
-## 2. Error de Node o Angular
-
-👉 Revisar versiones (Angular 20 requiere Node 20+)
-
-------------------------------------------------------------------------
-
-## 3. Problemas de permisos o cache
-
-``` bash
-docker system prune -a
-```
-
-------------------------------------------------------------------------
-
-## 4. API no responde
-
-👉 Verificar que el backend está corriendo:
-
-``` bash
-docker compose logs backend
-```
-
-------------------------------------------------------------------------
-
 # 🔐 Seguridad
 
 -   Nunca subir `.env` al repositorio\
