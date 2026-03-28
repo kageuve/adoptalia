@@ -106,25 +106,6 @@ docker compose up -d
 
 ------------------------------------------------------------------------
 
-### Frontend (Angular en vivo)
-
-``` yaml
-frontend:
-  image: node:20
-  working_dir: /app
-  volumes:
-    - ./frontend:/app
-  command: sh -c "npm install && npm start"
-  ports:
-    - "4200:4200"
-```
-
-👉 Acceso en:
-
-    http://localhost:4200
-
-------------------------------------------------------------------------
-
 # 🧰 Comandos útiles
 
 ## Ver logs
