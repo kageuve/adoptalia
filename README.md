@@ -97,33 +97,11 @@ desde:
 
 # 🛠️ Desarrollo (modificar la aplicación)
 
-## 🔁 Opción A --- desarrollo con rebuild (simple)
-
 Cada vez que hagas cambios:
 
 ``` bash
 docker compose build
 docker compose up -d
-```
-
-------------------------------------------------------------------------
-
-## ⚡ Opción B --- desarrollo en caliente (recomendado)
-
-### Backend (Node.js)
-
-Editar `docker-compose.yml`:
-
-``` yaml
-backend:
-  volumes:
-    - ./backend:/app
-```
-
-Instalar nodemon:
-
-``` bash
-npm install nodemon
 ```
 
 ------------------------------------------------------------------------
