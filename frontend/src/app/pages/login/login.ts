@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../types/user.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ export class Login implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +49,9 @@ export class Login implements OnInit {
     // Leer query params (login/register)
     this.route.queryParams.subscribe(params => {
       this.isLogin = params['mode'] !== 'register';
+      if (params['tipo'] === 'protectora') {
+        this.setUserType('protectora');
+      }
     });
   }
 
@@ -70,16 +75,24 @@ export class Login implements OnInit {
   }
 
   // LOGIN
-  onLogin() {
-    if (this.loginForm.invalid) return;
+onLogin() {
+  if (this.loginForm.invalid) return;
 
-    const loginData = this.loginForm.value as {
-      email: string;
-      password: string;
-    };
+  const { email, password } = this.loginForm.value;
 
-    console.log('LOGIN:', loginData);
-  }
+  this.authService.login(email, password).subscribe({
+    next: (res) => {
+      if (res.rol === 'protectora') {
+        this.router.navigate(['/protectoras']);
+      } else {
+        this.router.navigate(['/']);
+      }
+    },
+    error: (err) => {
+      console.error('Error en login:', err);
+    }
+  });
+}
 
   // REGISTER
   onRegister() {
