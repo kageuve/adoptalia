@@ -5,34 +5,34 @@
     </div>
 
     <div class="cards-container">
-        <div class="card">
+        <div class="card" routerLink="/adoptar" [queryParams]="{especie: 'Perro'}">
             <div class="card-icon green">🐶</div>
-                <h3>Perros</h3>
-            </div>
+            <h3>Perros</h3>
+        </div>
 
-        <div class="card">
+        <div class="card" routerLink="/adoptar" [queryParams]="{especie: 'Gato'}">
             <div class="card-icon orange">🐱</div>
-                <h3>Gatos</h3>
+            <h3>Gatos</h3>
         </div>
 
-        <div class="card">
-            <div class="card-icon green" routerLink="/protectoras">🏠</div>
-                <h3>Protectoras</h3>
+        <div class="card" routerLink="/protectoras">
+            <div class="card-icon green">🏠</div>
+            <h3>Protectoras</h3>
         </div>
-    
-        <div class="card">
-            <div class="card-icon orange" routerLink="/como-funciona">❤️</div>
-                <h3>Proceso de Adopción</h3>
+
+        <div class="card" routerLink="/como-funciona">
+            <div class="card-icon orange">❤️</div>
+            <h3>Proceso de Adopción</h3>
         </div>
 
         <div class="card">
             <div class="card-icon green">✨</div>
-                <h3>Casos Especiales</h3>
+            <h3>Casos Especiales</h3>
         </div>
 
         <div class="card">
             <div class="card-icon orange">🫂</div>
-                <h3>Comunidad</h3>
+            <h3>Comunidad</h3>
         </div>
     </div>
 </section>

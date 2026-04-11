@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FilterBar } from "../../components/filter-bar/filter-bar";
 import { Animal } from "../../types/animal.model";
 import { AnimalsService } from "../../services/animals.service";
@@ -7,17 +8,15 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-adoptar',
   standalone: true,
-  imports: [FilterBar,CommonModule],
+  imports: [FilterBar, CommonModule],
   templateUrl: './adoptar.html',
   styleUrls: ['./adoptar.scss']
 })
-
 export class Adoptar implements OnInit {
 
   animales: Animal[] = [];
   animalesFiltrados: Animal[] = [];
 
-  // filtros activos
   filtros = {
     especie: '',
     provincia: '',
@@ -25,21 +24,27 @@ export class Adoptar implements OnInit {
     edad: ''
   };
 
-  constructor(private animalsService: AnimalsService) {}
+  constructor(private animalsService: AnimalsService, private route: ActivatedRoute) {}
 
-ngOnInit(): void {
-  this.cargarAnimales();
-}
+  ngOnInit(): void {
+    this.cargarAnimales();
+  }
 
-    // Cargar datos desde el servicio (mock por ahora)
   cargarAnimales(): void {
     this.animalsService.getAnimals().subscribe(data => {
       this.animales = data;
-      this.animalesFiltrados = data;
+      this.route.queryParams.subscribe(params => {
+        this.filtros = {
+          especie: params['especie'] || '',
+          provincia: params['provincia'] || '',
+          tamano: params['tamano'] || '',
+          edad: params['edad'] || ''
+        };
+        this.aplicarFiltros();
+      });
     });
   }
 
-  // Aplicar filtros
   aplicarFiltros(): void {
     this.animalesFiltrados = this.animales.filter(animal => {
       return (
@@ -51,37 +56,23 @@ ngOnInit(): void {
     });
   }
 
-    // Filtro por edad
-  filtrarPorEdad(edad: number): boolean {
+  filtrarPorEdad(edad: number | null): boolean {
+    if (edad === null) return false;
     switch (this.filtros.edad) {
-      case 'joven':
-        return edad <= 2;
-      case 'adulto':
-        return edad > 2 && edad <= 8;
-      case 'senior':
-        return edad > 8;
-      default:
-        return true;
+      case 'joven':  return edad <= 2;
+      case 'adulto': return edad > 2 && edad <= 8;
+      case 'senior': return edad > 8;
+      default:       return true;
     }
   }
 
-  // Recibir filtros del filter-bar
   onFiltrosChange(filtros: any) {
-    console.log('FILTROS RECIBIDOS:', filtros); // borraaaar
     this.filtros = filtros;
     this.aplicarFiltros();
   }
 
-    // Reset filtros
   limpiarFiltros(): void {
-    this.filtros = {
-      especie: '',
-      provincia: '',
-      tamano: '',
-      edad: ''
-    };
+    this.filtros = { especie: '', provincia: '', tamano: '', edad: '' };
     this.animalesFiltrados = this.animales;
   }
 }
-
-

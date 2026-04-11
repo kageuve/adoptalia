@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AnimalsService } from '../../services/animals.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class FilterBar implements OnInit {
 
   provincias: string[] = [];
 
-  constructor(private animalsService: AnimalsService) {}
+  constructor(private animalsService: AnimalsService, private router: Router) {}
 
   ngOnInit(): void {
     this.animalsService.getAnimals().subscribe(animales => {
@@ -30,7 +31,7 @@ export class FilterBar implements OnInit {
   }
 
   aplicarFiltros() {
-    this.filtrosChange.emit(this.filtros);
+    this.router.navigate(['/adoptar'], { queryParams: this.filtros });
   }
 
   onFiltrosChange() {
