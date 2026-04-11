@@ -45,7 +45,6 @@ async function crearProtectora(datos) {
   }
 }
 
-// 🔹 NUEVA FUNCIÓN
 async function obtenerPorUsuarioId(usuarioId) {
   const connection = await db.getConnection();
   try {
@@ -59,7 +58,24 @@ async function obtenerPorUsuarioId(usuarioId) {
   }
 }
 
+// Obtiene todas las protectoras de forma pública
+async function obtenerTodas() {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      `SELECT id, nombre, ciudad, descripcion, telefono, email, imagen
+       FROM protectora
+       WHERE verificado = 1
+       ORDER BY nombre ASC`
+    );
+    return rows;
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   crearProtectora,
-  obtenerPorUsuarioId
+  obtenerPorUsuarioId,
+  obtenerTodas
 };

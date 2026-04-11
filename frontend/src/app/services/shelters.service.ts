@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { SHELTERS } from '../data/shelters.mock';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
 import { Shelter } from '../types/shelter.model';
 
 @Injectable({
@@ -8,7 +8,12 @@ import { Shelter } from '../types/shelter.model';
 })
 export class SheltersService {
 
+  private apiUrl = 'http://localhost:3000/api';
+
+  constructor(private http: HttpClient) {}
+
   getShelters(): Observable<Shelter[]> {
-    return of(SHELTERS);
+    return this.http.get<{ success: boolean; data: Shelter[] }>(`${this.apiUrl}/protectoras/publicas`)
+      .pipe(map(res => res.data));
   }
 }

@@ -16,11 +16,13 @@ app.use(express.static('public'));
 const animalRoutes = require('./routes/animalRoutes');
 const authRoutes = require('./routes/authRoutes');
 const importRoutes = require('./routes/importRoutes');
+const protectoraRoutes = require('./routes/protectoraRoutes');
 
 // Montar rutas
 app.use('/api/animales', animalRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/import', importRoutes);
+app.use('/api/protectoras', protectoraRoutes);
 
 // Ruta test
 app.get('/api/test', (req, res) => {
