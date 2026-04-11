@@ -17,6 +17,7 @@ export class AuthService {
       tap(res => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('rol', res.rol);
+        localStorage.setItem('email', res.email);
       })
     );
   }
@@ -24,6 +25,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
+    localStorage.removeItem('email');
     this.router.navigate(['/']);
   }
 
@@ -37,5 +39,9 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getEmail(): string | null {
+    return localStorage.getItem('email');
   }
 }
