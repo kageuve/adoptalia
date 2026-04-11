@@ -58,7 +58,8 @@ async function login(req, res) {
     res.json({
       message: 'Login correcto',
       token,
-      rol: usuario.rol
+      rol: usuario.rol,
+      email: usuario.email
     });
 
   } catch (error) {

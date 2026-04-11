@@ -27,15 +27,26 @@
     <li><a routerLink="/como-funciona" routerLinkActive="active" (click)="closeMenu()">Cómo funciona</a></li>
     <li><a routerLink="/impacto" routerLinkActive="active" (click)="closeMenu()">Impacto</a></li>
 
-    <li class="mobile-actions">
-      <button class="btn-session">Iniciar sesión</button>
-      <button class="btn-login">Registrarse</button>
-    </li>
+  <li class="mobile-actions">
+  <ng-container *ngIf="!authService.isLoggedIn(); else loggedInMobile">
+    <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
+    <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
+  </ng-container>
+  <ng-template #loggedInMobile>
+    <button class="btn-session" (click)="logout()">Cerrar sesión</button>
+  </ng-template>
+</li>
 
   </ul>
 
-  <div class="dsk-actions">
+<div class="dsk-actions">
+  <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
     <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
     <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
-  </div>
+  </ng-container>
+<ng-template #loggedIn>
+  <span class="user-email">{{ authService.getEmail() }}</span>
+  <button class="btn-session" (click)="logout()">Cerrar sesión</button>
+</ng-template>
+</div>
 </nav>

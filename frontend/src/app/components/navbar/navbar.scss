@@ -183,3 +183,12 @@ button {
     margin-top: var(--space-sm);
   }
 }
+
+.user-email {
+  font-size: var(--font-sm);
+  color: var(--color-text-hover);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-text-hover);
+  opacity: 0.9;
+}
