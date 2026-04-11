@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
-import { EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AnimalsService } from '../../services/animals.service';
 
 @Component({
   selector: 'app-filter-bar',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './filter-bar.html',
   styleUrl: './filter-bar.scss',
 })
+export class FilterBar implements OnInit {
 
-export class FilterBar {
   filtros = {
     especie: '',
     provincia: '',
@@ -18,11 +19,19 @@ export class FilterBar {
     edad: ''
   };
 
+  provincias: string[] = [];
+
+  constructor(private animalsService: AnimalsService) {}
+
+  ngOnInit(): void {
+    this.animalsService.getAnimals().subscribe(animales => {
+      this.provincias = [...new Set(animales.map(a => a.provincia))].sort();
+    });
+  }
 
   aplicarFiltros() {
     this.filtrosChange.emit(this.filtros);
   }
-
 
   onFiltrosChange() {
     this.filtros = { ...this.filtros };

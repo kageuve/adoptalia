@@ -108,10 +108,22 @@ async function eliminarAnimal(req, res) {
   }
 }
 
+//ListarAnimales sin token
+async function listarAnimalesPublicos(req, res) {
+  try {
+    const animales = await animalModel.obtenerDisponibles();
+    res.status(200).json({ success: true, data: animales });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error listando animales" });
+  }
+}
+
 module.exports = {
   listarAnimales,
   obtenerAnimal,
   crearAnimal,
   actualizarAnimal,
-  eliminarAnimal
+  eliminarAnimal,
+  listarAnimalesPublicos
 };

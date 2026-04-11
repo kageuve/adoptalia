@@ -14,10 +14,7 @@
       <label>Provincia</label>
       <select [(ngModel)]="filtros.provincia">
         <option value="">Todas</option>
-        <option value="Madrid">Madrid</option>
-        <option value="Barcelona">Barcelona</option>
-        <option value="Valencia">Valencia</option>
-        <option value="Sevilla">Sevilla</option>
+        <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
       </select>
     </div>
 
