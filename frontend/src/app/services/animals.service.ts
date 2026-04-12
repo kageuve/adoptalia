@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Animal } from '../types/animal.model';
+import { environment } from '../../environments/environment';
 //import { ANIMALES } from '../data/animals.mock'; //-->Mock de datos
 
 @Injectable({ providedIn: 'root' })
 export class AnimalsService {
 
-  private apiUrl = 'http://localhost:3000/api'; // ajusta el puerto
+  private apiUrl = environment.apiUrl; // ajusta el puerto
 
   constructor(private http: HttpClient) {}
 
