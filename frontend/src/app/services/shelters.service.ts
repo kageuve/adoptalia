@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Shelter } from '../types/shelter.model';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SheltersService {
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl; //ajusta el puerto
 
   constructor(private http: HttpClient) {}
 
