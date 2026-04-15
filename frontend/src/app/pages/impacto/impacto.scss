@@ -1,19 +1,20 @@
+/* HEADER */
 .impact-header {
   text-align: center;
   color: var(--color-text-primary);
+  margin-top: var(--space-lg);
 }
 
+/* CONTENEDOR PRINCIPAL */
 .impact-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-lg);
-  margin-top: var(--space-lg);
-  margin-bottom: var(--space-lg);
-  margin-left: var(--space-lg);
-  margin-right: var(--space-lg);
   padding: var(--space-md);
+  margin: var(--space-lg);
 }
 
+/* CARDS */
 .goal {
   background: var(--color-primary-superlight);
   border-radius: var(--radius-xl);
@@ -42,7 +43,6 @@
   font-weight: var(--font-bold);
   color: var(--color-primary);
   text-shadow: 0 2px 10px rgba(0,0,0,0.15);
-
 }
 
 .goal p {
@@ -50,13 +50,11 @@
   font-size: var(--font-sm);
 }
 
-//section 2
-
+/* SECTION STORY */
 .impact-story {
   margin-top: var(--space-lg);
   text-align: center;
   padding: var(--space-xl);
-
   background: var(--color-primary);
   color: var(--color-text-secondary);
 }
@@ -70,8 +68,7 @@
   margin-bottom: var(--space-sm);
 }
 
-//section 3
-
+/* SECTION PROGRESS */
 .impact-goal {
   margin-top: var(--space-xl);
   text-align: center;
@@ -106,57 +103,54 @@
   transition: width 0.8s ease;
 }
 
-//section 4
-
+/* SECTION ACTION */
 .impact-action {
-  margin-top: var(--space-xl);
-  margin-bottom: var(--space-xl);
+  margin: var(--space-xl) 0;
   text-align: center;
+  width: 100%;
+  height: 400px;
+  background-image: url(/img/img-impact.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
 }
 
 .impact-action h2 {
   color: var(--color-primary-dark);
 }
 
-.impact-action {
-  width: 100%;
-  height: 300px;
-  margin: var(--space-sm) 0 var(--space-md);
-  background-image: url(/img/img-impact.jpg);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-
-  button {
-    background: var(--color-primary);
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-text-secondary);
-    border-radius: var(--radius-lg);
-    padding: 12px 26px;
-    font-weight: var(--font-medium);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      background: var(--color-button-primary);
-      color: var(--color-primary-dark);
-    }
-  }
+.impact-action button {
+  background: var(--color-primary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--radius-lg);
+  padding: 12px 26px;
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.impact-action button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  background: var(--color-button-primary);
+  color: var(--color-primary-dark);
+}
 
-
+/* RESPONSIVE */
 @media (max-width: 800px) {
-
   .impact-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
-
   .impact-container {
     grid-template-columns: 1fr;
   }
@@ -164,5 +158,4 @@
   .progress-bar {
     height: 14px;
   }
-
 }

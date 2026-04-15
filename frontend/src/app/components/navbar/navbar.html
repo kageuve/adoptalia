@@ -1,52 +1,60 @@
 <nav class="navbar">
-
   <div class="logo" routerLink="/" routerLinkActive="active-logo">
     <div class="logo-icon">
-      <img src="/img/logo3.png" alt="Logo Adoptalia">
+      <img src="/img/logo3.png" alt="Logo Adoptalia" />
     </div>
     <span>Adoptalia</span>
   </div>
 
-    <!-- burguer menu -->
   <div class="burger-menu" (click)="toggleMenu()" [class.open]="menuOpen">
     <span></span>
     <span></span>
     <span></span>
   </div>
-  
+
   <ul class="links-container" [class.open]="menuOpen">
     <li>
-      <a routerLink="/" 
-      routerLinkActive="active" 
-      [routerLinkActiveOptions]="{ exact: true }" 
-      (click)="closeMenu()">
-      Inicio
-    </a></li>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">
+        Inicio
+      </a>
+    </li>
     <li><a routerLink="/adoptar" routerLinkActive="active" (click)="closeMenu()">Adoptar</a></li>
     <li><a routerLink="/protectoras" routerLinkActive="active" (click)="closeMenu()">Protectoras</a></li>
     <li><a routerLink="/como-funciona" routerLinkActive="active" (click)="closeMenu()">Cómo funciona</a></li>
     <li><a routerLink="/impacto" routerLinkActive="active" (click)="closeMenu()">Impacto</a></li>
 
-  <li class="mobile-actions">
-  <ng-container *ngIf="!authService.isLoggedIn(); else loggedInMobile">
-    <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
-    <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
-  </ng-container>
-  <ng-template #loggedInMobile>
-    <button class="btn-session" (click)="logout()">Cerrar sesión</button>
-  </ng-template>
-</li>
-
+    <li class="mobile-actions">
+      <ng-container *ngIf="!authService.isLoggedIn(); else loggedInMobile">
+        <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
+        <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
+      </ng-container>
+      <ng-template #loggedInMobile>
+        <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
+          ?? {{ authService.getEmail() }}
+        </button>
+        <div class="mobile-user-dropdown" *ngIf="userMenuOpen" (click)="$event.stopPropagation()">
+          <button class="dropdown-item" type="button" (click)="goToPanel()">Mi panel</button>
+          <button class="dropdown-item danger-item" type="button" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </ng-template>
+    </li>
   </ul>
 
-<div class="dsk-actions">
-  <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
+  <div class="dsk-actions">
+    <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
     <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
-    <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
-  </ng-container>
-<ng-template #loggedIn>
-  <span class="user-email">{{ authService.getEmail() }}</span>
-  <button class="btn-session" (click)="logout()">Cerrar sesión</button>
-</ng-template>
-</div>
+      <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
+    </ng-container>
+    <ng-template #loggedIn>
+      <div class="user-menu" (click)="$event.stopPropagation()">
+        <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
+          👤  {{ authService.getEmail() }}
+        </button>
+        <div class="user-dropdown" *ngIf="userMenuOpen">
+          <button class="dropdown-item" type="button" (click)="goToPanel()">Mi panel</button>
+          <button class="dropdown-item danger-item" type="button" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
 </nav>

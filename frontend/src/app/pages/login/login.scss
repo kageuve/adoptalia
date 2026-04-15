@@ -21,7 +21,7 @@
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.2);
   text-align: center;
-  color: white;
+  color: var(--color-surface);
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 
@@ -38,7 +38,7 @@
     padding: 8px;
     border: none;
     background: transparent;
-    color: white;
+    color: var(--color-surface);
     cursor: pointer;
     border-radius: var(--radius-sm);
     transition: all 0.3s ease;
@@ -79,7 +79,7 @@ h2 {
     border-radius: var(--radius-sm);
     border: 1px solid rgba(255,255,255,0.2);
     background: rgba(255,255,255,0.1);
-    color: white;
+    color: var(--color-surface);
     outline: none;
 
     transition: all 0.3s ease;
@@ -122,10 +122,10 @@ h2 {
   background: linear-gradient(
     135deg,
     var(--color-accent),
-    #ff9a5a
+    var(--color-button-tertiary)
   );
 
-  color: white;
+  color: var(--color-surface);
   font-weight: 600;
 
   transition: all 0.3s ease;
