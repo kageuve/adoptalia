@@ -1,0 +1,141 @@
+<section class="dashboard-shell">
+  <div class="dashboard-hero">
+    <div>
+      <span class="eyebrow">Panel protectora</span>
+      <h1>Gestiona tu actividad diaria</h1>
+      <p>
+        Controla tus animales, revisa solicitudes y mantén el refugio organizado desde un mismo panel.
+      </p>
+    </div>
+
+    <div class="metrics-grid">
+      <article class="metric-card">
+        <span class="metric-value">{{ totalAnimales }}</span>
+        <span class="metric-label">Animales activos</span>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-value">{{ totalSolicitudes }}</span>
+        <span class="metric-label">Solicitudes recibidas</span>
+      </article>
+    </div>
+  </div>
+
+  <section class="content-section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Gestión</span>
+        <h2>Mis animales</h2>
+      </div>
+
+      <button class="primary-btn" type="button" (click)="toggleFormulario()">
+        {{ mostrarFormulario ? 'Cerrar formulario' : 'Añadir animal' }}
+      </button>
+    </div>
+
+    <form class="animal-form" *ngIf="mostrarFormulario" [formGroup]="animalForm" (ngSubmit)="guardarAnimal()">
+      <div class="form-grid">
+        <label>
+          <span>Nombre</span>
+          <input type="text" formControlName="nombre" />
+        </label>
+
+        <label>
+          <span>Especie</span>
+          <select formControlName="especie">
+            <option>Perro</option>
+            <option>Gato</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Género</span>
+          <select formControlName="genero">
+            <option>Hembra</option>
+            <option>Macho</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Tamaño</span>
+          <select formControlName="tamano">
+            <option>Pequeño</option>
+            <option>Mediano</option>
+            <option>Grande</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Estado</span>
+          <select formControlName="estado">
+            <option value="disponible">Disponible</option>
+            <option value="reservado">Reservado</option>
+            <option value="adoptado">Adoptado</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button class="secondary-btn" type="button" (click)="cancelarEdicion()">Cancelar</button>
+        <button class="primary-btn" type="submit">
+          {{ editandoId ? 'Guardar cambios' : 'Añadir animal' }}
+        </button>
+      </div>
+    </form>
+
+    <div class="table-card">
+      <div class="table-row table-head">
+        <span>Animal</span>
+        <span>Detalles</span>
+        <span>Estado</span>
+        <span>Acciones</span>
+      </div>
+
+      <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
+        <span class="animal-name">{{ animal.nombre }}</span>
+        <span>{{ animal.especie }} · {{ animal.genero }} · {{ animal.tamano }}</span>
+        <span [class]="getBadgeClass(animal.estado)">{{ animal.estado }}</span>
+
+        <div class="row-actions">
+          <button class="ghost-btn" type="button" (click)="editarAnimal(animal)">Editar</button>
+          <button class="danger-btn" type="button" (click)="eliminarAnimal(animal.id)">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Seguimiento</span>
+        <h2>Solicitudes recibidas</h2>
+      </div>
+    </div>
+
+    <div class="requests-grid">
+      <article class="request-card" *ngFor="let solicitud of solicitudes; trackBy: trackById">
+        <div class="request-top">
+          <div>
+            <h3>{{ solicitud.animal }}</h3>
+            <p>{{ solicitud.adoptante }} · {{ solicitud.fecha }}</p>
+          </div>
+
+          <span [class]="getBadgeClass(solicitud.estado)">{{ solicitud.estado }}</span>
+        </div>
+
+        <div class="request-actions" *ngIf="solicitud.estado === 'pendiente'; else estadoFinal">
+          <button class="approve-btn" type="button" (click)="actualizarSolicitud(solicitud.id, 'aprobada')">
+            Aprobar
+          </button>
+          <button class="reject-btn" type="button" (click)="actualizarSolicitud(solicitud.id, 'rechazada')">
+            Rechazar
+          </button>
+        </div>
+
+        <ng-template #estadoFinal>
+          <p class="resolved-copy">Solicitud revisada y marcada como {{ solicitud.estado }}.</p>
+        </ng-template>
+      </article>
+    </div>
+  </section>
+</section>

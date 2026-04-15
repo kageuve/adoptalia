@@ -10,6 +10,7 @@
   
   --color-button-primary: #d0b15a;   /* Hover de los botones principales */
   --color-button-secondary: #b56548;   /* Hover secundario */
+  --color-button-tertiary: #ff9a5a;   /* Botones llamativos */
 
   --color-background: #F2EFDC;   /* Fondo general de la web.*/
   --color-surface: #FFFFFF;   /* Fondo de componentes como tarjetas, filtros o formularios */
@@ -28,6 +29,11 @@
 
 
   /* COLORES SECUNDARIOS */
+
+  /*solicitudes, favoritos, estadísticas*/
+  --color-pending: #9b6a02;   /* Estado pendiente o en proceso */
+  --color-approved: #2f7a34;   /* Estado aprobado o exitoso */
+  --color-rejected: #a03d3d;   /* Estado rechazado o error */   
 
   --color-success: #6AAE6D;   /* Mensajes de éxito o confirmaciones */
   --color-warning: #F2B84B;   /* Advertencias o avisos */
