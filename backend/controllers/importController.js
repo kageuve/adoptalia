@@ -7,7 +7,7 @@ async function importarCSV(req, res) {
 
   try {
 
-    // 🔐 Obtener protectora asociada al usuario autenticado
+    //Obtener protectora asociada al usuario autenticado
     const protectora = await protectoraModel.obtenerPorUsuarioId(req.user.id);
 
     if (!protectora) {

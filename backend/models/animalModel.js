@@ -141,10 +141,37 @@ async function obtenerDisponibles() {
     connection.release();
   }
 }
+//Obtiene un animal por id de manera publica con datos de protectora.
+async function obtenerPublicoPorId(id) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(`
+      SELECT 
+        a.id,
+        a.nombre,
+        CONCAT(UPPER(SUBSTRING(a.especie, 1, 1)), LOWER(SUBSTRING(a.especie, 2))) AS especie,
+        a.raza,
+        TIMESTAMPDIFF(YEAR, a.fecha_nacimiento, CURDATE()) AS edad,
+        CONCAT(UPPER(SUBSTRING(a.tamano, 1, 1)), LOWER(SUBSTRING(a.tamano, 2))) AS tamano,
+        a.genero,
+        a.descripcion,
+        a.estado,
+        p.ciudad AS provincia,
+        a.imagen_url AS imagen
+      FROM animal a
+      JOIN protectora p ON a.protectora_id = p.id
+      WHERE a.id = ?
+    `, [id]);
+    return rows[0];
+  } finally {
+    connection.release();
+  }
+}
 
 module.exports = {
   obtenerDisponibles,
   obtenerPorProtectora,
+  obtenerPublicoPorId,
   insertarMultiples,
   obtenerPorId,
   crear,

@@ -1,0 +1,70 @@
+<div class="ficha-container" *ngIf="animal && !cargando">
+
+  <div class="ficha-imagen">
+    <img [src]="animal.imagen || './img/no-image.png'" [alt]="animal.nombre">
+  </div>
+
+  <div class="ficha-info">
+
+    <div class="ficha-header">
+      <h1>{{ animal.nombre }}</h1>
+      <span class="estado" [class]="animal.estado">{{ animal.estado }}</span>
+    </div>
+
+    <div class="ficha-datos">
+      <div class="dato">
+        <span class="label">Especie</span>
+        <span>{{ animal.especie }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Raza</span>
+        <span>{{ animal.raza || 'Desconocida' }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Edad</span>
+        <span>{{ animal.edad !== null ? animal.edad + ' años' : 'Desconocida' }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Tamaño</span>
+        <span>{{ animal.tamano }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Género</span>
+        <span>{{ animal.genero }}</span>
+      </div>
+      <div class="dato">
+        <span class="label">Provincia</span>
+        <span>{{ animal.provincia }}</span>
+      </div>
+    </div>
+
+    <div class="ficha-descripcion" *ngIf="animal.descripcion">
+      <h3>Sobre {{ animal.nombre }}</h3>
+      <p>{{ animal.descripcion }}</p>
+    </div>
+
+    <div class="ficha-acciones">
+      <button class="btn-adoptar" *ngIf="authService.isLoggedIn() && animal.estado === 'disponible'">
+        Solicitar adopción
+      </button>
+      <p class="aviso-login" *ngIf="!authService.isLoggedIn()">
+        <a routerLink="/login">Inicia sesión</a> para solicitar la adopción
+      </p>
+    </div>
+
+    <div class="ficha-volver">
+      <a routerLink="/adoptar">← Volver a adoptar</a>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="cargando" *ngIf="cargando">
+  <p>Cargando...</p>
+</div>
+
+<div class="no-encontrado" *ngIf="!animal && !cargando">
+  <p>Animal no encontrado.</p>
+  <a routerLink="/adoptar">← Volver a adoptar</a>
+</div>

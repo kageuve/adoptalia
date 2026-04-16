@@ -10,10 +10,10 @@
   </div>
 
   <div class="animals-grid">
-    <div class="card" *ngFor="let animal of animalesFiltrados">
+    <div class="card" *ngFor="let animal of animalesFiltrados" [routerLink]="['/animal', animal.id]">
       
       <div class="image-wrapper">
-        <img [src]="animal.imagen" [alt]="animal.nombre">
+        <img [src]="animal.imagen || './img/no-image.png'" [alt]="animal.nombre">
       </div>
 
       <div class="card-content">
