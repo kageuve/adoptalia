@@ -118,12 +118,26 @@ async function listarAnimalesPublicos(req, res) {
     res.status(500).json({ success: false, message: "Error listando animales" });
   }
 }
+//Obtiene un animal sin token
+async function obtenerAnimalPublico(req, res) {
+  try {
+    const animal = await animalModel.obtenerPublicoPorId(req.params.id);
+    if (!animal) {
+      return res.status(404).json({ success: false, message: 'Animal no encontrado' });
+    }
+    res.status(200).json({ success: true, data: animal });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error obteniendo animal' });
+  }
+}
 
 module.exports = {
+  listarAnimalesPublicos,
+  obtenerAnimalPublico,
   listarAnimales,
   obtenerAnimal,
   crearAnimal,
   actualizarAnimal,
-  eliminarAnimal,
-  listarAnimalesPublicos
+  eliminarAnimal
 };

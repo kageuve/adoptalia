@@ -16,5 +16,10 @@ export class AnimalsService {
     return this.http.get<{ success: boolean; data: Animal[] }>(`${this.apiUrl}/animales/publicos`)
       .pipe(map(res => res.data));
   }
+
+  getAnimalById(id: number): Observable<Animal> {
+  return this.http.get<{ success: boolean; data: Animal }>(`${this.apiUrl}/animales/publico/${id}`)
+    .pipe(map(res => res.data));
+}
 }
 

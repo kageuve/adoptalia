@@ -4,11 +4,12 @@ import { FilterBar } from "../../components/filter-bar/filter-bar";
 import { Animal } from "../../types/animal.model";
 import { AnimalsService } from "../../services/animals.service";
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-adoptar',
   standalone: true,
-  imports: [FilterBar, CommonModule],
+  imports: [FilterBar, CommonModule, RouterLink],
   templateUrl: './adoptar.html',
   styleUrls: ['./adoptar.scss']
 })

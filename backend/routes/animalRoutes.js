@@ -5,6 +5,7 @@ const { verificarToken, soloProtectora } = require('../middlewares/authMiddlewar
 
 // Ver animales Ruta pública — sin verificarToken
 router.get('/publicos', animalController.listarAnimalesPublicos);
+router.get('/publico/:id', animalController.obtenerAnimalPublico);
 
 // 🔹 Ver animales (usuario autenticado con token)
 router.get('/', verificarToken, animalController.listarAnimales);
