@@ -3,11 +3,10 @@ const csv = require('csv-parser');
 const animalModel = require('../models/animalModel');
 const protectoraModel = require('../models/protectoraModel');
 
+const { Readable } = require('stream');
+
 async function importarCSV(req, res) {
-
   try {
-
-    //Obtener protectora asociada al usuario autenticado
     const protectora = await protectoraModel.obtenerPorUsuarioId(req.user.id);
 
     if (!protectora) {
@@ -15,54 +14,50 @@ async function importarCSV(req, res) {
     }
 
     const protectoraId = protectora.id;
-    const rutaArchivo = req.file.path;
-    const valores = [];
+    const animales = [];
 
-    fs.createReadStream(rutaArchivo)
+    const stream = Readable.from(req.file.buffer.toString());
+
+    stream
       .pipe(csv())
       .on('data', (row) => {
-
-        const tipo = row.tipo?.toLowerCase();
+        const especie = row.especie?.toLowerCase();
         const genero = row.genero?.toLowerCase();
         const tamano = row.tamano?.toLowerCase();
-        const estado = row.estado?.toLowerCase() || 'disponible';
 
-        if (!row.nombre || !tipo || !genero || !tamano)
-          return;
+        if (!row.nombre || !especie || !genero || !tamano) return;
 
-        valores.push([
-          protectoraId,   
-          row.local_id || null,
-          row.nombre,
-          tipo,
-          row.especie || null,
+        animales.push({
+          protectora_id: protectoraId,
+          nombre: row.nombre,
+          especie,
+          raza: row.raza || null,
           genero,
           tamano,
-          row.fecha_nacimiento || null,
-          row.descripcion || null,
-          row.chip || null,
-          estado
-        ]);
-
+          fecha_nacimiento: row.fecha_nacimiento || null,
+          descripcion: row.descripcion || null
+        });
       })
       .on('end', async () => {
-
-        if (valores.length > 0) {
-          await animalModel.insertarMultiples(valores);
+        try {
+          for (const animal of animales) {
+            await animalModel.crear(animal);
+          }
+          res.json({ message: "Importación completada", insertados: animales.length });
+        } catch (error) {
+          console.error('Error insertando animales:', error.message);
+          res.status(500).json({ message: "Error insertando animales" });
         }
-
-        res.json({
-          message: "Importación completada",
-          insertados: valores.length
-        });
-
+      })
+      .on('error', (error) => {
+        console.error('Error leyendo CSV:', error.message);
+        res.status(500).json({ message: "Error leyendo CSV" });
       });
 
   } catch (error) {
-  res.status(500).json({ message: "Error procesando CSV" });
-}
+    console.error('Error importando CSV:', error.message);
+    res.status(500).json({ message: "Error procesando CSV" });
+  }
 }
 
-module.exports = {
-  importarCSV
-};
+module.exports = { importarCSV };

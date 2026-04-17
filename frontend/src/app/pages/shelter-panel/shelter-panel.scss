@@ -160,7 +160,7 @@ select {
 
 .table-row {
   display: grid;
-  grid-template-columns: 1.1fr 1.6fr 0.8fr 1fr;
+  grid-template-columns: 80px 1.1fr 1.6fr 0.8fr 1fr;
   gap: var(--space-md);
   align-items: center;
   padding: 1rem 1.2rem;
@@ -225,6 +225,16 @@ select {
   margin: 0;
 }
 
+.section-actions {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.section-actions label {
+  cursor: pointer;
+}
+
 @media (max-width: 960px) {
   .dashboard-shell {
     padding: var(--space-md);
@@ -254,3 +264,53 @@ select {
     align-items: start;
   }
 }
+
+// Imagen upload
+.imagen-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+
+  span {
+    font-weight: var(--font-medium);
+    color: var(--color-primary-dark);
+  }
+}
+
+.imagen-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Imagen en tabla
+.animal-img {
+  width: 70px;
+  height: 70px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.no-img {
+  width: 70px;
+  height: 70px;
+  border-radius: var(--radius-sm);
+  background: rgba(65, 67, 27, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-xs);
+  color: var(--color-text-muted);
+}
+
+
