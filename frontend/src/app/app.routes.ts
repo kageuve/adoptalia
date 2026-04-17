@@ -17,7 +17,7 @@ export const routes: Routes = [
   { path: 'como-funciona', component: ComoFunciona },
   { path: 'impacto', component: Impacto },
   { path: 'login', component: Login },
-  { path: 'animal/:id', component: FichaAnimal }
+  { path: 'animal/:id', component: FichaAnimal },
   { path: 'panel-adoptante', component: UserPanel },
   { path: 'panel-protectora', component: ShelterPanel }
 ];

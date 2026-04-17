@@ -1,0 +1,45 @@
+const peticionModel = require('../models/peticionModel');
+
+async function crearPeticion(req, res) {
+  try {
+    const usuario_id = req.user.id;
+    const { animal_id, mensaje } = req.body;
+
+    if (!animal_id) {
+      return res.status(400).json({ success: false, message: 'Falta animal_id' });
+    }
+
+    const id = await peticionModel.crear({ usuario_id, animal_id, mensaje });
+
+    res.status(201).json({ success: true, message: 'Petición creada', id });
+
+  } catch (error) {
+        console.error('Error creando petición:', error.message, error.code);
+    res.status(500).json({ success: false, message: 'Error creando petición' });
+  }
+}
+
+async function comprobarPeticion(req, res) {
+  try {
+    const usuario_id = req.user.id;
+    const { animal_id } = req.params;
+    const peticion = await peticionModel.obtenerPorUsuarioYAnimal(usuario_id, animal_id);
+    res.status(200).json({ success: true, existe: !!peticion, peticion: peticion || null });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error comprobando petición' });
+  }
+}
+
+async function listarPeticionesUsuario(req, res) {
+  try {
+    const usuario_id = req.user.id;
+    const peticiones = await peticionModel.obtenerPorUsuario(usuario_id);
+    res.status(200).json({ success: true, data: peticiones });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error listando peticiones' });
+  }
+}
+
+module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario };
