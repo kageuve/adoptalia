@@ -49,4 +49,40 @@ async function obtenerPorUsuario(usuario_id) {
   }
 }
 
-module.exports = { crear, obtenerPorUsuarioYAnimal, obtenerPorUsuario };
+async function obtenerPorProtectora(protectora_id) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(`
+      SELECT 
+        p.id,
+        a.nombre AS animal,
+        u.email AS adoptante,
+        p.estado,
+        p.creado AS fecha,
+        p.mensaje
+      FROM peticion p
+      JOIN animal a ON p.animal_id = a.id
+      JOIN protectora pr ON a.protectora_id = pr.id
+      JOIN usuario u ON p.usuario_id = u.id
+      WHERE pr.id = ?
+      ORDER BY p.creado DESC
+    `, [protectora_id]);
+    return rows;
+  } finally {
+    connection.release();
+  }
+}
+
+async function actualizarEstado(id, estado) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(
+      `UPDATE peticion SET estado = ? WHERE id = ?`,
+      [estado, id]
+    );
+  } finally {
+    connection.release();
+  }
+}
+
+module.exports = { crear, obtenerPorUsuarioYAnimal, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado };

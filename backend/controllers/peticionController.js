@@ -1,4 +1,5 @@
 const peticionModel = require('../models/peticionModel');
+const protectoraModel = require('../models/protectoraModel');
 
 async function crearPeticion(req, res) {
   try {
@@ -42,4 +43,37 @@ async function listarPeticionesUsuario(req, res) {
   }
 }
 
-module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario };
+async function listarPeticionesProtectora(req, res) {
+  try {
+    const usuario_id = req.user.id;
+    const protectora = await protectoraModel.obtenerPorUsuarioId(usuario_id);
+    if (!protectora) {
+      return res.status(404).json({ success: false, message: 'Protectora no encontrada' });
+    }
+    const peticiones = await peticionModel.obtenerPorProtectora(protectora.id);
+    res.status(200).json({ success: true, data: peticiones });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error listando peticiones' });
+  }
+}
+
+async function actualizarPeticion(req, res) {
+  try {
+    const { id } = req.params;
+    const { estado } = req.body;
+
+    if (!['aprobada', 'rechazada'].includes(estado)) {
+      return res.status(400).json({ success: false, message: 'Estado no válido' });
+    }
+
+    await peticionModel.actualizarEstado(id, estado);
+    res.status(200).json({ success: true, message: 'Petición actualizada' });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error actualizando petición' });
+  }
+}
+
+module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario,listarPeticionesProtectora,actualizarPeticion };

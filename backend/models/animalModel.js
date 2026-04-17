@@ -46,7 +46,7 @@ async function insertarMultiples(valores) {
   }
 }
 
-// 🔹 Obtener por ID
+// Obtener por ID
 async function obtenerPorId(id) {
   const connection = await db.getConnection();
   try {
@@ -60,20 +60,22 @@ async function obtenerPorId(id) {
   }
 }
 
-// 🔹 Crear
+// Crear un animal nuevo.
 async function crear(datos) {
   const connection = await db.getConnection();
   try {
     const [result] = await connection.execute(
       `INSERT INTO animal 
-       (protectora_id, nombre, tipo, genero, tamano, estado)
-       VALUES (?, ?, ?, ?, ?, 'disponible')`,
+       (protectora_id, nombre, especie, genero, tamano, estado, fecha_nacimiento, descripcion)
+       VALUES (?, ?, ?, ?, ?, 'disponible', ?, ?)`,
       [
         datos.protectora_id,
         datos.nombre,
-        datos.tipo,
-        datos.genero,
-        datos.tamano
+        datos.especie.toLowerCase(),
+        datos.genero.toLowerCase(),
+        datos.tamano.toLowerCase(),
+        datos.fecha_nacimiento || null,
+        datos.descripcion || null
       ]
     );
     return result.insertId;
@@ -82,20 +84,22 @@ async function crear(datos) {
   }
 }
 
-// 🔹 Actualizar
+// Actualizar datos de un animal
 async function actualizar(id, datos) {
   const connection = await db.getConnection();
   try {
     await connection.execute(
       `UPDATE animal 
-       SET nombre = ?, tipo = ?, genero = ?, tamano = ?, estado = ?
+       SET nombre = ?, especie = ?, genero = ?, tamano = ?, estado = ?, fecha_nacimiento = ?, descripcion = ?
        WHERE id = ?`,
       [
         datos.nombre,
-        datos.tipo,
-        datos.genero,
-        datos.tamano,
+        datos.especie.toLowerCase(),
+        datos.genero.toLowerCase(),
+        datos.tamano.toLowerCase(),
         datos.estado,
+        datos.fecha_nacimiento || null,
+        datos.descripcion || null,
         id
       ]
     );
@@ -104,7 +108,7 @@ async function actualizar(id, datos) {
   }
 }
 
-// 🔹 Eliminar
+// Eliminar un animal
 async function eliminar(id) {
   const connection = await db.getConnection();
   try {
@@ -168,9 +172,33 @@ async function obtenerPublicoPorId(id) {
   }
 }
 
+async function obtenerPorProtectoraId(protectora_id) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(`
+      SELECT 
+        a.id,
+        a.nombre,
+        CONCAT(UPPER(SUBSTRING(a.especie, 1, 1)), LOWER(SUBSTRING(a.especie, 2))) AS especie,
+        a.genero,
+        CONCAT(UPPER(SUBSTRING(a.tamano, 1, 1)), LOWER(SUBSTRING(a.tamano, 2))) AS tamano,
+        a.estado,
+        a.fecha_nacimiento,
+        a.descripcion
+      FROM animal a
+      WHERE a.protectora_id = ?
+      ORDER BY a.creado DESC
+    `, [protectora_id]);
+    return rows;
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   obtenerDisponibles,
   obtenerPorProtectora,
+  obtenerPorProtectoraId,
   obtenerPublicoPorId,
   insertarMultiples,
   obtenerPorId,
