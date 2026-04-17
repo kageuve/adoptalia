@@ -144,6 +144,18 @@ async function listarAnimalesProtectora(req, res) {
   }
 }
 
+async function subirImagen(req, res) {
+  try {
+    const { id } = req.params;
+    const imagen_url = `${process.env.BASE_URL}/uploads/imagenes/${req.file.filename}`;
+    await animalModel.actualizarImagen(id, imagen_url);
+    res.status(200).json({ success: true, imagen_url });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error subiendo imagen' });
+  }
+}
+
 module.exports = {
   listarAnimalesProtectora,
   listarAnimalesPublicos,
@@ -152,5 +164,6 @@ module.exports = {
   obtenerAnimal,
   crearAnimal,
   actualizarAnimal,
-  eliminarAnimal
+  eliminarAnimal,
+  subirImagen
 };

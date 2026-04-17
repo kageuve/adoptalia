@@ -91,6 +91,17 @@
         </label>
       </div>
 
+      <div class="imagen-upload" *ngIf="editandoId">
+        <span>Imagen del animal</span>
+        <div class="imagen-preview" *ngIf="imagenPreview">
+          <img [src]="imagenPreview" alt="Preview" />
+        </div>
+        <label class="secondary-btn" for="imagenInput">
+          Subir imagen
+          <input id="imagenInput" type="file" accept="image/*" (change)="subirImagen($event)" style="display:none" />
+        </label>
+      </div>
+
       <div class="form-actions">
         <button class="secondary-btn" type="button" (click)="cancelarEdicion()">Cancelar</button>
         <button class="primary-btn" type="submit">
@@ -101,6 +112,7 @@
 
     <div class="table-card">
       <div class="table-row table-head">
+        <span>Imagen</span>
         <span>Animal</span>
         <span>Detalles</span>
         <span>Estado</span>
@@ -108,10 +120,13 @@
       </div>
 
       <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
+        <div>
+          <img *ngIf="animal.imagen_url" [src]="animal.imagen_url" [alt]="animal.nombre" class="animal-img">
+          <div *ngIf="!animal.imagen_url" class="no-img">Sin foto</div>
+        </div>
         <span class="animal-name">{{ animal.nombre }}</span>
         <span>{{ animal.especie }} · {{ animal.genero }} · {{ animal.tamano }}</span>
         <span [class]="getBadgeClass(animal.estado)">{{ animal.estado }}</span>
-
         <div class="row-actions">
           <button class="ghost-btn" type="button" (click)="editarAnimal(animal)">Editar</button>
           <button class="danger-btn" type="button" (click)="eliminarAnimal(animal.id)">Eliminar</button>

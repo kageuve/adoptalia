@@ -16,6 +16,7 @@ interface ShelterAnimal {
   tamano: string;
   fecha_nacimiento?: string | null;
   descripcion?: string | null;
+  imagen_url?: string | null;
 }
 
 interface ShelterRequest {
@@ -37,6 +38,7 @@ export class ShelterPanel implements OnInit {
 
   mostrarFormulario = false;
   editandoId: number | null = null;
+  imagenPreview: string | null = null;
   readonly animalForm;
 
   animales: ShelterAnimal[] = [];
@@ -50,7 +52,7 @@ export class ShelterPanel implements OnInit {
     private http: HttpClient,
     private authService: AuthService
   ) {
-    this.apiUrl=environment.apiUrl;
+    this.apiUrl = environment.apiUrl;
     this.animalForm = this.fb.group({
       nombre: ['', Validators.required],
       especie: ['Perro', Validators.required],
@@ -128,21 +130,22 @@ export class ShelterPanel implements OnInit {
     }
   }
 
-editarAnimal(animal: ShelterAnimal): void {
-  this.editandoId = animal.id;
-  this.mostrarFormulario = true;
-  this.animalForm.patchValue({
-    nombre: animal.nombre,
-    especie: animal.especie,
-    genero: animal.genero,
-    tamano: animal.tamano,
-    estado: animal.estado,
-    fecha_nacimiento: animal.fecha_nacimiento 
-      ? animal.fecha_nacimiento.split('T')[0] 
-      : null,
-    descripcion: animal.descripcion ?? ''
-  });
-}
+  editarAnimal(animal: ShelterAnimal): void {
+    this.editandoId = animal.id;
+    this.mostrarFormulario = true;
+    this.imagenPreview = animal.imagen_url ?? null;
+    this.animalForm.patchValue({
+      nombre: animal.nombre,
+      especie: animal.especie,
+      genero: animal.genero,
+      tamano: animal.tamano,
+      estado: animal.estado,
+      fecha_nacimiento: animal.fecha_nacimiento
+        ? animal.fecha_nacimiento.split('T')[0]
+        : null,
+      descripcion: animal.descripcion ?? ''
+    });
+  }
 
   eliminarAnimal(id: number): void {
     this.animalsService.eliminarAnimal(id).subscribe({
@@ -167,6 +170,7 @@ editarAnimal(animal: ShelterAnimal): void {
   cancelarEdicion(): void {
     this.editandoId = null;
     this.mostrarFormulario = false;
+    this.imagenPreview = null;
     this.animalForm.reset({
       nombre: '',
       especie: 'Perro',
@@ -187,23 +191,44 @@ editarAnimal(animal: ShelterAnimal): void {
   }
 
   importarCSV(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input.files?.length) return;
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-  const formData = new FormData();
-  formData.append('archivo', input.files[0]);
+    const formData = new FormData();
+    formData.append('archivo', input.files[0]);
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.authService.getToken()}`
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`
+    });
 
-  this.http.post<any>(`${this.apiUrl}/import/subir-csv`, formData, { headers }).subscribe({
-    next: (res) => {
-      alert(`Importación completada: ${res.insertados} animales añadidos`);
-      this.animalsService.getAnimalesProtectora().subscribe(data => this.animales = data);
-    },
-    error: (err) => console.error('Error importando CSV:', err)
-  });
-}
+    this.http.post<any>(`${this.apiUrl}/import/subir-csv`, formData, { headers }).subscribe({
+      next: (res) => {
+        alert(`Importación completada: ${res.insertados} animales añadidos`);
+        this.animalsService.getAnimalesProtectora().subscribe(data => this.animales = data);
+      },
+      error: (err) => console.error('Error importando CSV:', err)
+    });
+  }
 
+  subirImagen(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length || !this.editandoId) return;
+
+    const formData = new FormData();
+    formData.append('imagen', input.files[0]);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.getToken()}`
+    });
+
+    this.http.post<any>(`${this.apiUrl}/animales/${this.editandoId}/imagen`, formData, { headers }).subscribe({
+      next: (res) => {
+        this.imagenPreview = res.imagen_url;
+        this.animales = this.animales.map(a =>
+          a.id === this.editandoId ? { ...a, imagen_url: res.imagen_url } : a
+        );
+      },
+      error: (err) => console.error('Error subiendo imagen:', err)
+    });
+  }
 }

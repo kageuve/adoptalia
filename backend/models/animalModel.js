@@ -111,13 +111,30 @@ async function actualizar(id, datos) {
 }
 
 // Eliminar un animal
+const fs = require('fs');
+const path = require('path');
+
 async function eliminar(id) {
   const connection = await db.getConnection();
   try {
-    await connection.execute(
-      `DELETE FROM animal WHERE id = ?`,
-      [id]
+    // Obtener imagen antes de eliminar
+    const [rows] = await connection.execute(
+      `SELECT imagen_url FROM animal WHERE id = ?`, [id]
     );
+
+    await connection.execute(
+      `DELETE FROM animal WHERE id = ?`, [id]
+    );
+
+    // Borrar imagen si existe
+    if (rows[0]?.imagen_url) {
+      const filename = path.basename(rows[0].imagen_url);
+      const filePath = path.join(__dirname, '../public/uploads/imagenes', filename);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
   } finally {
     connection.release();
   }
@@ -186,12 +203,25 @@ async function obtenerPorProtectoraId(protectora_id) {
         CONCAT(UPPER(SUBSTRING(a.tamano, 1, 1)), LOWER(SUBSTRING(a.tamano, 2))) AS tamano,
         a.estado,
         a.fecha_nacimiento,
-        a.descripcion
+        a.descripcion,
+        a.imagen_url
       FROM animal a
       WHERE a.protectora_id = ?
       ORDER BY a.creado DESC
     `, [protectora_id]);
     return rows;
+  } finally {
+    connection.release();
+  }
+}
+
+async function actualizarImagen(id, imagen_url) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(
+      `UPDATE animal SET imagen_url = ? WHERE id = ?`,
+      [imagen_url, id]
+    );
   } finally {
     connection.release();
   }
@@ -206,5 +236,6 @@ module.exports = {
   obtenerPorId,
   crear,
   actualizar,
-  eliminar
+  eliminar,
+  actualizarImagen
 };
