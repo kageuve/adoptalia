@@ -44,9 +44,12 @@
     </div>
 
     <div class="ficha-acciones">
-      <button class="btn-adoptar" *ngIf="authService.isLoggedIn() && animal.estado === 'disponible'">
-        Solicitar adopción
-      </button>
+      <ng-container *ngIf="authService.isLoggedIn() && animal?.estado === 'disponible'">
+        <button class="btn-adoptar" (click)="solicitarAdopcion()" [disabled]="solicitudEnviada">
+          {{ solicitudEnviada ? '✓ Solicitud enviada' : 'Solicitar adopción' }}
+        </button>
+        <p class="error-solicitud" *ngIf="errorSolicitud">Ha ocurrido un error, inténtalo de nuevo.</p>
+      </ng-container>
       <p class="aviso-login" *ngIf="!authService.isLoggedIn()">
         <a routerLink="/login">Inicia sesión</a> para solicitar la adopción
       </p>

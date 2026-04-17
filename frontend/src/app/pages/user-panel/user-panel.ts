@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { PeticionService } from '../../services/peticion.service';
 
 interface AdoptionRequest {
   id: number;
@@ -26,35 +27,11 @@ interface FavoriteAnimal {
   templateUrl: './user-panel.html',
   styleUrl: './user-panel.scss'
 })
-export class UserPanel {
+export class UserPanel implements OnInit {
+
   readonly usuarioEmail: string;
 
-  readonly solicitudes: AdoptionRequest[] = [
-    {
-      id: 1,
-      animal: 'Luna',
-      protectora: 'Huellas Felices',
-      fecha: '10 abr 2026',
-      estado: 'pendiente',
-      mensaje: 'Hemos recibido tu solicitud y la protectora la está revisando.'
-    },
-    {
-      id: 2,
-      animal: 'Simba',
-      protectora: 'Animal Love',
-      fecha: '07 abr 2026',
-      estado: 'aprobada',
-      mensaje: 'Tu entrevista ha sido validada. La protectora se pondrá en contacto contigo.'
-    },
-    {
-      id: 3,
-      animal: 'Thor',
-      protectora: 'Protección Animal Norte',
-      fecha: '01 abr 2026',
-      estado: 'rechazada',
-      mensaje: 'La protectora ha decidido continuar con otro perfil para esta adopción.'
-    }
-  ];
+  solicitudes: AdoptionRequest[] = [];
 
   readonly favoritos: FavoriteAnimal[] = [
     {
@@ -73,12 +50,28 @@ export class UserPanel {
     }
   ];
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private peticionService: PeticionService) {
     this.usuarioEmail = this.authService.getEmail() ?? 'adoptante@adoptalia.com';
   }
 
+  ngOnInit(): void {
+    this.peticionService.getMisPeticiones().subscribe({
+      next: (data) => {
+        this.solicitudes = data.map(p => ({
+          id: p.id,
+          animal: p.animal,
+          protectora: p.protectora,
+          fecha: new Date(p.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
+          estado: p.estado,
+          mensaje: p.mensaje || ''
+        }));
+      },
+      error: (err) => console.error('Error cargando peticiones:', err)
+    });
+  }
+
   get solicitudesPendientes(): number {
-    return this.solicitudes.filter((solicitud) => solicitud.estado === 'pendiente').length;
+    return this.solicitudes.filter(s => s.estado === 'pendiente').length;
   }
 
   trackById(_: number, item: { id: number }): number {
