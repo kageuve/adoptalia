@@ -28,9 +28,15 @@
         <h2>Mis animales</h2>
       </div>
 
-      <button class="primary-btn" type="button" (click)="toggleFormulario()">
-        {{ mostrarFormulario ? 'Cerrar formulario' : 'Añadir animal' }}
-      </button>
+      <div class="section-actions">
+        <button class="primary-btn" type="button" (click)="toggleFormulario()">
+          {{ mostrarFormulario ? 'Cerrar formulario' : 'Añadir animal' }}
+        </button>
+        <label class="secondary-btn" for="csvInput">
+          Importar CSV
+          <input id="csvInput" type="file" accept=".csv" (change)="importarCSV($event)" style="display:none" />
+        </label>
+      </div>
     </div>
 
     <form class="animal-form" *ngIf="mostrarFormulario" [formGroup]="animalForm" (ngSubmit)="guardarAnimal()">
@@ -83,7 +89,6 @@
           <span>Descripción</span>
           <input type="text" formControlName="descripcion" />
         </label>
-
       </div>
 
       <div class="form-actions">

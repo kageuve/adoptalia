@@ -66,16 +66,18 @@ async function crear(datos) {
   try {
     const [result] = await connection.execute(
       `INSERT INTO animal 
-       (protectora_id, nombre, especie, genero, tamano, estado, fecha_nacimiento, descripcion)
-       VALUES (?, ?, ?, ?, ?, 'disponible', ?, ?)`,
+       (protectora_id, nombre, especie, raza, genero, tamano, fecha_nacimiento, descripcion, estado)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         datos.protectora_id,
         datos.nombre,
         datos.especie.toLowerCase(),
+        datos.raza || null,
         datos.genero.toLowerCase(),
         datos.tamano.toLowerCase(),
         datos.fecha_nacimiento || null,
-        datos.descripcion || null
+        datos.descripcion || null,
+        datos.estado || 'disponible'
       ]
     );
     return result.insertId;

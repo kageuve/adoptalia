@@ -225,6 +225,16 @@ select {
   margin: 0;
 }
 
+.section-actions {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.section-actions label {
+  cursor: pointer;
+}
+
 @media (max-width: 960px) {
   .dashboard-shell {
     padding: var(--space-md);
@@ -254,3 +264,5 @@ select {
     align-items: start;
   }
 }
+
+

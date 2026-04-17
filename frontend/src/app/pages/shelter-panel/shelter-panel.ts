@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PeticionService } from '../../services/peticion.service';
 import { AnimalsService } from '../../services/animals.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 interface ShelterAnimal {
   id: number;
@@ -38,12 +41,16 @@ export class ShelterPanel implements OnInit {
 
   animales: ShelterAnimal[] = [];
   solicitudes: ShelterRequest[] = [];
+  private apiUrl: string;
 
   constructor(
     private fb: FormBuilder,
     private peticionService: PeticionService,
-    private animalsService: AnimalsService
+    private animalsService: AnimalsService,
+    private http: HttpClient,
+    private authService: AuthService
   ) {
+    this.apiUrl=environment.apiUrl;
     this.animalForm = this.fb.group({
       nombre: ['', Validators.required],
       especie: ['Perro', Validators.required],
@@ -178,4 +185,25 @@ editarAnimal(animal: ShelterAnimal): void {
   getBadgeClass(estado: string): string {
     return `badge badge-${estado}`;
   }
+
+  importarCSV(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) return;
+
+  const formData = new FormData();
+  formData.append('archivo', input.files[0]);
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.authService.getToken()}`
+  });
+
+  this.http.post<any>(`${this.apiUrl}/import/subir-csv`, formData, { headers }).subscribe({
+    next: (res) => {
+      alert(`Importación completada: ${res.insertados} animales añadidos`);
+      this.animalsService.getAnimalesProtectora().subscribe(data => this.animales = data);
+    },
+    error: (err) => console.error('Error importando CSV:', err)
+  });
+}
+
 }

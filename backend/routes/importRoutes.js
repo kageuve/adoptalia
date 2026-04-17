@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname))
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Ruta protegida para subir CSV (solo protectoras)
 router.post(
