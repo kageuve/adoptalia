@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS adoptalia;
-CREATE DATABASE adoptalia CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE adoptalia;
+DROP DATABASE IF EXISTS adoptalia_db;
+CREATE DATABASE adoptalia_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE adoptalia_db;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
