@@ -1,4 +1,5 @@
 const animalModel = require('../models/animalModel');
+const protectoraModel = require('../models/protectoraModel');
 
 //  LISTAR
 async function listarAnimales(req, res) {
@@ -53,26 +54,22 @@ async function obtenerAnimal(req, res) {
   }
 }
 
-//  CREAR
+//  CREAR un animal
 async function crearAnimal(req, res) {
   try {
-    const id = await animalModel.crear(req.body);
-
-    res.status(201).json({
-      success: true,
-      message: "Animal creado",
-      id
-    });
-
+    const protectora = await protectoraModel.obtenerPorUsuarioId(req.user.id);
+    if (!protectora) {
+      return res.status(404).json({ success: false, message: 'Protectora no encontrada' });
+    }
+    const id = await animalModel.crear({ ...req.body, protectora_id: protectora.id });
+    res.status(201).json({ success: true, message: 'Animal creado', id });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error creando animal"
-    });
+    console.error('Error creando animal:', error.message, error.sqlMessage);
+    res.status(500).json({ success: false, message: 'Error creando animal' });
   }
 }
 
-//  ACTUALIZAR
+//  ACTUALIZAR un animal
 async function actualizarAnimal(req, res) {
   try {
     await animalModel.actualizar(req.params.id, req.body);
@@ -90,7 +87,7 @@ async function actualizarAnimal(req, res) {
   }
 }
 
-//  ELIMINAR
+//  ELIMINAR un animal
 async function eliminarAnimal(req, res) {
   try {
     await animalModel.eliminar(req.params.id);
@@ -132,7 +129,23 @@ async function obtenerAnimalPublico(req, res) {
   }
 }
 
+async function listarAnimalesProtectora(req, res) {
+  try {
+    const usuario_id = req.user.id;
+    const protectora = await protectoraModel.obtenerPorUsuarioId(usuario_id);
+    if (!protectora) {
+      return res.status(404).json({ success: false, message: 'Protectora no encontrada' });
+    }
+    const animales = await animalModel.obtenerPorProtectoraId(protectora.id);
+    res.status(200).json({ success: true, data: animales });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error listando animales' });
+  }
+}
+
 module.exports = {
+  listarAnimalesProtectora,
   listarAnimalesPublicos,
   obtenerAnimalPublico,
   listarAnimales,

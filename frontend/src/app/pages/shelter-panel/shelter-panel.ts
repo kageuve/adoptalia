@@ -1,7 +1,8 @@
-
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PeticionService } from '../../services/peticion.service';
+import { AnimalsService } from '../../services/animals.service';
 
 interface ShelterAnimal {
   id: number;
@@ -10,6 +11,8 @@ interface ShelterAnimal {
   estado: 'disponible' | 'reservado' | 'adoptado';
   genero: string;
   tamano: string;
+  fecha_nacimiento?: string | null;
+  descripcion?: string | null;
 }
 
 interface ShelterRequest {
@@ -27,30 +30,50 @@ interface ShelterRequest {
   templateUrl: './shelter-panel.html',
   styleUrl: './shelter-panel.scss'
 })
-export class ShelterPanel {
+export class ShelterPanel implements OnInit {
+
   mostrarFormulario = false;
   editandoId: number | null = null;
   readonly animalForm;
 
-  animales: ShelterAnimal[] = [
-    { id: 1, nombre: 'Luna', especie: 'Perro', estado: 'disponible', genero: 'Hembra', tamano: 'Grande' },
-    { id: 2, nombre: 'Nala', especie: 'Gato', estado: 'reservado', genero: 'Hembra', tamano: 'Pequeño' },
-    { id: 3, nombre: 'Rocky', especie: 'Perro', estado: 'adoptado', genero: 'Macho', tamano: 'Mediano' }
-  ];
+  animales: ShelterAnimal[] = [];
+  solicitudes: ShelterRequest[] = [];
 
-  solicitudes: ShelterRequest[] = [
-    { id: 1, animal: 'Luna', adoptante: 'lucia@email.com', fecha: '11 abr 2026', estado: 'pendiente' },
-    { id: 2, animal: 'Nala', adoptante: 'jose@email.com', fecha: '09 abr 2026', estado: 'aprobada' },
-    { id: 3, animal: 'Rocky', adoptante: 'ana@email.com', fecha: '05 abr 2026', estado: 'rechazada' }
-  ];
-
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private peticionService: PeticionService,
+    private animalsService: AnimalsService
+  ) {
     this.animalForm = this.fb.group({
       nombre: ['', Validators.required],
       especie: ['Perro', Validators.required],
       genero: ['Hembra', Validators.required],
       tamano: ['Mediano', Validators.required],
-      estado: ['disponible', Validators.required]
+      estado: ['disponible', Validators.required],
+      fecha_nacimiento: [null as string | null],
+      descripcion: ['']
+    });
+  }
+
+  ngOnInit(): void {
+    this.animalsService.getAnimalesProtectora().subscribe({
+      next: (data) => {
+        this.animales = data;
+      },
+      error: (err) => console.error('Error cargando animales:', err)
+    });
+
+    this.peticionService.getPeticionesProtectora().subscribe({
+      next: (data) => {
+        this.solicitudes = data.map(p => ({
+          id: p.id,
+          animal: p.animal,
+          adoptante: p.adoptante,
+          fecha: new Date(p.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
+          estado: p.estado
+        }));
+      },
+      error: (err) => console.error('Error cargando solicitudes:', err)
     });
   }
 
@@ -64,7 +87,6 @@ export class ShelterPanel {
 
   toggleFormulario(): void {
     this.mostrarFormulario = !this.mostrarFormulario;
-
     if (!this.mostrarFormulario) {
       this.cancelarEdicion();
     }
@@ -76,36 +98,63 @@ export class ShelterPanel {
       return;
     }
 
-    const animal = this.animalForm.getRawValue() as Omit<ShelterAnimal, 'id'>;
+    const animal = this.animalForm.getRawValue() as ShelterAnimal;
 
     if (this.editandoId) {
-      this.animales = this.animales.map((item) =>
-        item.id === this.editandoId ? { ...item, ...animal } : item
-      );
+      this.animalsService.actualizarAnimal(this.editandoId, animal).subscribe({
+        next: () => {
+          this.animales = this.animales.map(item =>
+            item.id === this.editandoId ? { ...item, ...animal } : item
+          );
+          this.cancelarEdicion();
+        },
+        error: (err) => console.error('Error actualizando animal:', err)
+      });
     } else {
-      this.animales = [
-        { id: Date.now(), ...animal },
-        ...this.animales
-      ];
+      this.animalsService.crearAnimal(animal).subscribe({
+        next: (res) => {
+          this.animales = [{ ...animal, id: res.id }, ...this.animales];
+          this.cancelarEdicion();
+        },
+        error: (err) => console.error('Error creando animal:', err)
+      });
     }
-
-    this.cancelarEdicion();
   }
 
-  editarAnimal(animal: ShelterAnimal): void {
-    this.editandoId = animal.id;
-    this.mostrarFormulario = true;
-    this.animalForm.patchValue(animal);
-  }
+editarAnimal(animal: ShelterAnimal): void {
+  this.editandoId = animal.id;
+  this.mostrarFormulario = true;
+  this.animalForm.patchValue({
+    nombre: animal.nombre,
+    especie: animal.especie,
+    genero: animal.genero,
+    tamano: animal.tamano,
+    estado: animal.estado,
+    fecha_nacimiento: animal.fecha_nacimiento 
+      ? animal.fecha_nacimiento.split('T')[0] 
+      : null,
+    descripcion: animal.descripcion ?? ''
+  });
+}
 
   eliminarAnimal(id: number): void {
-    this.animales = this.animales.filter((animal) => animal.id !== id);
+    this.animalsService.eliminarAnimal(id).subscribe({
+      next: () => {
+        this.animales = this.animales.filter(animal => animal.id !== id);
+      },
+      error: (err) => console.error('Error eliminando animal:', err)
+    });
   }
 
   actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
-    this.solicitudes = this.solicitudes.map((solicitud) =>
-      solicitud.id === id ? { ...solicitud, estado } : solicitud
-    );
+    this.peticionService.actualizarPeticion(id, estado).subscribe({
+      next: () => {
+        this.solicitudes = this.solicitudes.map(s =>
+          s.id === id ? { ...s, estado } : s
+        );
+      },
+      error: (err) => console.error('Error actualizando solicitud:', err)
+    });
   }
 
   cancelarEdicion(): void {
@@ -116,7 +165,9 @@ export class ShelterPanel {
       especie: 'Perro',
       genero: 'Hembra',
       tamano: 'Mediano',
-      estado: 'disponible'
+      estado: 'disponible',
+      fecha_nacimiento: null,
+      descripcion: ''
     });
   }
 

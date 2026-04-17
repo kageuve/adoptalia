@@ -36,4 +36,19 @@ getMisPeticiones(): Observable<any[]> {
     .pipe(map(res => res.data));
 }
 
+getPeticionesProtectora(): Observable<any[]> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.get<{ success: boolean; data: any[] }>(`${this.apiUrl}/peticiones/protectora`, { headers })
+    .pipe(map(res => res.data));
+}
+
+actualizarPeticion(id: number, estado: 'aprobada' | 'rechazada'): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.put(`${this.apiUrl}/peticiones/${id}`, { estado }, { headers });
+}
+
 }

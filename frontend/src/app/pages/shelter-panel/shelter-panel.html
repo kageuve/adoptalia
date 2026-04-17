@@ -51,8 +51,8 @@
         <label>
           <span>Género</span>
           <select formControlName="genero">
-            <option>Hembra</option>
-            <option>Macho</option>
+            <option>hembra</option>
+            <option>macho</option>
           </select>
         </label>
 
@@ -73,6 +73,17 @@
             <option value="adoptado">Adoptado</option>
           </select>
         </label>
+
+        <label>
+          <span>Fecha de nacimiento</span>
+          <input type="date" formControlName="fecha_nacimiento" />
+        </label>
+
+        <label>
+          <span>Descripción</span>
+          <input type="text" formControlName="descripcion" />
+        </label>
+
       </div>
 
       <div class="form-actions">
