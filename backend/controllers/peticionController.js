@@ -76,4 +76,15 @@ async function actualizarPeticion(req, res) {
   }
 }
 
-module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario,listarPeticionesProtectora,actualizarPeticion };
+async function cancelarPeticion(req, res) {
+  try {
+    const { id } = req.params;
+    await peticionModel.eliminar(id);
+    res.status(200).json({ success: true, message: 'Petición cancelada' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error cancelando petición' });
+  }
+}
+
+module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario, listarPeticionesProtectora, actualizarPeticion, cancelarPeticion };

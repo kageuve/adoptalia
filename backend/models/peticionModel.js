@@ -33,6 +33,7 @@ async function obtenerPorUsuario(usuario_id) {
       SELECT 
         p.id,
         a.nombre AS animal,
+        a.imagen_url AS imagen,
         pr.nombre AS protectora,
         p.estado,
         p.creado AS fecha,
@@ -85,4 +86,13 @@ async function actualizarEstado(id, estado) {
   }
 }
 
-module.exports = { crear, obtenerPorUsuarioYAnimal, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado };
+async function eliminar(id) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(`DELETE FROM peticion WHERE id = ?`, [id]);
+  } finally {
+    connection.release();
+  }
+}
+
+module.exports = { crear, obtenerPorUsuarioYAnimal, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar };

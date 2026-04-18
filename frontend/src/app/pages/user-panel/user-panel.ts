@@ -6,6 +6,7 @@ import { PeticionService } from '../../services/peticion.service';
 interface AdoptionRequest {
   id: number;
   animal: string;
+  imagen: string | null;
   protectora: string;
   fecha: string;
   estado: 'pendiente' | 'aprobada' | 'rechazada';
@@ -60,6 +61,7 @@ export class UserPanel implements OnInit {
         this.solicitudes = data.map(p => ({
           id: p.id,
           animal: p.animal,
+          imagen: p.imagen || null,
           protectora: p.protectora,
           fecha: new Date(p.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
           estado: p.estado,
@@ -81,4 +83,14 @@ export class UserPanel implements OnInit {
   getBadgeClass(estado: AdoptionRequest['estado']): string {
     return `badge badge-${estado}`;
   }
+
+  cancelarSolicitud(id: number): void {
+  this.peticionService.cancelarPeticion(id).subscribe({
+    next: () => {
+      this.solicitudes = this.solicitudes.filter(s => s.id !== id);
+    },
+    error: (err) => console.error('Error cancelando solicitud:', err)
+  });
+}
+
 }

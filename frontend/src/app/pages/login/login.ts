@@ -83,9 +83,9 @@ onLogin() {
   this.authService.login(email, password).subscribe({
     next: (res) => {
       if (res.rol === 'protectora') {
-        this.router.navigate(['/protectoras']);
+        this.router.navigate(['/panel-protectora']);
       } else {
-        this.router.navigate(['/']);
+        this.router.navigate(['/adoptar']);
       }
     },
     error: (err) => {

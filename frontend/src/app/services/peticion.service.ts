@@ -51,4 +51,11 @@ actualizarPeticion(id: number, estado: 'aprobada' | 'rechazada'): Observable<any
   return this.http.put(`${this.apiUrl}/peticiones/${id}`, { estado }, { headers });
 }
 
+cancelarPeticion(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${this.authService.getToken()}`
+  });
+  return this.http.delete(`${this.apiUrl}/peticiones/${id}`, { headers });
+}
+
 }
