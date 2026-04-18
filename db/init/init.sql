@@ -139,4 +139,23 @@ CREATE TABLE peticion (
     ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+-- ======================
+-- TABLA FAVORITO
+-- ======================
+
+CREATE TABLE favorito (
+  id INT NOT NULL AUTO_INCREMENT,
+  usuario_id INT NOT NULL,
+  animal_id INT NOT NULL,
+  creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY unico_favorito (usuario_id, animal_id),
+  CONSTRAINT fk_favorito_usuario
+    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_favorito_animal
+    FOREIGN KEY (animal_id) REFERENCES animal(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
 COMMIT;

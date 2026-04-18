@@ -4,7 +4,7 @@ const userModel = require('../models/userModel');
 
 const SECRET = process.env.JWT_SECRET;
 
-// 🔹 Registro
+// Registro
 async function register(req, res) {
   try {
     const { email, password, rol } = req.body;
@@ -32,7 +32,7 @@ async function register(req, res) {
   }
 }
 
-// 🔹 Login
+// Login
 async function login(req, res) {
   try {
     const { email, password } = req.body;

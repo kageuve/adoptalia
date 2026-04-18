@@ -11,7 +11,8 @@ router.get('/comprobar/:animal_id', verificarToken, peticionController.comprobar
 router.get('/mis-peticiones', verificarToken, peticionController.listarPeticionesUsuario);
 router.get('/protectora', verificarToken, peticionController.listarPeticionesProtectora);
 
-//PUTS
+//OTROS
 router.put('/:id', verificarToken, peticionController.actualizarPeticion);
+router.delete('/:id', verificarToken, peticionController.cancelarPeticion);
 
 module.exports = router;

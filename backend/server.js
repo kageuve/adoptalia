@@ -18,6 +18,7 @@ const authRoutes = require('./routes/authRoutes');
 const importRoutes = require('./routes/importRoutes');
 const protectoraRoutes = require('./routes/protectoraRoutes');
 const peticionRoutes = require('./routes/peticionRoutes');
+const favoritoRoutes = require('./routes/favoritoRoutes');
 
 // Montar rutas
 app.use('/api/animales', animalRoutes);
@@ -25,6 +26,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/import', importRoutes);
 app.use('/api/protectoras', protectoraRoutes);
 app.use('/api/peticiones', peticionRoutes);
+app.use('/api/favoritos', favoritoRoutes);
 
 // Ruta test
 app.get('/api/test', (req, res) => {

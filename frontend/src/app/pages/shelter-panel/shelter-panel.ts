@@ -27,6 +27,7 @@ interface ShelterRequest {
   estado: 'pendiente' | 'aprobada' | 'rechazada';
 }
 
+
 @Component({
   selector: 'app-shelter-panel',
   standalone: true,
@@ -44,6 +45,7 @@ export class ShelterPanel implements OnInit {
   animales: ShelterAnimal[] = [];
   solicitudes: ShelterRequest[] = [];
   private apiUrl: string;
+  protectora: any = null;
 
   constructor(
     private fb: FormBuilder,
@@ -84,6 +86,14 @@ export class ShelterPanel implements OnInit {
       },
       error: (err) => console.error('Error cargando solicitudes:', err)
     });
+
+    this.http.get<any>(`${this.apiUrl}/protectoras/mi-protectora`, { headers: new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` }) }).subscribe({
+  next: (res) => {
+    this.protectora = res.data;
+  },
+  error: (err) => console.error('Error cargando protectora:', err)
+});
+
   }
 
   get totalAnimales(): number {

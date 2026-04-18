@@ -9,7 +9,7 @@ async function crearProtectora(datos) {
 
     await connection.beginTransaction();
 
-    // 🔐 Hashear contraseña
+    // Hashear contraseña
     const hash = await bcrypt.hash(datos.password, 10);
 
     const [usuarioResult] = await connection.execute(

@@ -1,7 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AnimalsService } from '../../services/animals.service';
 
 @Component({
@@ -22,11 +22,24 @@ export class FilterBar implements OnInit {
 
   provincias: string[] = [];
 
-  constructor(private animalsService: AnimalsService, private router: Router) {}
+  constructor(
+    private animalsService: AnimalsService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.animalsService.getAnimals().subscribe(animales => {
       this.provincias = [...new Set(animales.map(a => a.provincia))].sort();
+    });
+
+    this.route.queryParams.subscribe(params => {
+      this.filtros = {
+        especie: params['especie'] || '',
+        provincia: params['provincia'] || '',
+        tamano: params['tamano'] || '',
+        edad: params['edad'] || ''
+      };
     });
   }
 

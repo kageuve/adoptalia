@@ -2,10 +2,8 @@
   <div class="dashboard-hero">
     <div>
       <span class="eyebrow">Panel protectora</span>
-      <h1>Gestiona tu actividad diaria</h1>
-      <p>
-        Controla tus animales, revisa solicitudes y mantén el refugio organizado desde un mismo panel.
-      </p>
+      <h1>{{ protectora?.nombre || 'Mi protectora' }}</h1>
+      <p>{{ protectora?.descripcion || 'Gestiona tu actividad diaria.' }}</p>
     </div>
 
     <div class="metrics-grid">
@@ -119,10 +117,10 @@
         <span>Acciones</span>
       </div>
 
-    <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
-      <div>
-        <img [src]="animal.imagen_url || '/img/no-image.png'" [alt]="animal.nombre" class="animal-img">
-      </div>
+      <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
+        <div>
+          <img [src]="animal.imagen_url || '/img/no.image.png'" [alt]="animal.nombre" class="animal-img">
+        </div>
         <span class="animal-name">{{ animal.nombre }}</span>
         <span>{{ animal.especie }} · {{ animal.genero }} · {{ animal.tamano }}</span>
         <span [class]="getBadgeClass(animal.estado)">{{ animal.estado }}</span>

@@ -1,8 +1,8 @@
 <section class="panel">
   <div class="header">
     <div>
-      <span class="label">Adopter panel</span>
-      <h1>Mi panel en Adoptalia</h1>
+      <span class="label">Panel de Adoptante</span>
+      <h1>{{ usuarioEmail }}</h1>
       <p>
         Revisa tus solicitudes y lleva un seguimiento de tus animales favoritos.
       </p>
@@ -35,33 +35,38 @@
   <section class="section">
     <div class="section-header">
       <div>
-        <span class="label">Tracking</span>
-        <h2>My requests</h2>
+        <span class="label">Seguimiento</span>
+        <h2>Mis solicitudes</h2>
       </div>
     </div>
 
-    <div class="requests">
-      <article class="request-card" *ngFor="let solicitud of solicitudes; trackBy: trackById">
-        <div class="request-top">
-          <div>
-            <h3>{{ solicitud.animal }}</h3>
-            <p>{{ solicitud.protectora }} · {{ solicitud.fecha }}</p>
-          </div>
+    <div class="requests-table">
+      <div class="request-row request-row-head">
+        <span>Imagen</span>
+        <span>Animal</span>
+        <span>Protectora</span>
+        <span>Estado</span>
+        <span>Acciones</span>
+      </div>
 
-          <span [class]="getBadgeClass(solicitud.estado)">
-            {{ solicitud.estado }}
-          </span>
+      <div class="request-row" *ngFor="let solicitud of solicitudes; trackBy: trackById">
+        <img [src]="solicitud.imagen || '/img/no.image.png'" [alt]="solicitud.animal" class="request-img">
+        <span class="animal-name">{{ solicitud.animal }}</span>
+        <span>{{ solicitud.protectora }} · {{ solicitud.fecha }}</span>
+        <span [class]="getBadgeClass(solicitud.estado)">{{ solicitud.estado }}</span>
+        <div>
+          <button class="cancel-btn" *ngIf="solicitud.estado === 'pendiente'" (click)="cancelarSolicitud(solicitud.id)">
+            Cancelar
+          </button>
         </div>
-
-        <p class="request-text">{{ solicitud.mensaje }}</p>
-      </article>
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="section-header">
       <div>
-        <span class="label">Saved</span>
+        <span class="label">Guardados</span>
         <h2>Favorites</h2>
       </div>
     </div>
