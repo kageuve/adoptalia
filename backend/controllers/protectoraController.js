@@ -25,7 +25,21 @@ async function listarProtectoras(req, res) {
   }
 }
 
+async function obtenerMiProtectora(req, res) {
+  try {
+    const protectora = await protectoraModel.obtenerPorUsuarioId(req.user.id);
+    if (!protectora) {
+      return res.status(404).json({ success: false, message: 'Protectora no encontrada' });
+    }
+    res.status(200).json({ success: true, data: protectora });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error obteniendo protectora' });
+  }
+}
+
 module.exports = {
   registrarProtectora,
-  listarProtectoras
+  listarProtectoras,
+  obtenerMiProtectora
 };
