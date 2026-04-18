@@ -119,11 +119,10 @@
         <span>Acciones</span>
       </div>
 
-      <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
-        <div>
-          <img *ngIf="animal.imagen_url" [src]="animal.imagen_url" [alt]="animal.nombre" class="animal-img">
-          <div *ngIf="!animal.imagen_url" class="no-img">Sin foto</div>
-        </div>
+    <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
+      <div>
+        <img [src]="animal.imagen_url || '/img/no-image.png'" [alt]="animal.nombre" class="animal-img">
+      </div>
         <span class="animal-name">{{ animal.nombre }}</span>
         <span>{{ animal.especie }} · {{ animal.genero }} · {{ animal.tamano }}</span>
         <span [class]="getBadgeClass(animal.estado)">{{ animal.estado }}</span>
