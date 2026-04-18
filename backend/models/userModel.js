@@ -26,7 +26,34 @@ async function crearUsuario(email, passwordHash, rol) {
   }
 }
 
+async function obtenerPorId(id) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      'SELECT id, email, rol, imagen FROM usuario WHERE id = ?',
+      [id]
+    );
+    return rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
+async function actualizarImagen(id, imagen) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(
+      'UPDATE usuario SET imagen = ? WHERE id = ?',
+      [imagen, id]
+    );
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   obtenerPorEmail,
-  crearUsuario
+  crearUsuario,
+  obtenerPorId,
+  actualizarImagen
 };

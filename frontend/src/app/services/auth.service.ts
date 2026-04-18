@@ -23,6 +23,14 @@ export class AuthService {
     );
   }
 
+  registerUsuario(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, { email, password, rol: 'usuario' });
+  }
+
+  registerProtectora(datos: { email: string; password: string; nombre: string; cif: string; ciudad: string; telefono?: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/protectoras/registrar-protectora`, datos);
+  }
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');

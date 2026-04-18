@@ -109,38 +109,87 @@
 }
 
 .ficha-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+
   .btn-adoptar {
-    background: var(--color-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-button-tertiary));
     color: white;
     border: none;
-    padding: var(--space-md) var(--space-lg);
+    padding: 14px var(--space-lg);
     border-radius: var(--radius-lg);
     font-size: var(--font-md);
     font-weight: var(--font-bold);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all 0.2s ease;
     width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    &::before { content: '🐾'; }
 
     &:hover:not([disabled]) {
-      background: var(--color-button-secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
     }
 
     &[disabled] {
       background: var(--color-text-muted);
       cursor: not-allowed;
       opacity: 0.7;
+      transform: none;
+      box-shadow: none;
     }
+  }
+
+  .error-solicitud {
+    color: var(--color-error, #e74c3c);
+    font-size: var(--font-sm);
+    margin: 0;
   }
 
   .aviso-login {
     color: var(--color-text-muted);
     font-size: var(--font-sm);
+    text-align: center;
+    padding: var(--space-md);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--color-accent);
 
     a {
       color: var(--color-accent);
       text-decoration: none;
       font-weight: var(--font-bold);
     }
+  }
+}
+
+.btn-favorito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+  color: var(--color-primary-dark);
+  padding: 12px var(--space-lg);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-md);
+  font-weight: var(--font-bold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    background: var(--color-accent);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   }
 }
 

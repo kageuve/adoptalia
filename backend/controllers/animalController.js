@@ -156,7 +156,18 @@ async function subirImagen(req, res) {
   }
 }
 
+async function listarAnimalesAdoptados(req, res) {
+  try {
+    const animales = await animalModel.obtenerAdoptados();
+    res.status(200).json({ success: true, data: animales });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error listando animales adoptados' });
+  }
+}
+
 module.exports = {
+  listarAnimalesAdoptados,
   listarAnimalesProtectora,
   listarAnimalesPublicos,
   obtenerAnimalPublico,

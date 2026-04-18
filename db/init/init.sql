@@ -14,20 +14,22 @@ CREATE TABLE usuario (
   email VARCHAR(150) NOT NULL,
   password VARCHAR(255) NOT NULL,
   rol ENUM('administrador','protectora','usuario') NOT NULL,
+  imagen VARCHAR(255) NULL DEFAULT NULL,
   creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   UNIQUE KEY email (email)
 ) ENGINE=InnoDB;
 
-INSERT INTO usuario (id, email, password, rol) VALUES
-(3, 'test@correo.com', '$2b$10$wcOGlnmbO4vuGkoZ/73.ROvxx1jvRaZK/wsVYptwMnIjtcZkgGfay', 'usuario'),
-(4, 'pacoFoc@correo.com', '$2b$10$QekmjJI3X3GoH325ViMmL.F7JA3FBzocgMheyYjL7.wvI5XHfNcH6', 'usuario'),
-(5, 'info@huellasfelices.org', '$2b$10$nDLfip602oYTIb9/HyLTy.oiHGtIP1xBJaTgcUFxg/4VlsY7VYply', 'protectora'),
-(6, 'contacto@patitas.org', '$2b$10$nDLfip602oYTIb9/HyLTy.oiHGtIP1xBJaTgcUFxg/4VlsY7VYply', 'protectora'),
-(7, 'hola@animallove.org', '$2b$10$nDLfip602oYTIb9/HyLTy.oiHGtIP1xBJaTgcUFxg/4VlsY7VYply', 'protectora'),
-(8, 'info@esperanzaanimal.org', '$2b$10$nDLfip602oYTIb9/HyLTy.oiHGtIP1xBJaTgcUFxg/4VlsY7VYply', 'protectora'),
-(9, 'contacto@panorte.org', '$2b$10$nDLfip602oYTIb9/HyLTy.oiHGtIP1xBJaTgcUFxg/4VlsY7VYply', 'protectora');
+-- Contraseña de todos los usuarios de demo: password123
+INSERT INTO usuario (id, email, password, rol, imagen) VALUES
+(3, 'test@correo.com', '$2b$10$tWbBMiq8vEnPi1tokDtatO4EFu2wO2MR82lywTkpV6JQAmxnf3/22', 'usuario', NULL),
+(4, 'pacoFoc@correo.com', '$2b$10$heCW9S18Yzhi1K8qVicQA.F9KFZJTwMeWkLguALRiOqGZ6i3Uvl7m', 'usuario', NULL),
+(5, 'info@huellasfelices.org', '$2b$10$8fyCHkt.OP9M6iZftdV5KeAiy7nFRBZA04U6Uw6WILpjrdl03PO3.', 'protectora', NULL),
+(6, 'contacto@patitas.org', '$2b$10$/Aqq3yQscyNJkgxy5ew3PueHD0XcmdQwIPg1XhJ7fdmJPXLfQoTxC', 'protectora', NULL),
+(7, 'hola@animallove.org', '$2b$10$u9JtmnyTDKwGGVe7fCOA4uyNM.AAZ.gVtBiWajD0q325r6MZ00vam', 'protectora', NULL),
+(8, 'info@esperanzaanimal.org', '$2b$10$8fyCHkt.OP9M6iZftdV5KeAiy7nFRBZA04U6Uw6WILpjrdl03PO3.', 'protectora', NULL),
+(9, 'contacto@panorte.org', '$2b$10$/Aqq3yQscyNJkgxy5ew3PueHD0XcmdQwIPg1XhJ7fdmJPXLfQoTxC', 'protectora', NULL);
 
 -- ======================
 -- TABLA PROTECTORA
@@ -98,8 +100,8 @@ INSERT INTO animal (protectora_id, nombre, especie, raza, genero, tamano, fecha_
 (10, 'Thor', 'perro', 'Husky', 'macho', 'grande', '2022-01-01', 'disponible', 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Siberian_Husky_-_Mika.jpg'),
 (8, 'Simba', 'gato', 'Común Europeo', 'macho', 'pequeño', '2023-01-01', 'disponible', 'https://content.elmueble.com/medio/2022/06/07/gato-erik-jan-leusink-ibpxglgjimi-unsplash_21d35523_1280x853.jpg'),
 (6, 'Kira', 'perro', 'Border Collie', 'hembra', 'mediano', '2024-01-01', 'disponible', 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Argentine_border_collie.jpg'),
-(7, 'Leo', 'gato', 'Maine Coon', 'macho', 'mediano', '2021-01-01', 'disponible', 'https://static.wixstatic.com/media/2b6761_e1b03cf129f4472a8dd5997f55ba31dc~mv2.jpg/v1/fill/w_640,h_588,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/2b6761_e1b03cf129f4472a8dd5997f55ba31dc~mv2.jpg'),
-(8, 'Bruno', 'perro', 'Golden Retriever', 'macho', 'grande', '2019-01-01', 'disponible', 'https://www.zoomalia.com/blogz/4850/tout-savoir-sur-golden-retriever.jpeg');
+(7, 'Leo', 'gato', 'Maine Coon', 'macho', 'mediano', '2021-01-01', 'adoptado', 'https://static.wixstatic.com/media/2b6761_e1b03cf129f4472a8dd5997f55ba31dc~mv2.jpg/v1/fill/w_640,h_588,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/2b6761_e1b03cf129f4472a8dd5997f55ba31dc~mv2.jpg'),
+(8, 'Bruno', 'perro', 'Golden Retriever', 'macho', 'grande', '2019-01-01', 'adoptado', 'https://www.zoomalia.com/blogz/4850/tout-savoir-sur-golden-retriever.jpeg');
 
 -- ======================
 -- TABLA MEDIA

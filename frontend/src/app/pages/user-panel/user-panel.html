@@ -10,6 +10,15 @@
 
     <div class="card">
       <span class="card-label">Cuenta activa</span>
+
+      <div class="profile-img-wrapper">
+        <img [src]="imagenPerfil || '/img/avatar-default.png'" alt="Foto de perfil" class="profile-img" />
+        <label class="profile-img-btn" title="Cambiar foto">
+          <input type="file" accept="image/*" (change)="subirImagenPerfil($event)" style="display:none" />
+          ✏️
+        </label>
+      </div>
+
       <strong>{{ usuarioEmail }}</strong>
       <p>Toda tu actividad de adopción en un solo lugar.</p>
     </div>
@@ -67,12 +76,12 @@
     <div class="section-header">
       <div>
         <span class="label">Guardados</span>
-        <h2>Favorites</h2>
+        <h2>Mis favoritos</h2>
       </div>
     </div>
 
     <div class="favorites">
-      <article class="favorite-card" *ngFor="let favorito of favoritos; trackBy: trackById">
+      <article class="favorite-card" *ngFor="let favorito of favoritos; trackBy: trackById" [routerLink]="['/animal', favorito.id]" style="cursor:pointer">
         <div class="favorite-img">
           <img [src]="favorito.imagen" [alt]="favorito.nombre" />
         </div>

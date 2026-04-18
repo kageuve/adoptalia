@@ -5,6 +5,7 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || 'adoptalia_user',
   password: process.env.DB_PASSWORD || 'Ad0pt4l14@2620',
   database: process.env.DB_NAME || 'adoptalia_db',
+  charset: 'utf8mb4',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
