@@ -46,12 +46,12 @@
     <div class="ficha-acciones">
       <ng-container *ngIf="authService.isLoggedIn() && animal?.estado === 'disponible'">
         <button class="btn-adoptar" (click)="solicitarAdopcion()" [disabled]="solicitudEnviada">
-          {{ solicitudEnviada ? '✓ Solicitud enviada' : 'Solicitar adopción' }}
+          {{ solicitudEnviada ? 'Solicitud enviada ✓' : 'Solicitar adopción' }}
         </button>
         <p class="error-solicitud" *ngIf="errorSolicitud">Ha ocurrido un error, inténtalo de nuevo.</p>
       </ng-container>
       <button class="btn-favorito" *ngIf="authService.isLoggedIn()" (click)="toggleFavorito()">
-        {{ esFavorito ? '❤️ Quitar de favoritos' : '🤍 Añadir a favoritos' }}
+        {{ esFavorito ? 'Quitar de favoritos ❤️' : 'Añadir a favoritos 🤍' }}
       </button>
       <p class="aviso-login" *ngIf="!authService.isLoggedIn()">
         <a routerLink="/login">Inicia sesión</a> para solicitar la adopción
@@ -59,7 +59,7 @@
     </div>
 
     <div class="ficha-volver">
-      <a routerLink="/adoptar">← Volver a adoptar</a>
+      <a routerLink="/adoptar">← Volver a Adoptar</a>
     </div>
 
   </div>
@@ -72,5 +72,5 @@
 
 <div class="no-encontrado" *ngIf="!animal && !cargando">
   <p>Animal no encontrado.</p>
-  <a routerLink="/adoptar">← Volver a adoptar</a>
+  <a routerLink="/adoptar">← Volver a Adoptar</a>
 </div>
