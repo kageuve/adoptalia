@@ -51,9 +51,24 @@ async function actualizarImagen(id, imagen) {
   }
 }
 
+async function contarAdoptantes() {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      `SELECT COUNT(*) AS users
+       FROM usuario
+       WHERE rol = 'usuario'`
+    );
+    return rows[0].users;
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   obtenerPorEmail,
   crearUsuario,
   obtenerPorId,
-  actualizarImagen
+  actualizarImagen,
+  contarAdoptantes
 };

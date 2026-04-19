@@ -12,6 +12,7 @@ interface ShelterAnimal {
   id: number;
   nombre: string;
   especie: string;
+  raza?: string | null;
   estado: 'disponible' | 'reservado' | 'adoptado';
   genero: string;
   tamano: string;
@@ -60,6 +61,7 @@ export class ShelterPanel implements OnInit {
     this.animalForm = this.fb.group({
       nombre: ['', Validators.required],
       especie: ['Perro', Validators.required],
+      raza: [''],
       genero: ['Hembra', Validators.required],
       tamano: ['Mediano', Validators.required],
       estado: ['disponible', Validators.required],
@@ -149,6 +151,7 @@ export class ShelterPanel implements OnInit {
     this.animalForm.patchValue({
       nombre: animal.nombre,
       especie: animal.especie,
+      raza: animal.raza ?? '',
       genero: animal.genero,
       tamano: animal.tamano,
       estado: animal.estado,
@@ -187,6 +190,7 @@ actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
     this.animalForm.reset({
       nombre: '',
       especie: 'Perro',
+      raza: '',
       genero: 'Hembra',
       tamano: 'Mediano',
       estado: 'disponible',

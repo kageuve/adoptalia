@@ -21,6 +21,7 @@ export class FilterBar implements OnInit {
   };
 
   provincias: string[] = [];
+  esPaginaAdoptar = false;
 
   constructor(
     private animalsService: AnimalsService,
@@ -29,6 +30,8 @@ export class FilterBar implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.esPaginaAdoptar = this.router.url.startsWith('/adoptar');
+
     this.animalsService.getAnimals().subscribe(animales => {
       this.provincias = [...new Set(animales.map(a => a.provincia))].sort();
     });
@@ -47,8 +50,31 @@ export class FilterBar implements OnInit {
     this.router.navigate(['/adoptar'], { queryParams: this.filtros });
   }
 
+  hayFiltrosActivos(): boolean {
+    return Object.values(this.filtros).some(valor => !!valor);
+  }
+
+  limpiarFiltros() {
+    this.filtros = {
+      especie: '',
+      provincia: '',
+      tamano: '',
+      edad: ''
+    };
+
+    if (this.esPaginaAdoptar) {
+      this.aplicarFiltros();
+      return;
+    }
+
+    this.filtros = { ...this.filtros };
+  }
+
   onFiltrosChange() {
     this.filtros = { ...this.filtros };
+    if (this.esPaginaAdoptar) {
+      this.aplicarFiltros();
+    }
   }
 
   @Output() filtrosChange = new EventEmitter<any>();

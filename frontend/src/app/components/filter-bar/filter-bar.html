@@ -3,7 +3,7 @@
 
     <div class="filter-group">
       <label>Especie</label>
-      <select [(ngModel)]="filtros.especie">
+      <select [(ngModel)]="filtros.especie" (ngModelChange)="onFiltrosChange()">
         <option value="">Todas</option>
         <option value="Perro">Perro</option>
         <option value="Gato">Gato</option>
@@ -12,7 +12,7 @@
 
     <div class="filter-group">
       <label>Provincia</label>
-      <select [(ngModel)]="filtros.provincia">
+      <select [(ngModel)]="filtros.provincia" (ngModelChange)="onFiltrosChange()">
         <option value="">Todas</option>
         <option *ngFor="let provincia of provincias" [value]="provincia">{{ provincia }}</option>
       </select>
@@ -20,7 +20,7 @@
 
     <div class="filter-group">
       <label>Tamaño</label>
-      <select [(ngModel)]="filtros.tamano">
+      <select [(ngModel)]="filtros.tamano" (ngModelChange)="onFiltrosChange()">
         <option value="">Todos</option>
         <option value="Pequeño">Pequeño</option>
         <option value="Mediano">Mediano</option>
@@ -30,7 +30,7 @@
 
     <div class="filter-group">
       <label>Edad</label>
-      <select [(ngModel)]="filtros.edad">
+      <select [(ngModel)]="filtros.edad" (ngModelChange)="onFiltrosChange()">
         <option value="">Todas</option>
         <option value="joven">Joven</option>
         <option value="adulto">Adulto</option>
@@ -38,7 +38,8 @@
       </select>
     </div>
 
-    <button class="btn-search" (click)="aplicarFiltros()">Buscar</button>
+    <button class="btn-search" *ngIf="!esPaginaAdoptar" (click)="aplicarFiltros()">Buscar</button>
+    <button class="btn-search" *ngIf="hayFiltrosActivos()" (click)="limpiarFiltros()">Limpiar filtros</button>
 
   </div>
 </div>

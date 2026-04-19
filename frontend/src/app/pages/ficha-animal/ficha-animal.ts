@@ -30,6 +30,10 @@ export class FichaAnimal implements OnInit {
     private favoritoService: FavoritoService
   ) {}
 
+  esProtectora(): boolean {
+    return this.authService.getRol() === 'protectora';
+  }
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

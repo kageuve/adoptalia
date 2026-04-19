@@ -17,8 +17,25 @@ async function obtenerPorUsuarioYAnimal(usuario_id, animal_id) {
   const connection = await db.getConnection();
   try {
     const [rows] = await connection.execute(
-      `SELECT id, estado FROM peticion WHERE usuario_id = ? AND animal_id = ?`,
+      `SELECT id, estado
+       FROM peticion
+       WHERE usuario_id = ? AND animal_id = ? AND estado = 'pendiente'
+       ORDER BY creado DESC
+       LIMIT 1`,
       [usuario_id, animal_id]
+    );
+    return rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
+async function obtenerPorId(id) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      `SELECT id, animal_id, estado FROM peticion WHERE id = ?`,
+      [id]
     );
     return rows[0];
   } finally {
@@ -95,4 +112,4 @@ async function eliminar(id) {
   }
 }
 
-module.exports = { crear, obtenerPorUsuarioYAnimal, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar };
+module.exports = { crear, obtenerPorId, obtenerPorUsuarioYAnimal, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar };

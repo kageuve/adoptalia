@@ -62,6 +62,11 @@
         </label>
 
         <label>
+          <span>Raza</span>
+          <input type="text" formControlName="raza" />
+        </label>
+
+        <label>
           <span>Género</span>
           <select formControlName="genero">
             <option>hembra</option>
@@ -117,7 +122,11 @@
       </div>
     </form>
 
-    <div class="table-card">
+    <div class="empty-state-card" *ngIf="animales.length === 0">
+      <p class="empty-state-copy">No hay animales registrados</p>
+    </div>
+
+    <div class="table-card" *ngIf="animales.length > 0">
       <div class="table-row table-head">
         <span>Imagen</span>
         <span>Animal</span>
@@ -149,7 +158,11 @@
       </div>
     </div>
 
-    <div class="requests-grid">
+    <div class="empty-state-card" *ngIf="solicitudes.length === 0">
+      <p class="empty-state-copy">No hay solicitudes activas</p>
+    </div>
+
+    <div class="requests-grid" *ngIf="solicitudes.length > 0">
       <article class="request-card" *ngFor="let solicitud of solicitudes; trackBy: trackById">
         <div class="request-top">
           <div>

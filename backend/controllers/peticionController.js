@@ -1,5 +1,6 @@
 const peticionModel = require('../models/peticionModel');
 const protectoraModel = require('../models/protectoraModel');
+const animalModel = require('../models/animalModel');
 
 async function crearPeticion(req, res) {
   try {
@@ -12,11 +13,11 @@ async function crearPeticion(req, res) {
 
     const id = await peticionModel.crear({ usuario_id, animal_id, mensaje });
 
-    res.status(201).json({ success: true, message: 'Petición creada', id });
+    res.status(201).json({ success: true, message: 'Peticion creada', id });
 
   } catch (error) {
-        console.error('Error creando petición:', error.message, error.code);
-    res.status(500).json({ success: false, message: 'Error creando petición' });
+    console.error('Error creando peticion:', error.message, error.code);
+    res.status(500).json({ success: false, message: 'Error creando peticion' });
   }
 }
 
@@ -28,7 +29,7 @@ async function comprobarPeticion(req, res) {
     res.status(200).json({ success: true, existe: !!peticion, peticion: peticion || null });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Error comprobando petición' });
+    res.status(500).json({ success: false, message: 'Error comprobando peticion' });
   }
 }
 
@@ -64,15 +65,25 @@ async function actualizarPeticion(req, res) {
     const { estado } = req.body;
 
     if (!['aprobada', 'rechazada'].includes(estado)) {
-      return res.status(400).json({ success: false, message: 'Estado no válido' });
+      return res.status(400).json({ success: false, message: 'Estado no valido' });
+    }
+
+    const peticion = await peticionModel.obtenerPorId(id);
+    if (!peticion) {
+      return res.status(404).json({ success: false, message: 'Peticion no encontrada' });
     }
 
     await peticionModel.actualizarEstado(id, estado);
-    res.status(200).json({ success: true, message: 'Petición actualizada' });
+
+    if (estado === 'aprobada') {
+      await animalModel.actualizarEstado(peticion.animal_id, 'adoptado');
+    }
+
+    res.status(200).json({ success: true, message: 'Peticion actualizada' });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Error actualizando petición' });
+    res.status(500).json({ success: false, message: 'Error actualizando peticion' });
   }
 }
 
@@ -80,10 +91,10 @@ async function cancelarPeticion(req, res) {
   try {
     const { id } = req.params;
     await peticionModel.eliminar(id);
-    res.status(200).json({ success: true, message: 'Petición cancelada' });
+    res.status(200).json({ success: true, message: 'Peticion cancelada' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Error cancelando petición' });
+    res.status(500).json({ success: false, message: 'Error cancelando peticion' });
   }
 }
 

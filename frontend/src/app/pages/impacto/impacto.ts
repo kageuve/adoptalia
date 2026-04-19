@@ -1,5 +1,7 @@
 import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { RouterLink } from "@angular/router";
+import { environment } from '../../../environments/environment';
 
 type CounterKeys = 'adoptions' | 'shelters' | 'animals' | 'users';
 
@@ -17,13 +19,20 @@ export class Impacto implements AfterViewInit {
   animals = 0;
   users = 0;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  private apiUrl = environment.apiUrl;
+
+  constructor(private cdr: ChangeDetectorRef, private http: HttpClient) {}
 
   ngAfterViewInit() {
-    this.animateCounter('adoptions', 26);
-    this.animateCounter('shelters', 12);
-    this.animateCounter('animals', 90);
-    this.animateCounter('users', 25);
+    this.http.get<{ success: boolean; data: Record<CounterKeys, number> }>(`${this.apiUrl}/usuarios/impacto`).subscribe({
+      next: (res) => {
+        this.animateCounter('adoptions', res.data.adoptions);
+        this.animateCounter('shelters', res.data.shelters);
+        this.animateCounter('animals', res.data.animals);
+        this.animateCounter('users', res.data.users);
+      },
+      error: (err) => console.error('Error cargando impacto:', err)
+    });
 
     window.scrollTo({
     top: 0,
