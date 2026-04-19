@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PeticionService } from '../../services/peticion.service';
 import { FavoritoService } from '../../services/favorito.service';
+import { NotificacionService } from '../../services/notificacion.service';
 import { environment } from '../../../environments/environment';
 
 interface AdoptionRequest {
@@ -44,6 +45,7 @@ export class UserPanel implements OnInit {
     private authService: AuthService,
     private peticionService: PeticionService,
     private favoritoService: FavoritoService,
+    private notificacionService: NotificacionService,
     private http: HttpClient
   ) {
     this.usuarioEmail = this.authService.getEmail() ?? 'adoptante@adoptalia.com';
@@ -98,14 +100,15 @@ export class UserPanel implements OnInit {
     return `badge badge-${estado}`;
   }
 
-  cancelarSolicitud(id: number): void {
-    this.peticionService.cancelarPeticion(id).subscribe({
-      next: () => {
-        this.solicitudes = this.solicitudes.filter(s => s.id !== id);
-      },
-      error: (err) => console.error('Error cancelando solicitud:', err)
-    });
-  }
+cancelarSolicitud(id: number): void {
+  this.peticionService.cancelarPeticion(id).subscribe({
+    next: () => {
+      this.solicitudes = this.solicitudes.filter(s => s.id !== id);
+      this.notificacionService.cargarPendientes();
+    },
+    error: (err) => console.error('Error cancelando solicitud:', err)
+  });
+}
 
   subirImagenPerfil(event: Event): void {
     const input = event.target as HTMLInputElement;

@@ -6,6 +6,7 @@ import { AnimalsService } from '../../services/animals.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { environment } from '../../../environments/environment';
+import { NotificacionService } from '../../services/notificacion.service';
 
 interface ShelterAnimal {
   id: number;
@@ -52,7 +53,8 @@ export class ShelterPanel implements OnInit {
     private peticionService: PeticionService,
     private animalsService: AnimalsService,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificacionService: NotificacionService
   ) {
     this.apiUrl = environment.apiUrl;
     this.animalForm = this.fb.group({
@@ -166,16 +168,17 @@ export class ShelterPanel implements OnInit {
     });
   }
 
-  actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
-    this.peticionService.actualizarPeticion(id, estado).subscribe({
-      next: () => {
-        this.solicitudes = this.solicitudes.map(s =>
-          s.id === id ? { ...s, estado } : s
-        );
-      },
-      error: (err) => console.error('Error actualizando solicitud:', err)
-    });
-  }
+actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
+  this.peticionService.actualizarPeticion(id, estado).subscribe({
+    next: () => {
+      this.solicitudes = this.solicitudes.map(s =>
+        s.id === id ? { ...s, estado } : s
+      );
+      this.notificacionService.cargarPendientes();
+    },
+    error: (err) => console.error('Error actualizando solicitud:', err)
+  });
+}
 
   cancelarEdicion(): void {
     this.editandoId = null;

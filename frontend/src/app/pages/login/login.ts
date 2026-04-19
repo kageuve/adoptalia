@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { NotificacionService } from '../../services/notificacion.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class Login implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificacionService: NotificacionService
   ) {}
 
   ngOnInit(): void {
@@ -84,24 +86,25 @@ export class Login implements OnInit {
   }
 
   // LOGIN
-  onLogin() {
-    if (this.loginForm.invalid) return;
-    this.errorMsg = '';
-    const { email, password } = this.loginForm.value;
+onLogin() {
+  if (this.loginForm.invalid) return;
+  this.errorMsg = '';
+  const { email, password } = this.loginForm.value;
 
-    this.authService.login(email, password).subscribe({
-      next: (res) => {
-        if (res.rol === 'protectora') {
-          this.router.navigate(['/panel-protectora']);
-        } else {
-          this.router.navigate(['/adoptar']);
-        }
-      },
-      error: () => {
-        this.errorMsg = 'Credenciales incorrectas. Revisa tu email y contraseña.';
+  this.authService.login(email, password).subscribe({
+    next: (res) => {
+      if (res.rol === 'protectora') {
+        this.router.navigate(['/panel-protectora']);
+      } else {
+        this.router.navigate(['/adoptar']);
       }
-    });
-  }
+      this.notificacionService.cargarPendientes();
+    },
+    error: () => {
+      this.errorMsg = 'Credenciales incorrectas. Revisa tu email y contraseña.';
+    }
+  });
+}
 
   // REGISTER
   onRegister() {

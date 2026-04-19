@@ -30,7 +30,9 @@
       </ng-container>
       <ng-template #loggedInMobile>
         <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
-          ?? {{ authService.getEmail() }}
+          <app-avatar-notif *ngIf="pendientes > 0" [size]="32" [count]="pendientes"></app-avatar-notif>
+          <app-avatar-online *ngIf="pendientes === 0" [size]="32"></app-avatar-online>
+          {{ authService.getEmail() }}
         </button>
         <div class="mobile-user-dropdown" *ngIf="userMenuOpen" (click)="$event.stopPropagation()">
           <button class="dropdown-item" type="button" (click)="goToPanel()">Mi panel</button>
@@ -42,13 +44,15 @@
 
   <div class="dsk-actions">
     <ng-container *ngIf="!authService.isLoggedIn(); else loggedIn">
-    <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
+      <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
       <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
     </ng-container>
     <ng-template #loggedIn>
       <div class="user-menu" (click)="$event.stopPropagation()">
         <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
-          👤  {{ authService.getEmail() }}
+          <app-avatar-notif *ngIf="pendientes > 0" [size]="36" [count]="pendientes"></app-avatar-notif>
+          <app-avatar-online *ngIf="pendientes === 0" [size]="36"></app-avatar-online>
+          {{ authService.getEmail() }}
         </button>
         <div class="user-dropdown" *ngIf="userMenuOpen">
           <button class="dropdown-item" type="button" (click)="goToPanel()">Mi panel</button>
