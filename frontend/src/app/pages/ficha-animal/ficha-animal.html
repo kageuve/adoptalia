@@ -44,13 +44,13 @@
     </div>
 
     <div class="ficha-acciones">
-      <ng-container *ngIf="authService.isLoggedIn() && animal?.estado === 'disponible'">
+      <ng-container *ngIf="authService.isLoggedIn() && !esProtectora() && animal?.estado === 'disponible'">
         <button class="btn-adoptar" (click)="solicitarAdopcion()" [disabled]="solicitudEnviada">
           {{ solicitudEnviada ? 'Solicitud enviada ✓' : 'Solicitar adopción' }}
         </button>
         <p class="error-solicitud" *ngIf="errorSolicitud">Ha ocurrido un error, inténtalo de nuevo.</p>
       </ng-container>
-      <button class="btn-favorito" *ngIf="authService.isLoggedIn()" (click)="toggleFavorito()">
+      <button class="btn-favorito" *ngIf="authService.isLoggedIn() && !esProtectora()" (click)="toggleFavorito()">
         {{ esFavorito ? 'Quitar de favoritos ❤️' : 'Añadir a favoritos 🤍' }}
       </button>
       <p class="aviso-login" *ngIf="!authService.isLoggedIn()">
