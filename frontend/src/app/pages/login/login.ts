@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { User } from '../../types/user.model';
 import { AuthService } from '../../services/auth.service';
+import { NotificacionService } from '../../services/notificacion.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,8 @@ export class Login implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificacionService: NotificacionService
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +89,7 @@ onLogin() {
       } else {
         this.router.navigate(['/adoptar']);
       }
+      this.notificacionService.cargarPendientes();
     },
     error: (err) => {
       console.error('Error en login:', err);

@@ -1,23 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { NotificacionService } from '../../services/notificacion.service';
+import { AvatarOnlineComponent } from '../avatars/avatar-online/avatar-online';
+import { AvatarNotifComponent } from '../avatars/avatar-notif/avatar-notif';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, AvatarOnlineComponent, AvatarNotifComponent],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
-export class Navbar {
+export class Navbar implements OnInit {
+
   menuOpen = false;
   userMenuOpen = false;
+  pendientes = 0;
 
   constructor(
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificacionService: NotificacionService
   ) {}
+
+  ngOnInit(): void {
+    this.notificacionService.pendientes$.subscribe(n => this.pendientes = n);
+    this.notificacionService.cargarPendientes();
+  }
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -39,13 +50,13 @@ export class Navbar {
   goToPanel() {
     const rol = this.authService.getRol();
     const route = rol === 'protectora' ? '/panel-protectora' : '/panel-adoptante';
-
     this.router.navigate([route]);
     this.closeUserMenu();
     this.closeMenu();
   }
 
   logout() {
+    this.notificacionService.resetPendientes();
     this.authService.logout();
     this.closeUserMenu();
     this.closeMenu();

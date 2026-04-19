@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { PeticionService } from '../../services/peticion.service';
 import { FavoritoService } from '../../services/favorito.service';
+import { NotificacionService } from '../../services/notificacion.service';
 
 interface AdoptionRequest {
   id: number;
@@ -38,7 +39,8 @@ export class UserPanel implements OnInit {
   constructor(
     private authService: AuthService,
     private peticionService: PeticionService,
-    private favoritoService: FavoritoService
+    private favoritoService: FavoritoService,
+    private notificacionService: NotificacionService
   ) {
     this.usuarioEmail = this.authService.getEmail() ?? 'adoptante@adoptalia.com';
   }
@@ -85,14 +87,15 @@ export class UserPanel implements OnInit {
     return `badge badge-${estado}`;
   }
 
-  cancelarSolicitud(id: number): void {
-    this.peticionService.cancelarPeticion(id).subscribe({
-      next: () => {
-        this.solicitudes = this.solicitudes.filter(s => s.id !== id);
-      },
-      error: (err) => console.error('Error cancelando solicitud:', err)
-    });
-  }
+cancelarSolicitud(id: number): void {
+  this.peticionService.cancelarPeticion(id).subscribe({
+    next: () => {
+      this.solicitudes = this.solicitudes.filter(s => s.id !== id);
+      this.notificacionService.cargarPendientes();
+    },
+    error: (err) => console.error('Error cancelando solicitud:', err)
+  });
+}
 
   eliminarFavorito(animal_id: number): void {
     this.favoritoService.eliminarFavorito(animal_id).subscribe({
