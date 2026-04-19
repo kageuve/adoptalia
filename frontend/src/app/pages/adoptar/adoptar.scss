@@ -17,6 +17,26 @@
   padding: var(--space-lg);
 }
 
+.empty-state-card {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--space-lg);
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 24px;
+  border: 1px solid rgba(65, 67, 27, 0.08);
+  box-shadow: var(--shadow-md);
+}
+
+.empty-state-copy {
+  margin: 0;
+  color: rgba(65, 67, 27, 0.45);
+  font-style: italic;
+  text-align: center;
+}
+
 .card {
   max-width: 350px;
   background: var(--color-border-soft);

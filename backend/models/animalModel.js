@@ -92,11 +92,12 @@ async function actualizar(id, datos) {
   try {
     await connection.execute(
       `UPDATE animal 
-       SET nombre = ?, especie = ?, genero = ?, tamano = ?, estado = ?, fecha_nacimiento = ?, descripcion = ?
+       SET nombre = ?, especie = ?, raza = ?, genero = ?, tamano = ?, estado = ?, fecha_nacimiento = ?, descripcion = ?
        WHERE id = ?`,
       [
         datos.nombre,
         datos.especie.toLowerCase(),
+        datos.raza || null,
         datos.genero.toLowerCase(),
         datos.tamano.toLowerCase(),
         datos.estado,
@@ -199,6 +200,7 @@ async function obtenerPorProtectoraId(protectora_id) {
         a.id,
         a.nombre,
         CONCAT(UPPER(SUBSTRING(a.especie, 1, 1)), LOWER(SUBSTRING(a.especie, 2))) AS especie,
+        a.raza,
         a.genero,
         CONCAT(UPPER(SUBSTRING(a.tamano, 1, 1)), LOWER(SUBSTRING(a.tamano, 2))) AS tamano,
         a.estado,
@@ -264,9 +266,25 @@ async function obtenerAdoptados() {
   }
 }
 
+async function obtenerMetricas() {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(`
+      SELECT
+        SUM(CASE WHEN estado = 'adoptado' THEN 1 ELSE 0 END) AS adoptions,
+        COUNT(*) AS animals
+      FROM animal
+    `);
+    return rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   obtenerDisponibles,
   obtenerAdoptados,
+  obtenerMetricas,
   obtenerPorProtectora,
   obtenerPorProtectoraId,
   obtenerPublicoPorId,

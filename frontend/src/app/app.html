@@ -1,8 +1,12 @@
-<!-- Contenido fijo en todas las páginas, junto al footer -->
-<app-navbar></app-navbar>
-<!-- <app-header></app-header> -->
+<div class="app-shell">
+  <!-- Contenido fijo en todas las páginas, junto al footer -->
+  <app-navbar></app-navbar>
+  <!-- <app-header></app-header> -->
 
-<!-- Contenido dinámico  -->
-<router-outlet></router-outlet>
+  <!-- Contenido dinámico  -->
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
 
-<app-footer></app-footer>
+  <app-footer></app-footer>
+</div>

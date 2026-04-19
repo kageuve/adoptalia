@@ -49,7 +49,11 @@
       </div>
     </div>
 
-    <div class="requests-table">
+    <div class="requests-empty-card" *ngIf="solicitudes.length === 0">
+      <p class="requests-empty">No hay solicitudes activas</p>
+    </div>
+
+    <div class="requests-table" *ngIf="solicitudes.length > 0">
       <div class="request-row request-row-head">
         <span>Imagen</span>
         <span>Animal</span>
@@ -80,7 +84,11 @@
       </div>
     </div>
 
-    <div class="favorites">
+    <div class="favorites-empty-card" *ngIf="favoritos.length === 0">
+      <p class="favorites-empty">Aún no has guardado ningún animal favorito</p>
+    </div>
+
+    <div class="favorites" *ngIf="favoritos.length > 0">
       <article class="favorite-card" *ngFor="let favorito of favoritos; trackBy: trackById" [routerLink]="['/animal', favorito.id]" style="cursor:pointer">
         <div class="favorite-img">
           <img [src]="favorito.imagen" [alt]="favorito.nombre" />

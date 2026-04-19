@@ -74,8 +74,23 @@ async function obtenerTodas() {
   }
 }
 
+async function contarActivas() {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      `SELECT COUNT(*) AS shelters
+       FROM protectora
+       WHERE verificado = 1`
+    );
+    return rows[0].shelters;
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   crearProtectora,
   obtenerPorUsuarioId,
-  obtenerTodas
+  obtenerTodas,
+  contarActivas
 };

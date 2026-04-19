@@ -1,4 +1,6 @@
 const userModel = require('../models/userModel');
+const animalModel = require('../models/animalModel');
+const protectoraModel = require('../models/protectoraModel');
 const path = require('path');
 
 async function getPerfil(req, res) {
@@ -22,4 +24,26 @@ async function subirImagenPerfil(req, res) {
   }
 }
 
-module.exports = { getPerfil, subirImagenPerfil };
+async function getImpacto(req, res) {
+  try {
+    const [animalMetrics, shelters, users] = await Promise.all([
+      animalModel.obtenerMetricas(),
+      protectoraModel.contarActivas(),
+      userModel.contarAdoptantes()
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        adoptions: Number(animalMetrics?.adoptions || 0),
+        shelters: Number(shelters || 0),
+        animals: Number(animalMetrics?.animals || 0),
+        users: Number(users || 0)
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+module.exports = { getPerfil, subirImagenPerfil, getImpacto };

@@ -80,3 +80,28 @@
   display: flex;
   gap: 15px;
 }
+
+@media (max-width: 768px) {
+  .shelters-list {
+    padding: var(--space-md);
+  }
+
+  .shelter-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shelter-card img {
+    width: 100%;
+    height: 220px;
+  }
+
+  .info {
+    width: 100%;
+  }
+
+  .contact {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

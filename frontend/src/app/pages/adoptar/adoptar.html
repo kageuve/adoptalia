@@ -9,7 +9,11 @@
     <app-filter-bar></app-filter-bar>
   </div>
 
-  <div class="animals-grid">
+  <div class="empty-state-card" *ngIf="hayFiltrosActivos() && animalesFiltrados.length === 0">
+    <p class="empty-state-copy">No hay animales que coincidan con los filtros seleccionados</p>
+  </div>
+
+  <div class="animals-grid" *ngIf="animalesFiltrados.length > 0">
     <div class="card" *ngFor="let animal of animalesFiltrados" [routerLink]="['/animal', animal.id]">
       
       <div class="image-wrapper">

@@ -57,6 +57,10 @@ export class Adoptar implements OnInit {
     });
   }
 
+  hayFiltrosActivos(): boolean {
+    return Object.values(this.filtros).some(valor => !!valor);
+  }
+
   filtrarPorEdad(edad: number | null): boolean {
     if (edad === null) return false;
     switch (this.filtros.edad) {
