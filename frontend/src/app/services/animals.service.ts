@@ -18,6 +18,11 @@ export class AnimalsService {
       .pipe(map(res => res.data));
   }
 
+  getAnimalesAdoptados(): Observable<any[]> {
+    return this.http.get<{ success: boolean; data: any[] }>(`${this.apiUrl}/animales/adoptados`)
+      .pipe(map(res => res.data));
+  }
+
   getAnimalById(id: number): Observable<Animal> {
   return this.http.get<{ success: boolean; data: Animal }>(`${this.apiUrl}/animales/publico/${id}`)
     .pipe(map(res => res.data));

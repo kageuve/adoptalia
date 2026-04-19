@@ -14,6 +14,7 @@ const upload = multer({ storage });
 
 // Rutas públicas
 router.get('/publicos', animalController.listarAnimalesPublicos);
+router.get('/adoptados', animalController.listarAnimalesAdoptados);
 router.get('/publico/:id', animalController.obtenerAnimalPublico);
 
 // Rutas protegidas

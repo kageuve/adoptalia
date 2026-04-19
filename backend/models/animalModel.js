@@ -227,8 +227,34 @@ async function actualizarImagen(id, imagen_url) {
   }
 }
 
+async function obtenerAdoptados() {
+  const connection = await db.getConnection();
+  try {
+    const [animales] = await connection.execute(`
+      SELECT
+        a.id,
+        a.nombre,
+        CONCAT(UPPER(SUBSTRING(a.especie, 1, 1)), LOWER(SUBSTRING(a.especie, 2))) AS especie,
+        a.raza,
+        TIMESTAMPDIFF(YEAR, a.fecha_nacimiento, CURDATE()) AS edad,
+        CONCAT(UPPER(SUBSTRING(a.tamano, 1, 1)), LOWER(SUBSTRING(a.tamano, 2))) AS tamano,
+        p.ciudad AS provincia,
+        p.nombre AS protectora,
+        a.imagen_url AS imagen
+      FROM animal a
+      JOIN protectora p ON a.protectora_id = p.id
+      WHERE a.estado = 'adoptado'
+      ORDER BY a.actualizado DESC
+    `);
+    return animales;
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   obtenerDisponibles,
+  obtenerAdoptados,
   obtenerPorProtectora,
   obtenerPorProtectoraId,
   obtenerPublicoPorId,

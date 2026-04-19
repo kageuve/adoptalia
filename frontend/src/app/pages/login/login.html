@@ -26,6 +26,10 @@
         : 'Gestiona tu protectora y sigue salvando vidas' }}
     </p>
 
+    <!-- MENSAJE ERROR / ÉXITO -->
+    <p class="msg-error" *ngIf="errorMsg">{{ errorMsg }}</p>
+    <p class="msg-success" *ngIf="successMsg">{{ successMsg }}</p>
+
     <!-- LOGIN -->
     <form *ngIf="isLogin && loginForm"
           [formGroup]="loginForm"
@@ -60,8 +64,8 @@
           class="form">
 
       <div class="input-group">
-        <input type="text" formControlName="name" placeholder=" " />
-        <label>Nombre</label>
+        <input type="text" formControlName="nombre" placeholder=" " />
+        <label>{{ userType === 'protectora' ? 'Nombre de la protectora' : 'Nombre' }}</label>
       </div>
 
       <div class="input-group">
@@ -78,7 +82,17 @@
       <div *ngIf="userType === 'protectora'" class="extra-fields">
 
         <div class="input-group">
-          <input type="text" formControlName="phone" placeholder=" " />
+          <input type="text" formControlName="cif" placeholder=" " />
+          <label>CIF</label>
+        </div>
+
+        <div class="input-group">
+          <input type="text" formControlName="ciudad" placeholder=" " />
+          <label>Ciudad</label>
+        </div>
+
+        <div class="input-group">
+          <input type="text" formControlName="telefono" placeholder=" " />
           <label>Teléfono</label>
         </div>
 

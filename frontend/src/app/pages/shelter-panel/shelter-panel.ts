@@ -223,6 +223,20 @@ actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
     });
   }
 
+  subirImagenProtectora(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const formData = new FormData();
+    formData.append('imagen', input.files[0]);
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
+    this.http.post<any>(`${this.apiUrl}/protectoras/mi-protectora/imagen`, formData, { headers }).subscribe({
+      next: (res) => {
+        if (this.protectora) this.protectora = { ...this.protectora, imagen: res.imagen };
+      },
+      error: (err) => console.error('Error subiendo imagen de protectora:', err)
+    });
+  }
+
   subirImagen(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length || !this.editandoId) return;

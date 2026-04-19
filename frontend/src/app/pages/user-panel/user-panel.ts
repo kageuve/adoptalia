@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PeticionService } from '../../services/peticion.service';
 import { FavoritoService } from '../../services/favorito.service';
 import { NotificacionService } from '../../services/notificacion.service';
+import { environment } from '../../../environments/environment';
 
 interface AdoptionRequest {
   id: number;
@@ -26,26 +29,36 @@ interface FavoriteAnimal {
 @Component({
   selector: 'app-user-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClientModule, RouterLink],
   templateUrl: './user-panel.html',
   styleUrl: './user-panel.scss'
 })
 export class UserPanel implements OnInit {
 
   readonly usuarioEmail: string;
+  imagenPerfil: string | null = null;
   solicitudes: AdoptionRequest[] = [];
   favoritos: FavoriteAnimal[] = [];
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private authService: AuthService,
     private peticionService: PeticionService,
     private favoritoService: FavoritoService,
-    private notificacionService: NotificacionService
+    private notificacionService: NotificacionService,
+    private http: HttpClient
   ) {
     this.usuarioEmail = this.authService.getEmail() ?? 'adoptante@adoptalia.com';
   }
 
   ngOnInit(): void {
+    // Cargar imagen de perfil
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
+    this.http.get<any>(`${this.apiUrl}/usuarios/perfil`, { headers }).subscribe({
+      next: (res) => { this.imagenPerfil = res.data?.imagen ?? null; },
+      error: () => {}
+    });
+
     this.peticionService.getMisPeticiones().subscribe({
       next: (data) => {
         this.solicitudes = data.map(p => ({
@@ -96,6 +109,18 @@ cancelarSolicitud(id: number): void {
     error: (err) => console.error('Error cancelando solicitud:', err)
   });
 }
+
+  subirImagenPerfil(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+    const formData = new FormData();
+    formData.append('imagen', input.files[0]);
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
+    this.http.post<any>(`${this.apiUrl}/usuarios/perfil/imagen`, formData, { headers }).subscribe({
+      next: (res) => { this.imagenPerfil = res.imagen; },
+      error: (err) => console.error('Error subiendo imagen de perfil:', err)
+    });
+  }
 
   eliminarFavorito(animal_id: number): void {
     this.favoritoService.eliminarFavorito(animal_id).subscribe({

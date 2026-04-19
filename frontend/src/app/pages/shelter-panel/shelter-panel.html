@@ -1,9 +1,18 @@
 <section class="dashboard-shell">
   <div class="dashboard-hero">
-    <div>
-      <span class="eyebrow">Panel protectora</span>
-      <h1>{{ protectora?.nombre || 'Mi protectora' }}</h1>
-      <p>{{ protectora?.descripcion || 'Gestiona tu actividad diaria.' }}</p>
+    <div class="dashboard-hero-info">
+      <div class="profile-img-wrapper">
+        <img [src]="protectora?.imagen || '/img/avatar-default.png'" alt="Logo protectora" class="profile-img" />
+        <label class="profile-img-btn" title="Cambiar foto">
+          <input type="file" accept="image/*" (change)="subirImagenProtectora($event)" style="display:none" />
+          ✏️
+        </label>
+      </div>
+      <div>
+        <span class="eyebrow">Panel protectora</span>
+        <h1>{{ protectora?.nombre || 'Mi protectora' }}</h1>
+        <p>{{ protectora?.descripcion || 'Gestiona tu actividad diaria.' }}</p>
+      </div>
     </div>
 
     <div class="metrics-grid">

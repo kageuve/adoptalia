@@ -265,3 +265,31 @@
   background: rgba(65, 67, 27, 0.05);
   font-weight: var(--font-bold);
 }
+.profile-img-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: var(--space-sm);
+
+  .profile-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.3);
+  }
+
+  .profile-img-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--color-accent);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+}

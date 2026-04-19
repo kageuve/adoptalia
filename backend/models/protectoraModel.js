@@ -29,9 +29,9 @@ async function crearProtectora(datos) {
         datos.nombre,
         datos.cif,
         datos.ciudad,
-        datos.direccion,
-        datos.web,
-        datos.descripcion
+        datos.direccion || null,
+        datos.web || null,
+        datos.descripcion || null
       ]
     );
 

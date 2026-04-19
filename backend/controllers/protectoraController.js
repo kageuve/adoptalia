@@ -1,16 +1,12 @@
 const protectoraModel = require('../models/protectoraModel');
 
 async function registrarProtectora(req, res) {
-
   try {
-
     await protectoraModel.crearProtectora(req.body);
-
-    res.send("Protectora registrada correctamente 🚀");
-
+    res.status(201).json({ message: 'Protectora registrada correctamente' });
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error al registrar protectora");
+    res.status(500).json({ message: error.code === 'ER_DUP_ENTRY' ? 'El email o CIF ya están registrados' : 'Error al registrar protectora' });
   }
 }
 
@@ -38,8 +34,30 @@ async function obtenerMiProtectora(req, res) {
   }
 }
 
+async function subirImagenProtectora(req, res) {
+  try {
+    if (!req.file) return res.status(400).json({ success: false, message: 'No se recibió imagen' });
+    const db = require('../db');
+    const imagen = `/uploads/perfiles/${req.file.filename}`;
+    const connection = await db.getConnection();
+    try {
+      await connection.execute(
+        'UPDATE protectora SET imagen = ? WHERE usuario_id = ?',
+        [imagen, req.user.id]
+      );
+    } finally {
+      connection.release();
+    }
+    res.json({ success: true, imagen });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   registrarProtectora,
   listarProtectoras,
-  obtenerMiProtectora
+  obtenerMiProtectora,
+  subirImagenProtectora
 };

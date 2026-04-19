@@ -314,3 +314,37 @@ select {
 }
 
 
+
+.dashboard-hero-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.profile-img-wrapper {
+  position: relative;
+  flex-shrink: 0;
+
+  .profile-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.3);
+  }
+
+  .profile-img-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--color-accent);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+  }
+}

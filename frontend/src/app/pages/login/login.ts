@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { User } from '../../types/user.model';
 import { AuthService } from '../../services/auth.service';
 import { NotificacionService } from '../../services/notificacion.service';
 
@@ -16,11 +15,11 @@ import { NotificacionService } from '../../services/notificacion.service';
 export class Login implements OnInit {
 
   isLogin = true;
-
   userType: 'adoptante' | 'protectora' = 'adoptante';
-
   loginForm!: FormGroup;
   registerForm!: FormGroup;
+  errorMsg = '';
+  successMsg = '';
 
   constructor(
     private fb: FormBuilder,
@@ -40,12 +39,12 @@ export class Login implements OnInit {
 
     // REGISTER FORM
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
+      nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      userType: ['adoptante', Validators.required],
-      organization: [''],
-      phone: ['']
+      cif: [''],
+      ciudad: [''],
+      telefono: ['']
     });
 
     // Leer query params (login/register)
@@ -60,18 +59,28 @@ export class Login implements OnInit {
   // Cambiar tipo de usuario (adoptante/protectora)
   setUserType(type: 'adoptante' | 'protectora') {
     this.userType = type;
-    this.registerForm.patchValue({ userType: type });
+    this.errorMsg = '';
+    this.successMsg = '';
+
+    if (type === 'protectora') {
+      this.registerForm.get('cif')?.setValidators(Validators.required);
+      this.registerForm.get('ciudad')?.setValidators(Validators.required);
+    } else {
+      this.registerForm.get('cif')?.clearValidators();
+      this.registerForm.get('ciudad')?.clearValidators();
+    }
+    this.registerForm.get('cif')?.updateValueAndValidity();
+    this.registerForm.get('ciudad')?.updateValueAndValidity();
   }
 
   // Cambiar entre login y registro
   setMode(isLogin: boolean) {
     this.isLogin = isLogin;
-
+    this.errorMsg = '';
+    this.successMsg = '';
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        mode: isLogin ? 'login' : 'register'
-      },
+      queryParams: { mode: isLogin ? 'login' : 'register' },
       queryParamsHandling: 'merge'
     });
   }
@@ -79,7 +88,7 @@ export class Login implements OnInit {
   // LOGIN
 onLogin() {
   if (this.loginForm.invalid) return;
-
+  this.errorMsg = '';
   const { email, password } = this.loginForm.value;
 
   this.authService.login(email, password).subscribe({
@@ -91,31 +100,54 @@ onLogin() {
       }
       this.notificacionService.cargarPendientes();
     },
-    error: (err) => {
-      console.error('Error en login:', err);
+    error: () => {
+      this.errorMsg = 'Credenciales incorrectas. Revisa tu email y contraseña.';
     }
   });
 }
 
   // REGISTER
   onRegister() {
-    if (this.registerForm.invalid) return;
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      this.errorMsg = 'Por favor, completa todos los campos obligatorios.';
+      return;
+    }
+    this.errorMsg = '';
+    this.successMsg = '';
+    const v = this.registerForm.value;
 
-    const formValue = this.registerForm.value;
-
-    const user: User = {
-      name: formValue.name,
-      email: formValue.email,
-      password: formValue.password,
-      userType: this.userType,
-      organization: this.userType === 'protectora' ? formValue.organization : undefined,
-      phone: this.userType === 'protectora' ? formValue.phone : undefined
-    };
-
-    console.log('USER:', user);
+    if (this.userType === 'protectora') {
+      this.authService.registerProtectora({
+        email: v.email,
+        password: v.password,
+        nombre: v.nombre,
+        cif: v.cif,
+        ciudad: v.ciudad,
+        telefono: v.telefono
+      }).subscribe({
+        next: () => {
+          this.successMsg = 'Protectora registrada. Ya puedes iniciar sesión.';
+          setTimeout(() => this.setMode(true), 2500);
+        },
+        error: (err) => {
+          this.errorMsg = err.error?.message || 'Error al registrar. Inténtalo de nuevo.';
+        }
+      });
+    } else {
+      this.authService.registerUsuario(v.email, v.password).subscribe({
+        next: () => {
+          this.successMsg = 'Cuenta creada. Ya puedes iniciar sesión.';
+          setTimeout(() => this.setMode(true), 2500);
+        },
+        error: (err) => {
+          this.errorMsg = err.error?.message || 'Error al registrar. Inténtalo de nuevo.';
+        }
+      });
+    }
   }
 
   toggleMode() {
-  this.setMode(!this.isLogin);
-}
+    this.setMode(!this.isLogin);
+  }
 }

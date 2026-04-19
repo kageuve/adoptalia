@@ -1,0 +1,37 @@
+<div class="casos-container">
+
+  <div class="casos-header">
+    <h2>Casos de éxito</h2>
+    <p>Animales que ya encontraron su hogar gracias a Adoptalia</p>
+  </div>
+
+  <!-- CARGANDO -->
+  <div class="loading" *ngIf="cargando">
+    <p>Cargando...</p>
+  </div>
+
+  <!-- VACÍO -->
+  <div class="empty" *ngIf="!cargando && animales.length === 0">
+    <p>Aún no hay animales adoptados registrados.</p>
+  </div>
+
+  <!-- GRID -->
+  <div class="animals-grid" *ngIf="!cargando && animales.length > 0">
+    <div class="card" *ngFor="let animal of animales">
+
+      <div class="image-wrapper">
+        <img [src]="animal.imagen || '/img/no-image.png'" [alt]="animal.nombre">
+        <span class="badge-adoptado">Adoptado</span>
+      </div>
+
+      <div class="card-content">
+        <h3>{{ animal.nombre }}</h3>
+        <p>{{ animal.especie }} · {{ animal.raza }}</p>
+        <span class="location">{{ animal.provincia }}</span>
+        <span class="protectora">{{ animal.protectora }}</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
