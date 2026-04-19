@@ -17,7 +17,11 @@ async function obtenerPorUsuarioYAnimal(usuario_id, animal_id) {
   const connection = await db.getConnection();
   try {
     const [rows] = await connection.execute(
-      `SELECT id, estado FROM peticion WHERE usuario_id = ? AND animal_id = ?`,
+      `SELECT id, estado
+       FROM peticion
+       WHERE usuario_id = ? AND animal_id = ? AND estado = 'pendiente'
+       ORDER BY creado DESC
+       LIMIT 1`,
       [usuario_id, animal_id]
     );
     return rows[0];

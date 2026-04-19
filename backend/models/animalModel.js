@@ -157,12 +157,6 @@ async function obtenerDisponibles() {
     FROM animal a
     JOIN protectora p ON a.protectora_id = p.id
     WHERE a.estado = 'disponible'
-      AND NOT EXISTS (
-        SELECT 1
-        FROM peticion pt
-        WHERE pt.animal_id = a.id
-          AND pt.estado = 'aprobada'
-      )
     ORDER BY a.creado DESC
     `);
     return animales;
@@ -249,7 +243,7 @@ async function obtenerAdoptados() {
   const connection = await db.getConnection();
   try {
     const [animales] = await connection.execute(`
-      SELECT DISTINCT
+      SELECT
         a.id,
         a.nombre,
         CONCAT(UPPER(SUBSTRING(a.especie, 1, 1)), LOWER(SUBSTRING(a.especie, 2))) AS especie,
@@ -261,9 +255,7 @@ async function obtenerAdoptados() {
         a.imagen_url AS imagen
       FROM animal a
       JOIN protectora p ON a.protectora_id = p.id
-      LEFT JOIN peticion pt ON pt.animal_id = a.id
       WHERE a.estado = 'adoptado'
-         OR pt.estado = 'aprobada'
       ORDER BY a.actualizado DESC
     `);
     return animales;
