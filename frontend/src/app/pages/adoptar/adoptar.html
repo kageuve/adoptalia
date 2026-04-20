@@ -18,6 +18,9 @@
       
       <div class="image-wrapper">
         <img [src]="animal.imagen || './img/no-image.png'" [alt]="animal.nombre">
+        <button *ngIf="esUsuario()" class="fav-btn" [class.fav-active]="esFavorito(animal.id)" (click)="toggleFavorito(animal.id, $event)" type="button" title="Añadir a favoritos">
+          ♥
+        </button>
       </div>
 
       <div class="card-content">

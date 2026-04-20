@@ -18,6 +18,7 @@ export class Navbar implements OnInit {
   menuOpen = false;
   userMenuOpen = false;
   pendientes = 0;
+  imagenPerfil: string | null = null;
 
   constructor(
     public authService: AuthService,
@@ -28,6 +29,7 @@ export class Navbar implements OnInit {
   ngOnInit(): void {
     this.notificacionService.pendientes$.subscribe(n => this.pendientes = n);
     this.notificacionService.cargarPendientes();
+    this.authService.imagenPerfil$.subscribe(img => this.imagenPerfil = img);
   }
 
   toggleMenu() {

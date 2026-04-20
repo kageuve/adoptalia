@@ -48,6 +48,8 @@ export class ShelterPanel implements OnInit {
   solicitudes: ShelterRequest[] = [];
   private apiUrl: string;
   protectora: any = null;
+  passwordMensaje: string | null = null;
+  readonly passwordForm;
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +60,11 @@ export class ShelterPanel implements OnInit {
     private notificacionService: NotificacionService
   ) {
     this.apiUrl = environment.apiUrl;
+    this.passwordForm = this.fb.group({
+      passwordActual: ['', Validators.required],
+      passwordNuevo: ['', [Validators.required, Validators.minLength(6)]],
+      passwordConfirm: ['', Validators.required]
+    });
     this.animalForm = this.fb.group({
       nombre: ['', Validators.required],
       especie: ['Perro', Validators.required],
@@ -94,6 +101,7 @@ export class ShelterPanel implements OnInit {
     this.http.get<any>(`${this.apiUrl}/protectoras/mi-protectora`, { headers: new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` }) }).subscribe({
   next: (res) => {
     this.protectora = res.data;
+    this.authService.setImagen(res.data?.imagen ?? null);
   },
   error: (err) => console.error('Error cargando protectora:', err)
 });
@@ -136,8 +144,9 @@ export class ShelterPanel implements OnInit {
     } else {
       this.animalsService.crearAnimal(animal).subscribe({
         next: (res) => {
-          this.animales = [{ ...animal, id: res.id }, ...this.animales];
-          this.cancelarEdicion();
+          const nuevoAnimal: ShelterAnimal = { ...animal, id: res.id };
+          this.animales = [nuevoAnimal, ...this.animales];
+          this.editarAnimal(nuevoAnimal);
         },
         error: (err) => console.error('Error creando animal:', err)
       });
@@ -236,8 +245,25 @@ actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
     this.http.post<any>(`${this.apiUrl}/protectoras/mi-protectora/imagen`, formData, { headers }).subscribe({
       next: (res) => {
         if (this.protectora) this.protectora = { ...this.protectora, imagen: res.imagen };
+        this.authService.setImagen(res.imagen);
       },
       error: (err) => console.error('Error subiendo imagen de protectora:', err)
+    });
+  }
+
+  cambiarPassword(): void {
+    const { passwordActual, passwordNuevo, passwordConfirm } = this.passwordForm.getRawValue();
+    if (this.passwordForm.invalid) { this.passwordForm.markAllAsTouched(); return; }
+    if (passwordNuevo !== passwordConfirm) {
+      this.passwordMensaje = 'Las contraseñas nuevas no coinciden';
+      return;
+    }
+    this.authService.cambiarPassword(passwordActual!, passwordNuevo!).subscribe({
+      next: () => {
+        this.passwordMensaje = 'ok';
+        this.passwordForm.reset();
+      },
+      error: (err) => { this.passwordMensaje = err.error?.message ?? 'Error al cambiar contraseña'; }
     });
   }
 

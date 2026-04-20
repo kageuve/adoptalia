@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { FilterBar } from "../../components/filter-bar/filter-bar";
 import { Animal } from "../../types/animal.model";
 import { AnimalsService } from "../../services/animals.service";
+import { FavoritoService } from '../../services/favorito.service';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -17,6 +19,7 @@ export class Adoptar implements OnInit {
 
   animales: Animal[] = [];
   animalesFiltrados: Animal[] = [];
+  favoritosIds: number[] = [];
 
   filtros = {
     especie: '',
@@ -25,10 +28,45 @@ export class Adoptar implements OnInit {
     edad: ''
   };
 
-  constructor(private animalsService: AnimalsService, private route: ActivatedRoute) {}
+  constructor(
+    private animalsService: AnimalsService,
+    private route: ActivatedRoute,
+    private favoritoService: FavoritoService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.cargarAnimales();
+    if (this.esUsuario()) {
+      this.favoritoService.getFavoritos().subscribe({
+        next: (data) => { this.favoritosIds = data.map(f => f.id); },
+        error: () => {}
+      });
+    }
+  }
+
+  esUsuario(): boolean {
+    return this.authService.isLoggedIn() && this.authService.getRol() === 'usuario';
+  }
+
+  esFavorito(id: number): boolean {
+    return this.favoritosIds.includes(id);
+  }
+
+  toggleFavorito(id: number, event: Event): void {
+    event.stopPropagation();
+    event.preventDefault();
+    if (this.esFavorito(id)) {
+      this.favoritoService.eliminarFavorito(id).subscribe({
+        next: () => { this.favoritosIds = this.favoritosIds.filter(fid => fid !== id); },
+        error: (err) => console.error(err)
+      });
+    } else {
+      this.favoritoService.agregarFavorito(id).subscribe({
+        next: () => { this.favoritosIds = [...this.favoritosIds, id]; },
+        error: (err) => console.error(err)
+      });
+    }
   }
 
   cargarAnimales(): void {

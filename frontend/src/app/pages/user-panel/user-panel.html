@@ -1,16 +1,6 @@
 <section class="panel">
   <div class="header">
-    <div>
-      <span class="label">Panel de Adoptante</span>
-      <h1>{{ usuarioEmail }}</h1>
-      <p>
-        Revisa tus solicitudes y lleva un seguimiento de tus animales favoritos.
-      </p>
-    </div>
-
-    <div class="card">
-      <span class="card-label">Cuenta activa</span>
-
+    <div class="header-info">
       <div class="profile-img-wrapper">
         <img [src]="imagenPerfil || '/img/avatar-default.png'" alt="Foto de perfil" class="profile-img" />
         <label class="profile-img-btn" title="Cambiar foto">
@@ -18,27 +8,27 @@
           ✏️
         </label>
       </div>
-
-      <strong>{{ usuarioEmail }}</strong>
-      <p>Toda tu actividad de adopción en un solo lugar.</p>
+      <div>
+        <span class="label">Panel adoptante</span>
+        <h1>{{ usuarioEmail }}</h1>
+        <p>Gestiona tus solicitudes y animales favoritos.</p>
+      </div>
     </div>
-  </div>
 
-  <div class="stats">
-    <article class="stat-card">
-      <span class="stat-value">{{ solicitudes.length }}</span>
-      <span class="stat-text">Solicitudes</span>
-    </article>
-
-    <article class="stat-card">
-      <span class="stat-value">{{ favoritos.length }}</span>
-      <span class="stat-text">Favoritos</span>
-    </article>
-
-    <article class="stat-card">
-      <span class="stat-value">{{ solicitudesPendientes }}</span>
-      <span class="stat-text">Pendientes</span>
-    </article>
+    <div class="metrics">
+      <article class="stat-card">
+        <span class="stat-value">{{ solicitudes.length }}</span>
+        <span class="stat-text">Solicitudes</span>
+      </article>
+      <article class="stat-card">
+        <span class="stat-value">{{ favoritos.length }}</span>
+        <span class="stat-text">Favoritos</span>
+      </article>
+      <article class="stat-card">
+        <span class="stat-value">{{ solicitudesPendientes }}</span>
+        <span class="stat-text">Pendientes</span>
+      </article>
+    </div>
   </div>
 
   <section class="section">
@@ -92,8 +82,11 @@
       <article class="favorite-card" *ngFor="let favorito of favoritos; trackBy: trackById" [routerLink]="['/animal', favorito.id]" style="cursor:pointer">
         <div class="favorite-img">
           <img [src]="favorito.imagen" [alt]="favorito.nombre" />
+          <button class="fav-btn fav-active" type="button" title="Quitar de favoritos"
+            (click)="eliminarFavorito(favorito.id); $event.stopPropagation()">
+            ♥
+          </button>
         </div>
-
         <div class="favorite-info">
           <h3>{{ favorito.nombre }}</h3>
           <p>{{ favorito.especie }}</p>
@@ -101,5 +94,37 @@
         </div>
       </article>
     </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <span class="label">Seguridad</span>
+        <h2>Cambiar contraseña</h2>
+      </div>
+    </div>
+
+    <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+      <div class="password-grid">
+        <label>
+          <span>Contraseña actual</span>
+          <input type="password" formControlName="passwordActual" />
+        </label>
+        <label>
+          <span>Nueva contraseña</span>
+          <input type="password" formControlName="passwordNuevo" />
+        </label>
+        <label>
+          <span>Confirmar nueva contraseña</span>
+          <input type="password" formControlName="passwordConfirm" />
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="primary-btn" type="submit">Guardar contraseña</button>
+      </div>
+      <p *ngIf="passwordMensaje" class="password-msg" [class.password-msg-ok]="passwordMensaje === 'ok'">
+        {{ passwordMensaje === 'ok' ? 'Contraseña actualizada correctamente' : passwordMensaje }}
+      </p>
+    </form>
   </section>
 </section>

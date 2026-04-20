@@ -30,8 +30,16 @@
       </ng-container>
       <ng-template #loggedInMobile>
         <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
-          <app-avatar-notif *ngIf="pendientes > 0" [size]="32" [count]="pendientes"></app-avatar-notif>
-          <app-avatar-online *ngIf="pendientes === 0" [size]="32"></app-avatar-online>
+          <ng-container *ngIf="imagenPerfil; else mobileDefaultAvatar">
+            <div class="profile-avatar">
+              <img [src]="imagenPerfil" alt="Perfil" class="profile-avatar-img" />
+              <span *ngIf="pendientes > 0" class="notif-badge">{{ pendientes }}</span>
+            </div>
+          </ng-container>
+          <ng-template #mobileDefaultAvatar>
+            <app-avatar-notif *ngIf="pendientes > 0" [size]="32" [count]="pendientes"></app-avatar-notif>
+            <app-avatar-online *ngIf="pendientes === 0" [size]="32"></app-avatar-online>
+          </ng-template>
           {{ authService.getEmail() }}
         </button>
         <div class="mobile-user-dropdown" *ngIf="userMenuOpen" (click)="$event.stopPropagation()">
@@ -50,8 +58,16 @@
     <ng-template #loggedIn>
       <div class="user-menu" (click)="$event.stopPropagation()">
         <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
-          <app-avatar-notif *ngIf="pendientes > 0" [size]="36" [count]="pendientes"></app-avatar-notif>
-          <app-avatar-online *ngIf="pendientes === 0" [size]="36"></app-avatar-online>
+          <ng-container *ngIf="imagenPerfil; else dskDefaultAvatar">
+            <div class="profile-avatar">
+              <img [src]="imagenPerfil" alt="Perfil" class="profile-avatar-img" />
+              <span *ngIf="pendientes > 0" class="notif-badge">{{ pendientes }}</span>
+            </div>
+          </ng-container>
+          <ng-template #dskDefaultAvatar>
+            <app-avatar-notif *ngIf="pendientes > 0" [size]="36" [count]="pendientes"></app-avatar-notif>
+            <app-avatar-online *ngIf="pendientes === 0" [size]="36"></app-avatar-online>
+          </ng-template>
           {{ authService.getEmail() }}
         </button>
         <div class="user-dropdown" *ngIf="userMenuOpen">

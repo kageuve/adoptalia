@@ -369,6 +369,20 @@ select {
   }
 }
 
+.password-msg {
+  margin: var(--space-sm) 0 0;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: var(--font-sm);
+  background: rgba(229, 115, 115, 0.12);
+  color: #9b3f3f;
+}
+
+.password-msg-ok {
+  background: rgba(106, 174, 109, 0.12);
+  color: #2e7a34;
+}
+
 // Imagen upload
 .imagen-upload {
   display: flex;

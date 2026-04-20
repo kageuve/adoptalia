@@ -77,9 +77,9 @@
         <label>
           <span>Tamaño</span>
           <select formControlName="tamano">
-            <option>Pequeño</option>
-            <option>Mediano</option>
-            <option>Grande</option>
+            <option value="Pequeño">Pequeño</option>
+            <option value="Mediano">Mediano</option>
+            <option value="Grande">Grande</option>
           </select>
         </label>
 
@@ -148,6 +148,38 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Seguridad</span>
+        <h2>Cambiar contraseña</h2>
+      </div>
+    </div>
+
+    <form class="animal-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+      <div class="form-grid">
+        <label>
+          <span>Contraseña actual</span>
+          <input type="password" formControlName="passwordActual" />
+        </label>
+        <label>
+          <span>Nueva contraseña</span>
+          <input type="password" formControlName="passwordNuevo" />
+        </label>
+        <label>
+          <span>Confirmar nueva contraseña</span>
+          <input type="password" formControlName="passwordConfirm" />
+        </label>
+      </div>
+      <div class="form-actions">
+        <button class="primary-btn" type="submit">Guardar contraseña</button>
+      </div>
+      <p *ngIf="passwordMensaje" class="password-msg" [class.password-msg-ok]="passwordMensaje === 'ok'">
+        {{ passwordMensaje === 'ok' ? 'Contraseña actualizada correctamente' : passwordMensaje }}
+      </p>
+    </form>
   </section>
 
   <section class="content-section">

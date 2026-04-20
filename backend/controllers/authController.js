@@ -67,7 +67,29 @@ async function login(req, res) {
   }
 }
 
+async function cambiarPassword(req, res) {
+  try {
+    const { passwordActual, passwordNuevo } = req.body;
+    if (!passwordActual || !passwordNuevo) {
+      return res.status(400).json({ success: false, message: 'Faltan datos' });
+    }
+    const usuario = await userModel.obtenerPasswordPorId(req.user.id);
+    if (!usuario) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+
+    const valido = await bcrypt.compare(passwordActual, usuario.password);
+    if (!valido) return res.status(401).json({ success: false, message: 'Contraseña actual incorrecta' });
+
+    const hash = await bcrypt.hash(passwordNuevo, 10);
+    await userModel.actualizarPassword(req.user.id, hash);
+
+    res.json({ success: true, message: 'Contraseña actualizada' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
 module.exports = {
   register,
-  login
+  login,
+  cambiarPassword
 };

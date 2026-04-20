@@ -147,7 +147,7 @@ async function listarAnimalesProtectora(req, res) {
 async function subirImagen(req, res) {
   try {
     const { id } = req.params;
-    const imagen_url = `${process.env.BASE_URL}/uploads/imagenes/${req.file.filename}`;
+    const imagen_url = `/uploads/imagenes/${req.file.filename}`;
     await animalModel.actualizarImagen(id, imagen_url);
     res.status(200).json({ success: true, imagen_url });
   } catch (error) {

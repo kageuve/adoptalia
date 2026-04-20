@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -29,7 +30,7 @@ interface FavoriteAnimal {
 @Component({
   selector: 'app-user-panel',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterLink],
+  imports: [CommonModule, HttpClientModule, RouterLink, ReactiveFormsModule],
   templateUrl: './user-panel.html',
   styleUrl: './user-panel.scss'
 })
@@ -39,6 +40,8 @@ export class UserPanel implements OnInit {
   imagenPerfil: string | null = null;
   solicitudes: AdoptionRequest[] = [];
   favoritos: FavoriteAnimal[] = [];
+  passwordMensaje: string | null = null;
+  readonly passwordForm;
   private apiUrl = environment.apiUrl;
 
   constructor(
@@ -46,16 +49,24 @@ export class UserPanel implements OnInit {
     private peticionService: PeticionService,
     private favoritoService: FavoritoService,
     private notificacionService: NotificacionService,
-    private http: HttpClient
+    private http: HttpClient,
+    private fb: FormBuilder
   ) {
     this.usuarioEmail = this.authService.getEmail() ?? 'adoptante@adoptalia.com';
+    this.passwordForm = this.fb.group({
+      passwordActual: ['', Validators.required],
+      passwordNuevo: ['', [Validators.required, Validators.minLength(6)]],
+      passwordConfirm: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
-    // Cargar imagen de perfil
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.get<any>(`${this.apiUrl}/usuarios/perfil`, { headers }).subscribe({
-      next: (res) => { this.imagenPerfil = res.data?.imagen ?? null; },
+      next: (res) => {
+        this.imagenPerfil = res.data?.imagen ?? null;
+        this.authService.setImagen(this.imagenPerfil);
+      },
       error: () => {}
     });
 
@@ -117,8 +128,27 @@ cancelarSolicitud(id: number): void {
     formData.append('imagen', input.files[0]);
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.post<any>(`${this.apiUrl}/usuarios/perfil/imagen`, formData, { headers }).subscribe({
-      next: (res) => { this.imagenPerfil = res.imagen; },
+      next: (res) => {
+        this.imagenPerfil = res.imagen;
+        this.authService.setImagen(res.imagen);
+      },
       error: (err) => console.error('Error subiendo imagen de perfil:', err)
+    });
+  }
+
+  cambiarPassword(): void {
+    const { passwordActual, passwordNuevo, passwordConfirm } = this.passwordForm.getRawValue();
+    if (this.passwordForm.invalid) { this.passwordForm.markAllAsTouched(); return; }
+    if (passwordNuevo !== passwordConfirm) {
+      this.passwordMensaje = 'Las contraseñas nuevas no coinciden';
+      return;
+    }
+    this.authService.cambiarPassword(passwordActual!, passwordNuevo!).subscribe({
+      next: () => {
+        this.passwordMensaje = 'ok';
+        this.passwordForm.reset();
+      },
+      error: (err) => { this.passwordMensaje = err.error?.message ?? 'Error al cambiar contraseña'; }
     });
   }
 

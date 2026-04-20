@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
@@ -10,8 +10,25 @@ import { environment } from '../../environments/environment';
 export class AuthService {
 
   private apiUrl = environment.apiUrl;
+  private imagenSubject = new BehaviorSubject<string | null>(localStorage.getItem('imagenPerfil'));
+  imagenPerfil$ = this.imagenSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  setImagen(imagen: string | null): void {
+    if (imagen) localStorage.setItem('imagenPerfil', imagen);
+    else localStorage.removeItem('imagenPerfil');
+    this.imagenSubject.next(imagen);
+  }
+
+  getImagen(): string | null {
+    return localStorage.getItem('imagenPerfil');
+  }
+
+  cambiarPassword(passwordActual: string, passwordNuevo: string): Observable<any> {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.getToken()}` });
+    return this.http.put(`${this.apiUrl}/auth/cambiar-password`, { passwordActual, passwordNuevo }, { headers });
+  }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
@@ -35,6 +52,8 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
     localStorage.removeItem('email');
+    localStorage.removeItem('imagenPerfil');
+    this.imagenSubject.next(null);
     this.router.navigate(['/']);
   }
 

@@ -51,6 +51,29 @@ async function actualizarImagen(id, imagen) {
   }
 }
 
+async function obtenerPasswordPorId(id) {
+  const connection = await db.getConnection();
+  try {
+    const [rows] = await connection.execute(
+      'SELECT password FROM usuario WHERE id = ?', [id]
+    );
+    return rows[0];
+  } finally {
+    connection.release();
+  }
+}
+
+async function actualizarPassword(id, hash) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(
+      'UPDATE usuario SET password = ? WHERE id = ?', [hash, id]
+    );
+  } finally {
+    connection.release();
+  }
+}
+
 async function contarAdoptantes() {
   const connection = await db.getConnection();
   try {
@@ -69,6 +92,8 @@ module.exports = {
   obtenerPorEmail,
   crearUsuario,
   obtenerPorId,
+  obtenerPasswordPorId,
   actualizarImagen,
+  actualizarPassword,
   contarAdoptantes
 };
