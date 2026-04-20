@@ -130,6 +130,7 @@ CREATE TABLE peticion (
   animal_id INT NOT NULL,
   mensaje TEXT NULL DEFAULT NULL,
   estado ENUM('pendiente','aprobada','rechazada') NULL DEFAULT 'pendiente',
+  visto TINYINT(1) DEFAULT 0,
   creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY fk_peticion_usuario (usuario_id),

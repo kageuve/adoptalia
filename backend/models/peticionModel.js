@@ -53,6 +53,7 @@ async function obtenerPorUsuario(usuario_id) {
         a.imagen_url AS imagen,
         pr.nombre AS protectora,
         p.estado,
+        p.visto,
         p.creado AS fecha,
         p.mensaje
       FROM peticion p
@@ -112,4 +113,17 @@ async function eliminar(id) {
   }
 }
 
-module.exports = { crear, obtenerPorId, obtenerPorUsuarioYAnimal, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar };
+async function marcarComoVistas(usuario_id) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(
+      `UPDATE peticion SET visto = 1 WHERE usuario_id = ? AND visto = 0 AND estado != 'pendiente'`,
+      [usuario_id]
+    );
+  } finally {
+    connection.release();
+  }
+}
+
+module.exports = { crear, obtenerPorUsuarioYAnimal,obtenerPorId, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar, marcarComoVistas };
+

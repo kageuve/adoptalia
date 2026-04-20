@@ -21,33 +21,49 @@ export class NotificacionService {
     });
   }
 
-  cargarPendientes(): void {
-      console.log('isLoggedIn:', this.authService.isLoggedIn());
-  console.log('rol:', this.authService.getRol());
-    if (!this.authService.isLoggedIn()) return;
+cargarPendientes(): void {
+  if (!this.authService.isLoggedIn()) return;
 
-    const rol = this.authService.getRol();
+  const rol = this.authService.getRol();
 
-    if (rol === 'protectora') {
-      this.http.get<any>(`${this.apiUrl}/peticiones/protectora`, { headers: this.getHeaders() }).subscribe({
-        next: (res) => {
-          const pendientes = res.data.filter((p: any) => p.estado === 'pendiente').length;
-          this._pendientes.next(pendientes);
-        },
-        error: () => this._pendientes.next(0)
-      });
-    } else {
-      this.http.get<any>(`${this.apiUrl}/peticiones/mis-peticiones`, { headers: this.getHeaders() }).subscribe({
-        next: (res) => {
-          const pendientes = res.data.filter((p: any) => p.estado === 'pendiente').length;
-          this._pendientes.next(pendientes);
-        },
-        error: () => this._pendientes.next(0)
-      });
-    }
+  if (rol === 'protectora') {
+    // Protectora: cuenta solicitudes pendientes de recibir
+    this.http.get<any>(`${this.apiUrl}/peticiones/protectora`, { headers: this.getHeaders() }).subscribe({
+      next: (res) => {
+          console.log('peticiones protectora:', res.data);
+        const pendientes = res.data.filter((p: any) => p.estado === 'pendiente').length;
+          console.log('pendientes:', pendientes);
+        this._pendientes.next(pendientes);
+      },
+      error: () => this._pendientes.next(0)
+    });
+  } else {
+    // Usuario: cuenta solicitudes aprobadas o rechazadas no vistas
+    this.http.get<any>(`${this.apiUrl}/peticiones/mis-peticiones`, { headers: this.getHeaders() }).subscribe({
+      next: (res) => {
+        const noVistas = res.data.filter((p: any) => p.estado !== 'pendiente' && !p.visto).length;
+        this._pendientes.next(noVistas);
+      },
+      error: () => this._pendientes.next(0)
+    });
   }
+}
 
   resetPendientes(): void {
     this._pendientes.next(0);
   }
+
+marcarVistas(): void {
+  console.log('marcando vistas...');
+  this.http.put(`${this.apiUrl}/peticiones/marcar-vistas`, {}, { headers: this.getHeaders() }).subscribe({
+    next: (res) => {
+      console.log('vistas marcadas:', res);
+      this._pendientes.next(0);
+      this.cargarPendientes();
+    },
+    error: (err) => {
+      console.error('error marcando vistas:', err);
+    }
+  });
+}
 }

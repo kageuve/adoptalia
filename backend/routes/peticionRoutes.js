@@ -12,6 +12,7 @@ router.get('/mis-peticiones', verificarToken, peticionController.listarPeticione
 router.get('/protectora', verificarToken, peticionController.listarPeticionesProtectora);
 
 //OTROS
+router.put('/marcar-vistas', verificarToken, peticionController.marcarVistas);
 router.put('/:id', verificarToken, peticionController.actualizarPeticion);
 router.delete('/:id', verificarToken, peticionController.cancelarPeticion);
 
