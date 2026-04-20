@@ -98,4 +98,14 @@ async function cancelarPeticion(req, res) {
   }
 }
 
-module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario, listarPeticionesProtectora, actualizarPeticion, cancelarPeticion };
+async function marcarVistas(req, res) {
+  try {
+    await peticionModel.marcarComoVistas(req.user.id);
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false });
+  }
+}
+
+module.exports = { crearPeticion, comprobarPeticion, listarPeticionesUsuario, listarPeticionesProtectora, actualizarPeticion, cancelarPeticion, marcarVistas };

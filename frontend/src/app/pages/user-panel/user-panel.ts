@@ -97,6 +97,8 @@ export class UserPanel implements OnInit {
       },
       error: (err) => console.error('Error cargando favoritos:', err)
     });
+
+    this.notificacionService.marcarVistas();
   }
 
   get solicitudesPendientes(): number {
