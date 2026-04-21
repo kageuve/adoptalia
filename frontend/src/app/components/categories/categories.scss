@@ -82,6 +82,7 @@
   .cards-container {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+    margin: 5px;
   }
 
   .card {
@@ -92,4 +93,5 @@
     height: 120px;
     font-size: 36px;
   }
+
 }

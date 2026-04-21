@@ -3,10 +3,19 @@
   color: #fff;
   text-align: center;
   padding: 1rem;
-  .socials a {
+  .social-icons a {
     margin: 0 0.5rem;
     color: #f5f0e6;
     text-decoration: none;
     font-size: 1.2rem;
+  
+    .ig-icon {
+      width: 24px;
+      height: 24px;
+      transition: transform 0.2s ease;
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
   }
 }

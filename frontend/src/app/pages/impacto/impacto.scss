@@ -108,32 +108,73 @@
   margin: var(--space-xl) 0;
   text-align: center;
   width: 100%;
-  height: 400px;
+  min-height: 420px;
   background-image: url(/img/img-impact.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   margin-bottom: 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: var(--space-md);
+  padding: var(--space-xl);
+  overflow: hidden;
+}
+
+.impact-action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 248, 233, 0.82) 0%,
+    rgba(255, 248, 233, 0.58) 45%,
+    rgba(65, 67, 27, 0.22) 100%
+  );
+}
+
+.impacto-text {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  padding: 1.5rem 1.75rem;
+  background: rgba(255, 250, 240, 0.72);
+  border: 1px solid rgba(65, 67, 27, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  backdrop-filter: blur(6px);
 }
 
 .impact-action h2 {
   color: var(--color-primary-dark);
+  margin: 0 0 var(--space-sm);
+  font-size: clamp(1.6rem, 2.4vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.impact-action p {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: var(--font-md);
+  line-height: 1.7;
+  text-wrap: balance;
 }
 
 .impact-action button {
+  position: relative;
+  z-index: 1;
   background: var(--color-primary);
   color: var(--color-text-secondary);
-  border: 1px solid var(--color-text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-lg);
-  padding: 12px 26px;
+  padding: 14px 28px;
   font-weight: var(--font-medium);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
 }
 
 .impact-action button:hover {
@@ -148,6 +189,17 @@
   .impact-container {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .impact-action {
+    min-height: 360px;
+    padding: var(--space-lg);
+    background-position: center;
+  }
+
+  .impacto-text {
+    max-width: 100%;
+    padding: 1.25rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -157,5 +209,30 @@
 
   .progress-bar {
     height: 14px;
+  }
+
+  .impact-action {
+    min-height: 340px;
+    padding: var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .impacto-text {
+    padding: 1rem;
+    border-radius: 20px;
+  }
+
+  .impact-action h2 {
+    font-size: 1.5rem;
+  }
+
+  .impact-action p {
+    font-size: var(--font-sm);
+    line-height: 1.6;
+  }
+
+  .impact-action button {
+    width: 100%;
+    max-width: 280px;
   }
 }

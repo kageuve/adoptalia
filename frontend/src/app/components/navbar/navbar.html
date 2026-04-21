@@ -25,8 +25,8 @@
 
     <li class="mobile-actions">
       <ng-container *ngIf="!authService.isLoggedIn(); else loggedInMobile">
-        <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }">Iniciar sesión</button>
-        <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }">Registrarse</button>
+        <button class="btn-session" [routerLink]="['/login']" [queryParams]="{ mode: 'login' }" (click)="closeMenu()">Iniciar sesión</button>
+        <button class="btn-login" [routerLink]="['/login']" [queryParams]="{ mode: 'register' }" (click)="closeMenu()">Registrarse</button>
       </ng-container>
       <ng-template #loggedInMobile>
         <button class="user-menu-trigger" type="button" (click)="toggleUserMenu($event)">
