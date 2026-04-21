@@ -41,6 +41,7 @@ export class UserPanel implements OnInit {
   solicitudes: AdoptionRequest[] = [];
   favoritos: FavoriteAnimal[] = [];
   passwordMensaje: string | null = null;
+  mostrarPasswordForm = false;
   readonly passwordForm;
   private apiUrl = environment.apiUrl;
 
@@ -152,6 +153,14 @@ cancelarSolicitud(id: number): void {
       },
       error: (err) => { this.passwordMensaje = err.error?.message ?? 'Error al cambiar contraseña'; }
     });
+  }
+
+  togglePasswordForm(): void {
+    this.mostrarPasswordForm = !this.mostrarPasswordForm;
+    if (!this.mostrarPasswordForm) {
+      this.passwordMensaje = null;
+      this.passwordForm.reset();
+    }
   }
 
   eliminarFavorito(animal_id: number): void {

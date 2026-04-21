@@ -100,11 +100,17 @@
     <div class="section-header">
       <div>
         <span class="label">Seguridad</span>
-        <h2>Cambiar contraseña</h2>
+        <h2>Credenciales</h2>
       </div>
     </div>
 
-    <form class="password-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+    <div class="form-actions">
+      <button class="primary-btn" type="button" (click)="togglePasswordForm()">
+        {{ mostrarPasswordForm ? 'Ocultar formulario' : 'Cambiar contraseña' }}
+      </button>
+    </div>
+
+    <form class="password-form" *ngIf="mostrarPasswordForm" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
       <div class="password-grid">
         <label>
           <span>Contraseña actual</span>
