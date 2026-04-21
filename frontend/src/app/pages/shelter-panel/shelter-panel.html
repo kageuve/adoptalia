@@ -137,7 +137,7 @@
 
       <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
         <div>
-          <img [src]="animal.imagen_url || '/img/no.image.png'" [alt]="animal.nombre" class="animal-img">
+          <img [src]="animal.imagen_url || '/img/no-image.png'" [alt]="animal.nombre" class="animal-img">
         </div>
         <span class="animal-name">{{ animal.nombre }}</span>
         <span>{{ animal.especie }} · {{ animal.genero }} · {{ animal.tamano }}</span>

@@ -16,7 +16,7 @@ async function getPerfil(req, res) {
 async function subirImagenPerfil(req, res) {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'No se recibió imagen' });
-    const imagen = `/uploads/perfiles/${req.file.filename}`;
+    const imagen = `${process.env.BASE_URL}/uploads/perfiles/${req.file.filename}`;
     await userModel.actualizarImagen(req.user.id, imagen);
     res.json({ success: true, imagen });
   } catch (error) {

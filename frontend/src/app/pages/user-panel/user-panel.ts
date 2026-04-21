@@ -63,9 +63,10 @@ export class UserPanel implements OnInit {
   ngOnInit(): void {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.get<any>(`${this.apiUrl}/usuarios/perfil`, { headers }).subscribe({
-      next: (res) => {
-        this.imagenPerfil = res.data?.imagen ?? null;
-        this.authService.setImagen(this.imagenPerfil);
+    next: (res) => {
+      const imagenRaw = res.data?.imagen ?? null;
+      this.authService.setImagen(imagenRaw);
+      this.imagenPerfil = this.authService.getImagen();
       },
       error: () => {}
     });
@@ -92,7 +93,7 @@ export class UserPanel implements OnInit {
           nombre: f.nombre,
           especie: f.especie,
           ubicacion: f.provincia,
-          imagen: f.imagen || '/img/no.image.png'
+          imagen: f.imagen || '/img/no-image.png'
         }));
       },
       error: (err) => console.error('Error cargando favoritos:', err)
@@ -130,10 +131,11 @@ cancelarSolicitud(id: number): void {
     formData.append('imagen', input.files[0]);
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.post<any>(`${this.apiUrl}/usuarios/perfil/imagen`, formData, { headers }).subscribe({
-      next: (res) => {
-        this.imagenPerfil = res.imagen;
-        this.authService.setImagen(res.imagen);
-      },
+    next: (res) => {
+      console.log('respuesta subir imagen:', res);
+      this.imagenPerfil = res.imagen;
+      this.authService.setImagen(res.imagen);
+    },
       error: (err) => console.error('Error subiendo imagen de perfil:', err)
     });
   }
