@@ -15,11 +15,17 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  setImagen(imagen: string | null): void {
-    if (imagen) localStorage.setItem('imagenPerfil', imagen);
-    else localStorage.removeItem('imagenPerfil');
-    this.imagenSubject.next(imagen);
+setImagen(imagen: string | null): void {
+  if (imagen) {
+    const baseUrl = this.apiUrl.replace('/api', '');
+    const imagenCompleta = imagen.startsWith('http') ? imagen : `${baseUrl}${imagen}`;
+    localStorage.setItem('imagenPerfil', imagenCompleta);
+    this.imagenSubject.next(imagenCompleta);
+  } else {
+    localStorage.removeItem('imagenPerfil');
+    this.imagenSubject.next(null);
   }
+}
 
   getImagen(): string | null {
     return localStorage.getItem('imagenPerfil');

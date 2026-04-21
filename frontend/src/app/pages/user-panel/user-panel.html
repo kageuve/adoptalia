@@ -53,7 +53,7 @@
       </div>
 
       <div class="request-row" *ngFor="let solicitud of solicitudes; trackBy: trackById">
-        <img [src]="solicitud.imagen || '/img/no.image.png'" [alt]="solicitud.animal" class="request-img">
+        <img [src]="solicitud.imagen || '/img/no-image.png'" [alt]="solicitud.animal" class="request-img">
         <span class="animal-name">{{ solicitud.animal }}</span>
         <span>{{ solicitud.protectora }} · {{ solicitud.fecha }}</span>
         <span [class]="getBadgeClass(solicitud.estado)">{{ solicitud.estado }}</span>
