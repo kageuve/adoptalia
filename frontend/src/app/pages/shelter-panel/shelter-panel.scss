@@ -17,6 +17,10 @@
   gap: var(--space-md);
 }
 
+.form-actions-password {
+  justify-content: flex-start;
+}
+
 .dashboard-hero {
   grid-template-columns: 1.4fr 1fr;
   align-items: start;
@@ -161,6 +165,10 @@ select {
 .form-actions {
   margin-top: var(--space-lg);
   justify-content: center;
+}
+
+.password-toggle-actions {
+  justify-content: flex-start;
 }
 
 .table-card {

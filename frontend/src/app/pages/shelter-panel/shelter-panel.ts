@@ -49,6 +49,7 @@ export class ShelterPanel implements OnInit {
   private apiUrl: string;
   protectora: any = null;
   passwordMensaje: string | null = null;
+  mostrarPasswordForm = false;
   readonly passwordForm;
 
   mostrarPasswordActual = false;
@@ -273,6 +274,14 @@ actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
       },
       error: (err) => { this.passwordMensaje = err.error?.message ?? 'Error al cambiar contraseña'; }
     });
+  }
+
+  togglePasswordForm(): void {
+    this.mostrarPasswordForm = !this.mostrarPasswordForm;
+    if (!this.mostrarPasswordForm) {
+      this.passwordMensaje = null;
+      this.passwordForm.reset();
+    }
   }
 
   subirImagen(event: Event): void {
