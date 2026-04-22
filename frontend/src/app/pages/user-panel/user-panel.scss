@@ -484,6 +484,31 @@
   }
 }
 
+.input-password-wrapper {
+  position: relative;
+
+  input {
+    width: 100%;
+    padding-right: 3rem;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+}
+
 @media (max-width: 640px) {
   .request-row {
     grid-template-columns: 1fr;

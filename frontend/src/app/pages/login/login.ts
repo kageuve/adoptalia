@@ -150,4 +150,16 @@ onLogin() {
   toggleMode() {
     this.setMode(!this.isLogin);
   }
+
+  mostrarPassword = false;
+mostrarPasswordRegistro = false;
+
+togglePassword() {
+  this.mostrarPassword = !this.mostrarPassword;
+}
+
+togglePasswordRegistro() {
+  this.mostrarPasswordRegistro = !this.mostrarPasswordRegistro;
+}
+
 }
