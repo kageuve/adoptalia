@@ -51,6 +51,14 @@ export class ShelterPanel implements OnInit {
   passwordMensaje: string | null = null;
   readonly passwordForm;
 
+  mostrarPasswordActual = false;
+  mostrarPasswordNuevo = false;
+  mostrarPasswordConfirm = false;
+
+  togglePasswordActual() { this.mostrarPasswordActual = !this.mostrarPasswordActual; }
+  togglePasswordNuevo() { this.mostrarPasswordNuevo = !this.mostrarPasswordNuevo; }
+  togglePasswordConfirm() { this.mostrarPasswordConfirm = !this.mostrarPasswordConfirm; }
+
   constructor(
     private fb: FormBuilder,
     private peticionService: PeticionService,

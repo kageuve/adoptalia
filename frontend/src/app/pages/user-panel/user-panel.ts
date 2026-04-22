@@ -44,6 +44,14 @@ export class UserPanel implements OnInit {
   readonly passwordForm;
   private apiUrl = environment.apiUrl;
 
+mostrarPasswordActual = false;
+mostrarPasswordNuevo = false;
+mostrarPasswordConfirm = false;
+
+togglePasswordActual() { this.mostrarPasswordActual = !this.mostrarPasswordActual; }
+togglePasswordNuevo() { this.mostrarPasswordNuevo = !this.mostrarPasswordNuevo; }
+togglePasswordConfirm() { this.mostrarPasswordConfirm = !this.mostrarPasswordConfirm; }
+
   constructor(
     private authService: AuthService,
     private peticionService: PeticionService,
