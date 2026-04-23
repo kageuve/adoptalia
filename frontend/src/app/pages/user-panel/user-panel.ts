@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { PeticionService } from '../../services/peticion.service';
 import { FavoritoService } from '../../services/favorito.service';
@@ -30,7 +31,7 @@ interface FavoriteAnimal {
 @Component({
   selector: 'app-user-panel',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, HttpClientModule, RouterLink, ReactiveFormsModule, FormsModule],
   templateUrl: './user-panel.html',
   styleUrl: './user-panel.scss'
 })
@@ -38,6 +39,9 @@ export class UserPanel implements OnInit {
 
   readonly usuarioEmail: string;
   imagenPerfil: string | null = null;
+  nombreUsuario: string = '';
+  descripcion: string = '';
+  editandoDescripcion = false;
   solicitudes: AdoptionRequest[] = [];
   favoritos: FavoriteAnimal[] = [];
   passwordMensaje: string | null = null;
@@ -45,13 +49,13 @@ export class UserPanel implements OnInit {
   readonly passwordForm;
   private apiUrl = environment.apiUrl;
 
-mostrarPasswordActual = false;
-mostrarPasswordNuevo = false;
-mostrarPasswordConfirm = false;
+  mostrarPasswordActual = false;
+  mostrarPasswordNuevo = false;
+  mostrarPasswordConfirm = false;
 
-togglePasswordActual() { this.mostrarPasswordActual = !this.mostrarPasswordActual; }
-togglePasswordNuevo() { this.mostrarPasswordNuevo = !this.mostrarPasswordNuevo; }
-togglePasswordConfirm() { this.mostrarPasswordConfirm = !this.mostrarPasswordConfirm; }
+  togglePasswordActual() { this.mostrarPasswordActual = !this.mostrarPasswordActual; }
+  togglePasswordNuevo() { this.mostrarPasswordNuevo = !this.mostrarPasswordNuevo; }
+  togglePasswordConfirm() { this.mostrarPasswordConfirm = !this.mostrarPasswordConfirm; }
 
   constructor(
     private authService: AuthService,
@@ -72,10 +76,12 @@ togglePasswordConfirm() { this.mostrarPasswordConfirm = !this.mostrarPasswordCon
   ngOnInit(): void {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.get<any>(`${this.apiUrl}/usuarios/perfil`, { headers }).subscribe({
-    next: (res) => {
-      const imagenRaw = res.data?.imagen ?? null;
-      this.authService.setImagen(imagenRaw);
-      this.imagenPerfil = this.authService.getImagen();
+      next: (res) => {
+        const imagenRaw = res.data?.imagen ?? null;
+        this.authService.setImagen(imagenRaw);
+        this.imagenPerfil = this.authService.getImagen();
+        this.descripcion = res.data?.descripcion ?? '';
+        this.nombreUsuario = res.data?.nombre ?? '';
       },
       error: () => {}
     });
@@ -123,15 +129,16 @@ togglePasswordConfirm() { this.mostrarPasswordConfirm = !this.mostrarPasswordCon
     return `badge badge-${estado}`;
   }
 
-cancelarSolicitud(id: number): void {
-  this.peticionService.cancelarPeticion(id).subscribe({
-    next: () => {
-      this.solicitudes = this.solicitudes.filter(s => s.id !== id);
-      this.notificacionService.cargarPendientes();
-    },
-    error: (err) => console.error('Error cancelando solicitud:', err)
-  });
-}
+  cancelarSolicitud(id: number): void {
+    if (!confirm('¿Estás seguro de que quieres cancelar esta solicitud?')) return;
+    this.peticionService.cancelarPeticion(id).subscribe({
+      next: () => {
+        this.solicitudes = this.solicitudes.filter(s => s.id !== id);
+        this.notificacionService.cargarPendientes();
+      },
+      error: (err) => console.error('Error cancelando solicitud:', err)
+    });
+  }
 
   subirImagenPerfil(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -140,11 +147,10 @@ cancelarSolicitud(id: number): void {
     formData.append('imagen', input.files[0]);
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.post<any>(`${this.apiUrl}/usuarios/perfil/imagen`, formData, { headers }).subscribe({
-    next: (res) => {
-      console.log('respuesta subir imagen:', res);
-      this.imagenPerfil = res.imagen;
-      this.authService.setImagen(res.imagen);
-    },
+      next: (res) => {
+        this.imagenPerfil = res.imagen;
+        this.authService.setImagen(res.imagen);
+      },
       error: (err) => console.error('Error subiendo imagen de perfil:', err)
     });
   }
@@ -173,7 +179,22 @@ cancelarSolicitud(id: number): void {
     }
   }
 
+  toggleEditarDescripcion() {
+    this.editandoDescripcion = !this.editandoDescripcion;
+  }
+
+  guardarDescripcion(): void {
+    const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
+    this.http.put<any>(`${this.apiUrl}/usuarios/perfil`, { descripcion: this.descripcion }, { headers }).subscribe({
+      next: () => {
+        this.editandoDescripcion = false;
+      },
+      error: (err) => console.error('Error guardando descripción:', err)
+    });
+  }
+
   eliminarFavorito(animal_id: number): void {
+    if (!confirm('¿Quieres quitar este animal de favoritos?')) return;
     this.favoritoService.eliminarFavorito(animal_id).subscribe({
       next: () => {
         this.favoritos = this.favoritos.filter(f => f.id !== animal_id);

@@ -10,4 +10,5 @@ export interface Animal {
   genero?: 'macho' | 'hembra';
   descripcion?: string | null;
   estado?: 'disponible' | 'reservado' | 'adoptado';
+  protectora?: string;
 }

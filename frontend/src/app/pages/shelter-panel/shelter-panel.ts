@@ -25,6 +25,9 @@ interface ShelterRequest {
   id: number;
   animal: string;
   adoptante: string;
+  adoptante_nombre: string | null;
+  adoptante_descripcion: string | null;
+  adoptante_imagen: string | null;
   fecha: string;
   estado: 'pendiente' | 'aprobada' | 'rechazada';
 }
@@ -100,6 +103,9 @@ export class ShelterPanel implements OnInit {
           id: p.id,
           animal: p.animal,
           adoptante: p.adoptante,
+          adoptante_nombre: p.adoptante_nombre || null,
+          adoptante_descripcion: p.adoptante_descripcion || null,
+          adoptante_imagen: p.adoptante_imagen || null,
           fecha: new Date(p.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }),
           estado: p.estado
         }));
@@ -181,7 +187,8 @@ export class ShelterPanel implements OnInit {
   }
 
   eliminarAnimal(id: number): void {
-    this.animalsService.eliminarAnimal(id).subscribe({
+    if (!confirm('¿Estás seguro de que quieres eliminar este animal?')) return;
+      this.animalsService.eliminarAnimal(id).subscribe({
       next: () => {
         this.animales = this.animales.filter(animal => animal.id !== id);
       },
@@ -305,4 +312,15 @@ actualizarSolicitud(id: number, estado: 'aprobada' | 'rechazada'): void {
       error: (err) => console.error('Error subiendo imagen:', err)
     });
   }
+
+  eliminarSolicitud(id: number): void {
+  if (!confirm('¿Eliminar esta solicitud?')) return;
+  this.peticionService.cancelarPeticion(id).subscribe({
+    next: () => {
+      this.solicitudes = this.solicitudes.filter(s => s.id !== id);
+    },
+    error: (err) => console.error('Error eliminando solicitud:', err)
+  });
+}
+
 }

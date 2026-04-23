@@ -181,6 +181,7 @@ async function obtenerPublicoPorId(id) {
         a.descripcion,
         a.estado,
         p.ciudad AS provincia,
+        p.nombre AS protectora,
         a.imagen_url AS imagen
       FROM animal a
       JOIN protectora p ON a.protectora_id = p.id

@@ -135,7 +135,7 @@ onLogin() {
         }
       });
     } else {
-      this.authService.registerUsuario(v.email, v.password).subscribe({
+      this.authService.registerUsuario(v.email, v.password, v.nombre).subscribe({
         next: () => {
           this.successMsg = 'Cuenta creada. Ya puedes iniciar sesión.';
           setTimeout(() => this.setMode(true), 2500);

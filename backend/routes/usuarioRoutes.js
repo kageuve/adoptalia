@@ -14,5 +14,6 @@ const upload = multer({ storage });
 router.get('/impacto', usuarioController.getImpacto);
 router.get('/perfil', verificarToken, usuarioController.getPerfil);
 router.post('/perfil/imagen', verificarToken, upload.single('imagen'), usuarioController.subirImagenPerfil);
+router.put('/perfil', verificarToken, usuarioController.actualizarPerfil);
 
 module.exports = router;
