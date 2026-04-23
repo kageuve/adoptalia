@@ -45,6 +45,7 @@ export class ShelterPanel implements OnInit {
   mostrarFormulario = false;
   editandoId: number | null = null;
   imagenPreview: string | null = null;
+  tabAnimales: 'activos' | 'adoptados' = 'activos';
   readonly animalForm;
 
   animales: ShelterAnimal[] = [];
@@ -123,8 +124,20 @@ export class ShelterPanel implements OnInit {
 
   }
 
+  get animalesActivos(): ShelterAnimal[] {
+    return this.animales.filter(a => a.estado !== 'adoptado');
+  }
+
+  get animalesAdoptados(): ShelterAnimal[] {
+    return this.animales.filter(a => a.estado === 'adoptado');
+  }
+
+  get animalesFiltrados(): ShelterAnimal[] {
+    return this.tabAnimales === 'activos' ? this.animalesActivos : this.animalesAdoptados;
+  }
+
   get totalAnimales(): number {
-    return this.animales.length;
+    return this.animalesActivos.length;
   }
 
   get totalSolicitudes(): number {

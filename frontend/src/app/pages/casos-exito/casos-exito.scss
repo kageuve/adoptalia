@@ -1,12 +1,12 @@
 .casos-container {
   width: 100%;
   background-color: var(--color-background);
-  padding: var(--space-lg) 0;
+  padding: 0;
 }
 
 .casos-header {
   text-align: center;
-  padding: var(--space-lg) var(--space-lg) 0;
+  padding: var(--space-md) var(--space-lg) 0;
 
   h2 {
     color: var(--color-text-primary);

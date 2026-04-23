@@ -125,11 +125,23 @@
       </div>
     </form>
 
-    <div class="empty-state-card" *ngIf="animales.length === 0">
-      <p class="empty-state-copy">No hay animales registrados</p>
+    <!-- Pestañas -->
+    <div class="animal-tabs">
+      <button class="tab-btn" [class.tab-active]="tabAnimales === 'activos'" (click)="tabAnimales = 'activos'">
+        Activos ({{ animalesActivos.length }})
+      </button>
+      <button class="tab-btn" [class.tab-active]="tabAnimales === 'adoptados'" (click)="tabAnimales = 'adoptados'">
+        Adoptados ({{ animalesAdoptados.length }})
+      </button>
     </div>
 
-    <div class="table-card" *ngIf="animales.length > 0">
+    <div class="empty-state-card" *ngIf="animalesFiltrados.length === 0">
+      <p class="empty-state-copy">
+        {{ tabAnimales === 'activos' ? 'No hay animales activos registrados' : 'No hay animales adoptados registrados' }}
+      </p>
+    </div>
+
+    <div class="table-card" *ngIf="animalesFiltrados.length > 0">
       <div class="table-row table-head">
         <span>Imagen</span>
         <span>Animal</span>
@@ -138,7 +150,7 @@
         <span>Acciones</span>
       </div>
 
-      <div class="table-row" *ngFor="let animal of animales; trackBy: trackById">
+      <div class="table-row" *ngFor="let animal of animalesFiltrados; trackBy: trackById">
         <div>
           <img [src]="animal.imagen_url || '/img/no-image.png'" [alt]="animal.nombre" class="animal-img">
         </div>
@@ -156,12 +168,66 @@
   <section class="content-section">
     <div class="section-heading">
       <div>
-        <span class="eyebrow">Seguridad</span>
-        <h2>Cambiar contraseña</h2>
+        <span class="eyebrow">Seguimiento</span>
+        <h2>Solicitudes recibidas</h2>
       </div>
     </div>
 
-    <form class="animal-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+    <div class="empty-state-card" *ngIf="solicitudes.length === 0">
+      <p class="empty-state-copy">No hay solicitudes activas</p>
+    </div>
+
+    <div class="requests-grid" *ngIf="solicitudes.length > 0">
+      <article class="request-card" *ngFor="let solicitud of solicitudes; trackBy: trackById">
+        <div class="request-top">
+          <div class="adoptante-info">
+            <div>
+              <h3>{{ solicitud.animal }}</h3>
+              <p>{{ solicitud.adoptante_nombre || solicitud.adoptante }} · {{ solicitud.fecha }}</p>
+              <p class="adoptante-email">{{ solicitud.adoptante }}</p>
+              <p class="adoptante-desc" *ngIf="solicitud.adoptante_descripcion">{{ solicitud.adoptante_descripcion }}</p>
+            </div>
+          </div>
+
+          <div class="request-status">
+            <span [class]="getBadgeClass(solicitud.estado)">{{ solicitud.estado }}</span>
+            <button class="danger-btn" *ngIf="solicitud.estado === 'rechazada'" type="button" (click)="eliminarSolicitud(solicitud.id)">
+              Eliminar
+            </button>
+          </div>
+        </div>
+
+        <div class="request-actions" *ngIf="solicitud.estado === 'pendiente'; else estadoFinal">
+          <button class="approve-btn" type="button" (click)="actualizarSolicitud(solicitud.id, 'aprobada')">
+            Aprobar
+          </button>
+          <button class="reject-btn" type="button" (click)="actualizarSolicitud(solicitud.id, 'rechazada')">
+            Rechazar
+          </button>
+        </div>
+
+        <ng-template #estadoFinal>
+          <p class="resolved-copy">Solicitud revisada y marcada como {{ solicitud.estado }}.</p>
+        </ng-template>
+      </article>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Seguridad</span>
+        <h2>Cambiar contraseña</h2>
+      </div>
+      <button class="toggle-form-btn" type="button" (click)="togglePasswordForm()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        {{ mostrarPasswordForm ? 'Ocultar' : 'Cambiar contraseña' }}
+      </button>
+    </div>
+
+    <form *ngIf="mostrarPasswordForm" class="animal-form" [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
       <div class="form-grid">
         <label>
           <span>Contraseña actual</span>
@@ -222,53 +288,5 @@
         {{ passwordMensaje === 'ok' ? 'Contraseña actualizada correctamente' : passwordMensaje }}
       </p>
     </form>
-  </section>
-
-  <section class="content-section">
-    <div class="section-heading">
-      <div>
-        <span class="eyebrow">Seguimiento</span>
-        <h2>Solicitudes recibidas</h2>
-      </div>
-    </div>
-
-    <div class="empty-state-card" *ngIf="solicitudes.length === 0">
-      <p class="empty-state-copy">No hay solicitudes activas</p>
-    </div>
-
-    <div class="requests-grid" *ngIf="solicitudes.length > 0">
-      <article class="request-card" *ngFor="let solicitud of solicitudes; trackBy: trackById">
-        <div class="request-top">
-          <div class="adoptante-info">
-            <div>
-              <h3>{{ solicitud.animal }}</h3>
-              <p>{{ solicitud.adoptante_nombre || solicitud.adoptante }} · {{ solicitud.fecha }}</p>
-              <p class="adoptante-email">{{ solicitud.adoptante }}</p>
-              <p class="adoptante-desc" *ngIf="solicitud.adoptante_descripcion">{{ solicitud.adoptante_descripcion }}</p>
-            </div>
-          </div>
-
-          <div class="request-status">
-            <span [class]="getBadgeClass(solicitud.estado)">{{ solicitud.estado }}</span>
-            <button class="danger-btn" *ngIf="solicitud.estado === 'rechazada'" type="button" (click)="eliminarSolicitud(solicitud.id)">
-              Eliminar
-            </button>
-          </div>
-        </div>
-
-        <div class="request-actions" *ngIf="solicitud.estado === 'pendiente'; else estadoFinal">
-          <button class="approve-btn" type="button" (click)="actualizarSolicitud(solicitud.id, 'aprobada')">  
-            Aprobar
-          </button>
-          <button class="reject-btn" type="button" (click)="actualizarSolicitud(solicitud.id, 'rechazada')">
-            Rechazar
-          </button>
-        </div>
-
-      <ng-template #estadoFinal>
-        <p class="resolved-copy">Solicitud revisada y marcada como {{ solicitud.estado }}.</p>
-      </ng-template>
-    </article>
-  </div>
   </section>
 </section>

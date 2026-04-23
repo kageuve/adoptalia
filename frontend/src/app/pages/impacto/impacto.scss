@@ -52,11 +52,13 @@
 
 /* SECTION STORY */
 .impact-story {
-  margin-top: var(--space-lg);
+  margin: var(--space-lg);
+  border-radius: var(--radius-xl);
   text-align: center;
   padding: var(--space-xl);
   background: var(--color-primary);
   color: var(--color-text-secondary);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .impact-story-icon {
@@ -70,7 +72,7 @@
 
 /* SECTION PROGRESS */
 .impact-goal {
-  margin-top: var(--space-xl);
+  margin-top: var(--space-lg);
   text-align: center;
   padding: 0 var(--space-md);
 }
@@ -105,15 +107,15 @@
 
 /* SECTION ACTION */
 .impact-action {
-  margin: var(--space-xl) 0;
+  margin: 0 var(--space-lg) var(--space-lg);
+  border-radius: var(--radius-xl);
   text-align: center;
-  width: 100%;
+  width: calc(100% - 2 * var(--space-lg));
   min-height: 420px;
   background-image: url(/img/img-impact.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  margin-bottom: 0;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -122,6 +124,7 @@
   gap: var(--space-md);
   padding: var(--space-xl);
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
 }
 
 .impact-action::before {
@@ -190,7 +193,16 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .impact-story {
+    margin: var(--space-md);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+  }
+
   .impact-action {
+    margin: 0 var(--space-md) var(--space-md);
+    width: calc(100% - 2 * var(--space-md));
+    border-radius: var(--radius-lg);
     min-height: 360px;
     padding: var(--space-lg);
     background-position: center;
@@ -212,6 +224,9 @@
   }
 
   .impact-action {
+    margin: 0 var(--space-sm) var(--space-sm);
+    width: calc(100% - 2 * var(--space-sm));
+    border-radius: var(--radius-md);
     min-height: 340px;
     padding: var(--space-md);
     gap: var(--space-sm);

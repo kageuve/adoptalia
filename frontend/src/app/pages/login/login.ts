@@ -31,16 +31,18 @@ export class Login implements OnInit {
 
   ngOnInit(): void {
 
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
     // LOGIN FORM
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(emailRegex)]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
     // REGISTER FORM
     this.registerForm = this.fb.group({
       nombre: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(emailRegex)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       cif: [''],
       ciudad: [''],
