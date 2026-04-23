@@ -32,7 +32,7 @@ app.use('/api/usuarios', usuarioRoutes);
 
 // Ruta test
 app.get('/api/test', (req, res) => {
-  res.json({ mensaje: "Backend funcionando 🚀" });
+  res.json({ mensaje: "Backend funcionando" });
 });
 
 app.listen(port, () => {

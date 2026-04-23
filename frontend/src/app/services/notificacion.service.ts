@@ -30,9 +30,7 @@ cargarPendientes(): void {
     // Protectora: cuenta solicitudes pendientes de recibir
     this.http.get<any>(`${this.apiUrl}/peticiones/protectora`, { headers: this.getHeaders() }).subscribe({
       next: (res) => {
-          console.log('peticiones protectora:', res.data);
         const pendientes = res.data.filter((p: any) => p.estado === 'pendiente').length;
-          console.log('pendientes:', pendientes);
         this._pendientes.next(pendientes);
       },
       error: () => this._pendientes.next(0)
@@ -54,10 +52,8 @@ cargarPendientes(): void {
   }
 
 marcarVistas(): void {
-  console.log('marcando vistas...');
   this.http.put(`${this.apiUrl}/peticiones/marcar-vistas`, {}, { headers: this.getHeaders() }).subscribe({
     next: (res) => {
-      console.log('vistas marcadas:', res);
       this._pendientes.next(0);
       this.cargarPendientes();
     },

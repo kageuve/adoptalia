@@ -46,4 +46,13 @@ async function getImpacto(req, res) {
   }
 }
 
-module.exports = { getPerfil, subirImagenPerfil, getImpacto };
+async function actualizarPerfil(req, res) {
+  try {
+    await userModel.actualizarPerfil(req.user.id, req.body);
+    res.json({ success: true, message: 'Perfil actualizado' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+}
+
+module.exports = { getPerfil, subirImagenPerfil, getImpacto, actualizarPerfil };

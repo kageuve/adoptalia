@@ -76,6 +76,9 @@ async function obtenerPorProtectora(protectora_id) {
         p.id,
         a.nombre AS animal,
         u.email AS adoptante,
+        u.nombre AS adoptante_nombre,
+        u.descripcion AS adoptante_descripcion,
+        u.imagen AS adoptante_imagen,
         p.estado,
         p.creado AS fecha,
         p.mensaje

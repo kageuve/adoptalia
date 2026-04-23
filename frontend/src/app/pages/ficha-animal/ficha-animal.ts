@@ -62,6 +62,7 @@ export class FichaAnimal implements OnInit {
   }
 
   solicitarAdopcion(): void {
+    if (!confirm('¿Confirmas la solicitud de adopción?')) return;
     if (!this.animal) return;
     this.peticionService.crearPeticion(this.animal.id).subscribe({
       next: () => {

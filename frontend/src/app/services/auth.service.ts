@@ -38,16 +38,19 @@ setImagen(imagen: string | null): void {
 
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
-      tap(res => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('rol', res.rol);
-        localStorage.setItem('email', res.email);
-      })
+    tap(res => {
+    localStorage.setItem('token', res.token);
+    localStorage.setItem('rol', res.rol);
+    localStorage.setItem('email', res.email);
+      if (res.imagen) {
+        this.setImagen(res.imagen);
+      }
+    })
     );
   }
 
-  registerUsuario(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/auth/register`, { email, password, rol: 'usuario' });
+  registerUsuario(email: string, password: string, nombre?: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/register`, { email, password, rol: 'usuario', nombre });
   }
 
   registerProtectora(datos: { email: string; password: string; nombre: string; cif: string; ciudad: string; telefono?: string }): Observable<any> {

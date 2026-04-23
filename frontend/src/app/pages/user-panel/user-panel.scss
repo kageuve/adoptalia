@@ -414,6 +414,7 @@
   }
 }
 
+
 @media (max-width: 900px) {
   .requests-table {
     display: grid;
@@ -541,5 +542,17 @@
 
   .favorite-img {
     height: 260px;
+  }
+}
+
+.ghost-edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: var(--color-accent);
+
+  &:hover {
+    color: var(--color-button-secondary);
   }
 }

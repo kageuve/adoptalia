@@ -7,7 +7,7 @@ const SECRET = process.env.JWT_SECRET;
 // Registro
 async function register(req, res) {
   try {
-    const { email, password, rol } = req.body;
+    const { email, password, rol, nombre } = req.body;
 
     if (!email || !password || !rol) {
       return res.status(400).json({ message: 'Faltan datos' });
@@ -19,8 +19,7 @@ async function register(req, res) {
     }
 
     const hash = await bcrypt.hash(password, 10);
-
-    const userId = await userModel.crearUsuario(email, hash, rol);
+    const userId = await userModel.crearUsuario(email, hash, rol, nombre);
 
     res.status(201).json({
       message: 'Usuario creado correctamente',
@@ -59,7 +58,8 @@ async function login(req, res) {
       message: 'Login correcto',
       token,
       rol: usuario.rol,
-      email: usuario.email
+      email: usuario.email,
+      imagen: usuario.imagen || null
     });
 
   } catch (error) {

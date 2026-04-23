@@ -13,12 +13,12 @@ async function obtenerPorEmail(email) {
   }
 }
 
-async function crearUsuario(email, passwordHash, rol) {
+async function crearUsuario(email, passwordHash, rol, nombre = null) {
   const connection = await db.getConnection();
   try {
     const [result] = await connection.execute(
-      'INSERT INTO usuario (email, password, rol) VALUES (?, ?, ?)',
-      [email, passwordHash, rol]
+      'INSERT INTO usuario (email, password, rol, nombre) VALUES (?, ?, ?, ?)',
+      [email, passwordHash, rol, nombre]
     );
     return result.insertId;
   } finally {
@@ -30,7 +30,7 @@ async function obtenerPorId(id) {
   const connection = await db.getConnection();
   try {
     const [rows] = await connection.execute(
-      'SELECT id, email, rol, imagen FROM usuario WHERE id = ?',
+      'SELECT id, email, rol, imagen, nombre, descripcion FROM usuario WHERE id = ?',
       [id]
     );
     return rows[0];
@@ -88,6 +88,18 @@ async function contarAdoptantes() {
   }
 }
 
+async function actualizarPerfil(id, datos) {
+  const connection = await db.getConnection();
+  try {
+    await connection.execute(
+      'UPDATE usuario SET descripcion = ? WHERE id = ?',
+      [datos.descripcion || null, id]
+    );
+  } finally {
+    connection.release();
+  }
+}
+
 module.exports = {
   obtenerPorEmail,
   crearUsuario,
@@ -95,5 +107,7 @@ module.exports = {
   obtenerPasswordPorId,
   actualizarImagen,
   actualizarPassword,
+  actualizarPerfil,
   contarAdoptantes
 };
+
