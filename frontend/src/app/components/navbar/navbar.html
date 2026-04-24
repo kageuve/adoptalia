@@ -42,7 +42,7 @@
           </ng-template>
           {{ authService.getEmail() }}
         </button>
-        <div class="mobile-user-dropdown" *ngIf="userMenuOpen" (click)="$event.stopPropagation()">
+        <div class="mobile-user-dropdown" [class.open]="userMenuOpen" (click)="$event.stopPropagation()">
           <button class="dropdown-item" type="button" (click)="goToPanel()">Mi panel</button>
           <button class="dropdown-item danger-item" type="button" (click)="logout()">Cerrar sesión</button>
         </div>
@@ -70,7 +70,7 @@
           </ng-template>
           {{ authService.getEmail() }}
         </button>
-        <div class="user-dropdown" *ngIf="userMenuOpen">
+        <div class="user-dropdown" [class.open]="userMenuOpen">
           <button class="dropdown-item" type="button" (click)="goToPanel()">Mi panel</button>
           <button class="dropdown-item danger-item" type="button" (click)="logout()">Cerrar sesión</button>
         </div>
