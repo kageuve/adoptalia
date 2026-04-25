@@ -23,7 +23,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-md);
   box-shadow: 0 6px 18px rgba(0,0,0,0.08);
   letter-spacing: 1px;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -35,7 +34,18 @@
 }
 
 .impact-icon {
+  display: flex;
+  justify-content: center;
   font-size: var(--font-xxl);
+  height: 125px;
+}
+
+.goal-img {
+    width: 95%;
+    height: auto;
+    object-fit: contain;
+    transition: all 0.5s ease;
+    filter: drop-shadow(0px 8px 12px rgba(0, 0, 0, 0.3));
 }
 
 .counter-number {
@@ -47,7 +57,7 @@
 
 .goal p {
   color: var(--color-text-primary);
-  font-size: var(--font-sm);
+  font-size: var(--font-md);
 }
 
 /* SECTION STORY */
@@ -202,6 +212,11 @@
     padding: var(--space-lg);
   }
 
+  .story-icon {
+    width: 10%;
+    height: auto;
+  }
+
   .impact-action {
     margin: 0 var(--space-md) var(--space-md);
     width: calc(100% - 2 * var(--space-md));
@@ -225,6 +240,11 @@
 
   .impact-container {
     grid-template-columns: 1fr;
+  }
+
+  .story-icon {
+    width: 10%;
+    height: auto;
   }
 
   .progress-bar {

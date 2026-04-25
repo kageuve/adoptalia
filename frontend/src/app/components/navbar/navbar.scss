@@ -51,6 +51,7 @@
   color: var(--color-text-secondary);
   font-weight: var(--font-medium);
   transition: color 0.2s ease;
+  position: relative;
 }
 
 .links-container a:hover {
@@ -59,6 +60,21 @@
 
 .links-container a.active {
   font-weight: var(--font-bold);
+}
+
+.links-container a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-text-hover);
+  transition: width 0.3s ease;
+}
+
+.links-container a.active::after {
+  width: 100%;
 }
 
 // Botones
