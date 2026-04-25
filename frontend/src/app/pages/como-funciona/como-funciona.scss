@@ -32,6 +32,29 @@
   animation: fadeStep 1.0s ease forwards;
 }
 
+.step-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: center;
+}
+
+.step-icon-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.step-icon {
+  display: flex;
+  justify-content: center;
+  width: 20%;
+  height: auto;
+  object-fit: contain;
+}
+
 .step:not(:last-child)::after {
   content: "";
   position: absolute;
@@ -79,7 +102,7 @@
 
 .step-container {
   background: var(--color-primary-superlight);
-  padding: var(--space-lg);
+  padding: var(--space-md);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(0,0,0,0.05);
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
@@ -108,9 +131,16 @@
 
   .step-container {
     text-align: center;
+    padding: 10px;
   }
   
   .step {
     gap: var(--space-md);
   }
+
+  .step-icon {
+  width: 75%;
+  }
 }
+
+

@@ -55,15 +55,18 @@
   margin: var(--space-lg);
   border-radius: var(--radius-xl);
   text-align: center;
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   background: var(--color-primary);
   color: var(--color-text-secondary);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-.impact-story-icon {
-  font-size: var(--font-hero);
-  margin-bottom: var(--space-md);
+.story-icon {
+  justify-self: center;
+  width: 3%;
+  height: auto;
+  margin-top: -10px;
+  margin-bottom: -20px;
 }
 
 .impact-story h2 {
@@ -78,7 +81,7 @@
 }
 
 .progress-container {
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-lg);
   width: 100%;
 }
 
@@ -215,6 +218,11 @@
 }
 
 @media (max-width: 480px) {
+
+  .impact-header {
+    margin-left: var(--space-md);
+  }
+
   .impact-container {
     grid-template-columns: 1fr;
   }

@@ -1,76 +1,48 @@
 <section class="categories">
     <div class="title">
         <h2>Encuentra a tu compañero perfecto</h2>
-        <p>Explora nuestras categorías y descubre miles de animales esperando por ti</p>
+        <p>Explora nuestras categorías y descubre miles de animales esperando su nuevo hogar.</p>
     </div>
 
     <div class="cards-container">
         <div class="card" routerLink="/adoptar" [queryParams]="{especie: 'Perro'}">
             <div class="card-icon green">
-              <!-- Huella de perro: 4 dedos en arco + almohadilla central -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="rgba(255,255,255,0.93)">
-                <ellipse cx="11" cy="11" rx="5.5" ry="7.5" transform="rotate(-12,11,11)"/>
-                <ellipse cx="22" cy="7"  rx="5.5" ry="7.5" transform="rotate(-4,22,7)"/>
-                <ellipse cx="34" cy="7"  rx="5.5" ry="7.5" transform="rotate(4,34,7)"/>
-                <ellipse cx="45" cy="11" rx="5.5" ry="7.5" transform="rotate(12,45,11)"/>
-                <path d="M11 36 C8 28 10 22 18 22 Q28 20 38 22 C46 22 48 28 45 36 L40 48 Q34 56 28 56 Q22 56 16 48 Z"/>
-              </svg>
+              <img src="icons/icono-perro.webp" alt="Icono Perro" class="card-img">
             </div>
             <h3>Perros</h3>
         </div>
 
         <div class="card" routerLink="/adoptar" [queryParams]="{especie: 'Gato'}">
-            <div class="card-icon orange">
-              <!-- Cara de gato: orejas puntiagudas + cara redonda + ojos + boca -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="rgba(255,255,255,0.93)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M7 27 L13 5 L27 21" fill="rgba(255,255,255,0.93)" stroke="rgba(255,255,255,0.93)"/>
-                <path d="M53 27 L47 5 L33 21" fill="rgba(255,255,255,0.93)" stroke="rgba(255,255,255,0.93)"/>
-                <circle cx="30" cy="36" r="21"/>
-                <circle cx="21" cy="32" r="2.5" fill="rgba(255,255,255,0.93)" stroke="none"/>
-                <circle cx="39" cy="32" r="2.5" fill="rgba(255,255,255,0.93)" stroke="none"/>
-                <path d="M28 40 L30 43 L32 40" fill="rgba(255,255,255,0.93)" stroke="rgba(255,255,255,0.93)" stroke-width="1.5"/>
-                <path d="M25 47 Q30 52 35 47"/>
-              </svg>
+            <div class="card-icon green">
+              <img src="icons/icono-gato.webp" alt="Icono Gato" class="card-img">
             </div>
             <h3>Gatos</h3>
         </div>
 
         <div class="card" routerLink="/protectoras">
             <div class="card-icon green">
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.93)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
+              <img src="icons/icono-prote.webp" alt="Icono Protectora" class="card-img">
             </div>
             <h3>Protectoras</h3>
         </div>
 
         <div class="card" routerLink="/como-funciona">
-            <div class="card-icon orange">
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="rgba(255,255,255,0.93)" stroke="rgba(255,255,255,0.93)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
+            <div class="card-icon green">
+              <img src="icons/icono-collar.webp" alt="Icono Proceso de Adopción" class="card-img">
             </div>
             <h3>Proceso de Adopción</h3>
         </div>
 
         <div class="card" routerLink="/casos-exito">
             <div class="card-icon green">
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="rgba(255,255,255,0.93)" stroke="rgba(255,255,255,0.93)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-              </svg>
+              <img src="icons/icono-exito.webp" alt="Icono Casos de Éxito" class="card-img">
             </div>
             <h3>Casos de éxito</h3>
         </div>
 
         <div class="card" onclick="window.open('https://www.instagram.com/adoptalia.es','_blank')">
-            <div class="card-icon orange">
-              <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.93)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                <circle cx="9" cy="7" r="4"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-              </svg>
+            <div class="card-icon green">
+              <img src="icons/icono-comunidad.webp" alt="Icono Comunidad" class="card-img">
             </div>
             <h3>Comunidad</h3>
         </div>

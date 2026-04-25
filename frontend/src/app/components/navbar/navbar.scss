@@ -47,7 +47,7 @@
 
 .links-container a {
   text-decoration: none;
-  font-size: var(--font-md);
+  font-size: 1.1rem;
   color: var(--color-text-secondary);
   font-weight: var(--font-medium);
   transition: color 0.2s ease;
@@ -59,7 +59,6 @@
 
 .links-container a.active {
   font-weight: var(--font-bold);
-  border-bottom: 2px solid var(--color-text-secondary);
 }
 
 // Botones
@@ -198,7 +197,8 @@ button {
   right: 0;
   top: calc(100% + 10px);
   min-width: 180px;
-  padding: var(--space-sm);
+  max-height: 0;
+  padding: 0 var(--space-sm);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
@@ -206,11 +206,31 @@ button {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateY(-6px);
+  visibility: hidden;
   z-index: 30;
+  transition: opacity 0.22s ease, transform 0.22s ease, max-height 0.22s ease, padding 0.22s ease, visibility 0.22s ease;
+}
+
+.user-dropdown.open,
+.mobile-user-dropdown.open {
+  max-height: 140px;
+  padding: var(--space-sm);
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  visibility: visible;
 }
 
 .mobile-user-dropdown {
   position: static;
+  margin-top: 0;
+}
+
+.mobile-user-dropdown.open {
   margin-top: var(--space-xs);
 }
 
@@ -243,7 +263,8 @@ button {
     top: 100%;
     left: 0;
     width: 100%;
-    background: var(--color-primary-dark);
+    background: color-mix(in srgb, var(--color-primary-dark) 84%, transparent);
+    backdrop-filter: blur(10px);
     flex-direction: column;
     align-items: center;
     gap: var(--space-md);
@@ -254,6 +275,25 @@ button {
     opacity: 0;
     pointer-events: none;
     transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .links-container > li:not(.mobile-actions) {
+    width: min(92%, 360px);
+    border-radius: var(--radius-md);
+  }
+
+  .links-container > li:not(.mobile-actions):nth-child(odd) {
+    background: color-mix(in srgb, var(--color-primary-light) 14%, transparent);
+  }
+
+  .links-container > li:not(.mobile-actions):nth-child(even) {
+    background: color-mix(in srgb, var(--color-primary-superlight) 9%, transparent);
+  }
+
+  .links-container > li:not(.mobile-actions) a {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    text-align: center;
   }
 
   .links-container.open {
