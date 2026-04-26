@@ -46,6 +46,8 @@ MYSQL_PASSWORD=tu_password_user
 # Backend
 PORT=3000
 JWT_SECRET=clave_super_secreta
+# Para funcionar en local:
+BASE_URL=http://localhost:3000
 ```
 
 ------------------------------------------------------------------------
