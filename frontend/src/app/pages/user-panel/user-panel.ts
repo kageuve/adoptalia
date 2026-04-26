@@ -148,8 +148,8 @@ export class UserPanel implements OnInit {
     const headers = new HttpHeaders({ Authorization: `Bearer ${this.authService.getToken()}` });
     this.http.post<any>(`${this.apiUrl}/usuarios/perfil/imagen`, formData, { headers }).subscribe({
       next: (res) => {
-        this.imagenPerfil = res.imagen;
         this.authService.setImagen(res.imagen);
+        this.imagenPerfil = this.authService.getImagen();
       },
       error: (err) => console.error('Error subiendo imagen de perfil:', err)
     });
