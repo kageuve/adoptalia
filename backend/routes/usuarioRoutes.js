@@ -2,18 +2,12 @@ const express = require('express');
 const router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
 const { verificarToken } = require('../middlewares/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'public/uploads/perfiles/'),
-  filename: (req, file, cb) => cb(null, `perfil_${Date.now()}${path.extname(file.originalname)}`)
-});
-const upload = multer({ storage });
+const { imageUpload } = require('../middlewares/upload');
+const uploadImage = imageUpload('perfiles');
 
 router.get('/impacto', usuarioController.getImpacto);
 router.get('/perfil', verificarToken, usuarioController.getPerfil);
-router.post('/perfil/imagen', verificarToken, upload.single('imagen'), usuarioController.subirImagenPerfil);
+router.post('/perfil/imagen', verificarToken, uploadImage, usuarioController.subirImagenPerfil);
 router.put('/perfil', verificarToken, usuarioController.actualizarPerfil);
 
 module.exports = router;

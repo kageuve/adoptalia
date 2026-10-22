@@ -1,7 +1,10 @@
 const protectoraModel = require('../models/protectoraModel');
+const { validEmail, validPassword } = require('../validation');
 
 async function registrarProtectora(req, res) {
   try {
+    const { email, password, nombre, cif, ciudad } = req.body;
+    if (!validEmail(email) || !validPassword(password) || [nombre, cif, ciudad].some(x => typeof x !== 'string' || !x.trim())) return res.status(400).json({ message: 'Datos de registro no válidos; contraseña mínima de 10 caracteres' });
     await protectoraModel.crearProtectora(req.body);
     res.status(201).json({ message: 'Protectora registrada correctamente' });
   } catch (error) {
@@ -51,7 +54,7 @@ async function subirImagenProtectora(req, res) {
     res.json({ success: true, imagen });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'No se pudo completar la operación' });
   }
 }
 

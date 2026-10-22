@@ -7,6 +7,7 @@ const { Readable } = require('stream');
 
 async function importarCSV(req, res) {
   try {
+    if (!req.file) return res.status(400).json({ message: 'No se recibió CSV' });
     const protectora = await protectoraModel.obtenerPorUsuarioId(req.user.id);
 
     if (!protectora) {

@@ -43,7 +43,7 @@ export class Login implements OnInit {
     this.registerForm = this.fb.group({
       nombre: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(emailRegex)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(10)]],
       cif: [''],
       ciudad: [''],
       telefono: ['']

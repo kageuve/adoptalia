@@ -1,0 +1,4 @@
+{
+  "/api": { "target": "http://backend:3000", "secure": false },
+  "/uploads": { "target": "http://backend:3000", "secure": false }
+}

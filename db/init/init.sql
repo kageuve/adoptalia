@@ -1,167 +1,125 @@
-DROP DATABASE IF EXISTS adoptalia_db;
-CREATE DATABASE adoptalia_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE adoptalia_db;
+-- Schema only. The MySQL image selects MYSQL_DATABASE before running this file.
 
-SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `animal` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `protectora_id` int NOT NULL,
+  `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `especie` enum('perro','gato') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `raza` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `genero` enum('macho','hembra') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tamano` enum('pequeño','mediano','grande') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
+  `descripcion` text COLLATE utf8mb4_unicode_ci,
+  `chip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `estado` enum('disponible','reservado','adoptado') COLLATE utf8mb4_unicode_ci DEFAULT 'disponible',
+  `creado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `actualizado` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `imagen_url` text COLLATE utf8mb4_unicode_ci,
+  PRIMARY KEY (`id`),
+  KEY `fk_animal_protectora` (`protectora_id`),
+  CONSTRAINT `fk_animal_protectora` FOREIGN KEY (`protectora_id`) REFERENCES `protectora` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `favorito` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  `animal_id` int NOT NULL,
+  `creado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unico_favorito` (`usuario_id`,`animal_id`),
+  KEY `fk_favorito_animal` (`animal_id`),
+  CONSTRAINT `fk_favorito_animal` FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_favorito_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `media` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `animal_id` int NOT NULL,
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `principal` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_media_animal` (`animal_id`),
+  CONSTRAINT `fk_media_animal` FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `peticion` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  `animal_id` int NOT NULL,
+  `mensaje` text COLLATE utf8mb4_unicode_ci,
+  `estado` enum('pendiente','aprobada','rechazada') COLLATE utf8mb4_unicode_ci DEFAULT 'pendiente',
+  `visto` tinyint(1) DEFAULT '0',
+  `creado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_peticion_usuario` (`usuario_id`),
+  KEY `fk_peticion_animal` (`animal_id`),
+  CONSTRAINT `fk_peticion_animal` FOREIGN KEY (`animal_id`) REFERENCES `animal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_peticion_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `protectora` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  `nombre` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `cif` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ciudad` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `direccion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `latitud` decimal(10,8) DEFAULT NULL,
+  `longitud` decimal(11,8) DEFAULT NULL,
+  `web` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `descripcion` text COLLATE utf8mb4_unicode_ci,
+  `telefono` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `imagen` text COLLATE utf8mb4_unicode_ci,
+  `verificado` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `usuario_id` (`usuario_id`),
+  UNIQUE KEY `cif` (`cif`),
+  CONSTRAINT `fk_protectora_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuario` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rol` enum('administrador','protectora','usuario') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `descripcion` text COLLATE utf8mb4_unicode_ci,
+  `imagen` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `creado` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `actualizado` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
--- ======================
--- TABLA USUARIO
--- ======================
-
-CREATE TABLE usuario (
-  id INT NOT NULL AUTO_INCREMENT,
-  email VARCHAR(150) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  rol ENUM('administrador','protectora','usuario') NOT NULL,
-  nombre VARCHAR(150) NULL DEFAULT NULL,
-  descripcion TEXT NULL DEFAULT NULL,
-  imagen VARCHAR(255) NULL DEFAULT NULL,
-  creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  actualizado TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY email (email)
-) ENGINE=InnoDB;
-
--- Contraseña de todos los usuarios de demo: password123
-INSERT INTO usuario (id, email, password, rol, imagen) VALUES
-(3, 'test@correo.com', '$2b$10$tWbBMiq8vEnPi1tokDtatO4EFu2wO2MR82lywTkpV6JQAmxnf3/22', 'usuario', NULL),
-(4, 'pacoFoc@correo.com', '$2b$10$heCW9S18Yzhi1K8qVicQA.F9KFZJTwMeWkLguALRiOqGZ6i3Uvl7m', 'usuario', NULL),
-(5, 'info@huellasfelices.org', '$2b$10$8fyCHkt.OP9M6iZftdV5KeAiy7nFRBZA04U6Uw6WILpjrdl03PO3.', 'protectora', NULL),
-(6, 'contacto@patitas.org', '$2b$10$/Aqq3yQscyNJkgxy5ew3PueHD0XcmdQwIPg1XhJ7fdmJPXLfQoTxC', 'protectora', NULL),
-(7, 'hola@animallove.org', '$2b$10$u9JtmnyTDKwGGVe7fCOA4uyNM.AAZ.gVtBiWajD0q325r6MZ00vam', 'protectora', NULL),
-(8, 'info@esperanzaanimal.org', '$2b$10$8fyCHkt.OP9M6iZftdV5KeAiy7nFRBZA04U6Uw6WILpjrdl03PO3.', 'protectora', NULL),
-(9, 'contacto@panorte.org', '$2b$10$/Aqq3yQscyNJkgxy5ew3PueHD0XcmdQwIPg1XhJ7fdmJPXLfQoTxC', 'protectora', NULL);
-
--- ======================
--- TABLA PROTECTORA
--- ======================
-
-CREATE TABLE protectora (
-  id INT NOT NULL AUTO_INCREMENT,
-  usuario_id INT NOT NULL,
-  nombre VARCHAR(150) NOT NULL,
-  cif VARCHAR(20) NOT NULL,
-  ciudad VARCHAR(100) NOT NULL,
-  direccion VARCHAR(255) NULL DEFAULT NULL,
-  latitud DECIMAL(10,8) NULL DEFAULT NULL,
-  longitud DECIMAL(11,8) NULL DEFAULT NULL,
-  web VARCHAR(255) NULL DEFAULT NULL,
-  descripcion TEXT NULL DEFAULT NULL,
-  telefono VARCHAR(20) NULL DEFAULT NULL,
-  email VARCHAR(150) NULL DEFAULT NULL,
-  imagen TEXT NULL DEFAULT NULL,
-  verificado TINYINT(1) NULL DEFAULT 0,
-  PRIMARY KEY (id),
-  UNIQUE KEY usuario_id (usuario_id),
-  UNIQUE KEY cif (cif),
-  CONSTRAINT fk_protectora_usuario
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-INSERT INTO protectora (id, usuario_id, nombre, cif, ciudad, descripcion, telefono, email, imagen, verificado) VALUES
-(6, 5, 'Protectora Huellas Felices', 'B11111111', 'Madrid', 'Rescatamos y cuidamos perros y gatos abandonados, buscando un hogar responsable.', '600 123 456', 'info@huellasfelices.org', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhDafiH5F_w1gYCrdhK3ptNyiEG2L0GPQQPQ&s', 1),
-(7, 6, 'Refugio Patitas', 'B22222222', 'Barcelona', 'Centro de acogida especializado en animales en situación de abandono.', '611 234 567', 'contacto@patitas.org', 'https://www.shutterstock.com/image-photo/dog-shelter-animal-volunteer-takes-260nw-2467677723.jpg', 1),
-(8, 7, 'Asociación Animal Love', 'B33333333', 'Valencia', 'Promovemos la adopción responsable y el bienestar animal.', '622 345 678', 'hola@animallove.org', 'https://res.cloudinary.com/worldpackers/image/upload/c_fill,f_auto,q_auto,w_1024/v1/guides/article_cover/wesauslaoz5kkprwrkjg?_a=BACAGSGT', 1),
-(9, 8, 'Refugio Esperanza Animal', 'B44444444', 'Sevilla', 'Damos una segunda oportunidad a animales rescatados.', '633 456 789', 'info@esperanzaanimal.org', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbPkcFNuvn6_eIPm_MKRB1oBvbfpN4ajwLyQ&s', 1),
-(10, 9, 'Protección Animal Norte', 'B55555555', 'Bilbao', 'Refugio comprometido con el rescate y adopción de animales.', '644 567 890', 'contacto@panorte.org', 'https://mivet.com/wp-content/uploads/fly-images/912/Foto-Post-16-740x510-c.jpg', 1);
-
--- ======================
--- TABLA ANIMAL
--- ======================
-
-CREATE TABLE animal (
-  id INT NOT NULL AUTO_INCREMENT,
-  protectora_id INT NOT NULL,
-  nombre VARCHAR(100) NOT NULL,
-  especie ENUM('perro','gato') NOT NULL,
-  raza VARCHAR(100) NULL DEFAULT NULL,
-  genero ENUM('macho','hembra') NOT NULL,
-  tamano ENUM('pequeño','mediano','grande') NOT NULL,
-  fecha_nacimiento DATE NULL DEFAULT NULL,
-  descripcion TEXT NULL DEFAULT NULL,
-  chip VARCHAR(50) NULL DEFAULT NULL,
-  estado ENUM('disponible','reservado','adoptado') NULL DEFAULT 'disponible',
-  creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  actualizado TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  imagen_url TEXT NULL DEFAULT NULL,
-  PRIMARY KEY (id),
-  KEY fk_animal_protectora (protectora_id),
-  CONSTRAINT fk_animal_protectora
-    FOREIGN KEY (protectora_id) REFERENCES protectora(id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-INSERT INTO animal (protectora_id, nombre, especie, raza, genero, tamano, fecha_nacimiento, estado, imagen_url) VALUES
-(6, 'Luna', 'perro', 'Labrador', 'hembra', 'grande', '2022-01-01', 'disponible', 'https://cdn-ilcmkfh.nitrocdn.com/yyMhcicvwELNLGXsIkJPkrkfmvWjNMQC/assets/images/optimized/rev-7cbf74f/labradoresdeabantueso.com/wp-content/uploads/2013/07/Jara-9-tocada.jpg'),
-(7, 'Max', 'perro', 'Pastor Alemán', 'macho', 'grande', '2020-01-01', 'disponible', 'https://www.aon.es/personales/seguro-perro-gato/wp-content/uploads/sites/2/2021/06/pastor-aleman-3.jpg'),
-(8, 'Nala', 'gato', 'Siamés', 'hembra', 'pequeño', '2023-01-01', 'disponible', 'https://www.purina.es/sites/default/files/styles/ttt_image_510/public/2024-02/sitesdefaultfilesstylessquare_medium_440x440public2022-06Siamese201.jpg?itok=j9A2IvjN'),
-(9, 'Rocky', 'perro', 'Bulldog', 'macho', 'mediano', '2021-01-01', 'disponible', 'https://cdn.wamiz.fr/cdn-cgi/image/format=auto,quality=80,width=720,height=405,fit=cover/animal/breed/dog/adult/668664f3a41f4810812457.jpg'),
-(6, 'Mia', 'gato', 'Persa', 'hembra', 'pequeño', '2024-01-01', 'disponible', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSs39eQbvt3uazkZO5ltg-vOFA66qeIWP8dmYT6RiC2v0XmEQdtGVMc54avT9NBnA4Zrz9ahD3HmeuGKMBelzqXO5x7dpxVIHRRZlXFaKIhhQ&s=10'),
-(10, 'Thor', 'perro', 'Husky', 'macho', 'grande', '2022-01-01', 'disponible', 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Siberian_Husky_-_Mika.jpg'),
-(8, 'Simba', 'gato', 'Común Europeo', 'macho', 'pequeño', '2023-01-01', 'disponible', 'https://content.elmueble.com/medio/2022/06/07/gato-erik-jan-leusink-ibpxglgjimi-unsplash_21d35523_1280x853.jpg'),
-(6, 'Kira', 'perro', 'Border Collie', 'hembra', 'mediano', '2024-01-01', 'disponible', 'https://upload.wikimedia.org/wikipedia/commons/9/9c/Argentine_border_collie.jpg'),
-(7, 'Leo', 'gato', 'Maine Coon', 'macho', 'mediano', '2021-01-01', 'adoptado', 'https://static.wixstatic.com/media/2b6761_e1b03cf129f4472a8dd5997f55ba31dc~mv2.jpg/v1/fill/w_640,h_588,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/2b6761_e1b03cf129f4472a8dd5997f55ba31dc~mv2.jpg'),
-(8, 'Bruno', 'perro', 'Golden Retriever', 'macho', 'grande', '2019-01-01', 'adoptado', 'https://www.zoomalia.com/blogz/4850/tout-savoir-sur-golden-retriever.jpeg');
-
--- ======================
--- TABLA MEDIA
--- ======================
-
-CREATE TABLE media (
-  id INT NOT NULL AUTO_INCREMENT,
-  animal_id INT NOT NULL,
-  url VARCHAR(255) NOT NULL,
-  principal TINYINT(1) NULL DEFAULT 0,
-  PRIMARY KEY (id),
-  KEY fk_media_animal (animal_id),
-  CONSTRAINT fk_media_animal
-    FOREIGN KEY (animal_id) REFERENCES animal(id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
--- ======================
--- TABLA PETICION
--- ======================
-
-CREATE TABLE peticion (
-  id INT NOT NULL AUTO_INCREMENT,
-  usuario_id INT NOT NULL,
-  animal_id INT NOT NULL,
-  mensaje TEXT NULL DEFAULT NULL,
-  estado ENUM('pendiente','aprobada','rechazada') NULL DEFAULT 'pendiente',
-  visto TINYINT(1) DEFAULT 0,
-  creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY fk_peticion_usuario (usuario_id),
-  KEY fk_peticion_animal (animal_id),
-  CONSTRAINT fk_peticion_usuario
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_peticion_animal
-    FOREIGN KEY (animal_id) REFERENCES animal(id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
--- ======================
--- TABLA FAVORITO
--- ======================
-
-CREATE TABLE favorito (
-  id INT NOT NULL AUTO_INCREMENT,
-  usuario_id INT NOT NULL,
-  animal_id INT NOT NULL,
-  creado TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY unico_favorito (usuario_id, animal_id),
-  CONSTRAINT fk_favorito_usuario
-    FOREIGN KEY (usuario_id) REFERENCES usuario(id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT fk_favorito_animal
-    FOREIGN KEY (animal_id) REFERENCES animal(id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB;
-
-COMMIT;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

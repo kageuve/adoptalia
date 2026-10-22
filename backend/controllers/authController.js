@@ -1,16 +1,17 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userModel = require('../models/userModel');
+const { validPassword, validEmail } = require('../validation');
 
-const SECRET = process.env.JWT_SECRET;
+const { jwtSecret: SECRET } = require('../config');
 
 // Registro
 async function register(req, res) {
   try {
     const { email, password, rol, nombre } = req.body;
 
-    if (!email || !password || !rol) {
-      return res.status(400).json({ message: 'Faltan datos' });
+    if (!validEmail(email) || !validPassword(password) || rol !== 'usuario') {
+      return res.status(400).json({ message: 'Datos no válidos; las contraseñas nuevas requieren al menos 10 caracteres' });
     }
 
     const existe = await userModel.obtenerPorEmail(email);
@@ -27,7 +28,7 @@ async function register(req, res) {
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'No se pudo completar la operación' });
   }
 }
 
@@ -36,6 +37,7 @@ async function login(req, res) {
   try {
     const { email, password } = req.body;
 
+    if (!validEmail(email) || typeof password !== 'string' || Buffer.byteLength(password) > 72) return res.status(400).json({ message: 'Credenciales no válidas' });
     const usuario = await userModel.obtenerPorEmail(email);
 
     if (!usuario) {
@@ -63,15 +65,15 @@ async function login(req, res) {
     });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'No se pudo completar la operación' });
   }
 }
 
 async function cambiarPassword(req, res) {
   try {
     const { passwordActual, passwordNuevo } = req.body;
-    if (!passwordActual || !passwordNuevo) {
-      return res.status(400).json({ success: false, message: 'Faltan datos' });
+    if (typeof passwordActual !== 'string' || !validPassword(passwordNuevo)) {
+      return res.status(400).json({ success: false, message: 'Datos no válidos; las contraseñas nuevas requieren al menos 10 caracteres' });
     }
     const usuario = await userModel.obtenerPasswordPorId(req.user.id);
     if (!usuario) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
@@ -84,7 +86,7 @@ async function cambiarPassword(req, res) {
 
     res.json({ success: true, message: 'Contraseña actualizada' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'No se pudo completar la operación' });
   }
 }
 

@@ -1,0 +1,43 @@
+name: Validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Validate configuration and scripts
+        run: |
+          cp .env.example .env
+          chmod 600 .env
+          docker compose config --quiet
+          docker compose -p adoptalia-dev -f compose.dev.yaml config --quiet
+          python3 -m py_compile scripts/ops.py scripts/smoke-test.py
+          for script in scripts/*.sh; do bash -n "$script"; done
+      - name: Backend unit tests and runtime dependency audit
+        run: |
+          docker build --target development -t adoptalia-backend-test backend
+          docker run --rm adoptalia-backend-test npm test
+          docker run --rm adoptalia-backend-test npm audit --omit=dev
+      - name: Production frontend build
+        run: docker build -t adoptalia-frontend-test frontend
+      - name: Isolated integration test
+        run: |
+          python3 - <<'PYENV'
+          import pathlib, secrets
+          p = pathlib.Path('.env')
+          s = p.read_text()
+          for placeholder in ['CHANGE_ME_root_random_password', 'CHANGE_ME_app_random_password', 'CHANGE_ME_generate_with_openssl_rand_hex_32']:
+              s = s.replace(placeholder, secrets.token_hex(32))
+          s = s.replace('WEB_PORT=80', 'WEB_PORT=18080').replace('PMA_PORT=8080', 'PMA_PORT=18081')
+          p.write_text(s)
+          PYENV
+          sudo ./scripts/deploy.sh --build backend frontend
+          python3 scripts/smoke-test.py --allow-test-data
+      - name: Service logs on failure
+        if: failure()
+        run: docker compose logs --tail 80
+      - name: Stop isolated CI services
+        if: always()
+        run: docker compose down

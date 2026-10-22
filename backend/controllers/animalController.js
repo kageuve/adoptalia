@@ -4,7 +4,8 @@ const protectoraModel = require('../models/protectoraModel');
 //  LISTAR
 async function listarAnimales(req, res) {
   try {
-    const protectoraId = req.query.protectora_id;
+    const protectora = await protectoraModel.obtenerPorUsuarioId(req.user.id);
+    const protectoraId = protectora?.id;
 
     if (!protectoraId) {
       return res.status(400).json({

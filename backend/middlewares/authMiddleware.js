@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const SECRET = process.env.JWT_SECRET;
+const { jwtSecret: SECRET } = require('../config');
 
 function verificarToken(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -9,10 +9,12 @@ function verificarToken(req, res, next) {
     return res.status(401).json({ message: 'Token requerido' });
   }
 
-  const token = authHeader.split(' ')[1];
+  if (!/^Bearer [^ ]+$/.test(authHeader)) return res.status(401).json({ message: 'Token inválido' });
+  const token = authHeader.slice(7);
 
   try {
-    const decoded = jwt.verify(token, SECRET);
+    const decoded = jwt.verify(token, SECRET, { algorithms: ['HS256'] });
+    if (!Number.isSafeInteger(decoded.id) || decoded.id <= 0 || !['usuario', 'protectora', 'administrador'].includes(decoded.rol)) return res.status(401).json({ message: 'Token inválido' });
     req.user = decoded; // id y rol
     next();
   } catch (error) {

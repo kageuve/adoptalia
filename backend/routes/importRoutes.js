@@ -1,19 +1,11 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
 const importController = require('../controllers/importController');
 const { verificarToken, soloProtectora } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-// Configuración de almacenamiento
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + path.extname(file.originalname))
-});
-
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024, files: 1, fields: 10 } });
 
 // Ruta protegida para subir CSV (solo protectoras)
 router.post(

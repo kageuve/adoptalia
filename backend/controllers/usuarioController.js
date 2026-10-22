@@ -9,7 +9,7 @@ async function getPerfil(req, res) {
     if (!usuario) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     res.json({ success: true, data: usuario });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'No se pudo completar la operación' });
   }
 }
 
@@ -20,7 +20,7 @@ async function subirImagenPerfil(req, res) {
     await userModel.actualizarImagen(req.user.id, imagen);
     res.json({ success: true, imagen });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'No se pudo completar la operación' });
   }
 }
 
@@ -42,7 +42,7 @@ async function getImpacto(req, res) {
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'No se pudo completar la operación' });
   }
 }
 
@@ -51,7 +51,7 @@ async function actualizarPerfil(req, res) {
     await userModel.actualizarPerfil(req.user.id, req.body);
     res.json({ success: true, message: 'Perfil actualizado' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: 'No se pudo completar la operación' });
   }
 }
 

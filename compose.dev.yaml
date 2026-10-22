@@ -1,0 +1,45 @@
+# Standalone development stack: NEVER merge with production compose.yaml.
+name: ${COMPOSE_PROJECT_NAME:-adoptalia-dev}
+services:
+  db:
+    extends: {file: compose.yaml, service: db}
+    volumes:
+      - ./data/development/mysql:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+  backend:
+    extends: {file: compose.yaml, service: backend}
+    image: adoptalia/backend-dev:local
+    build: {context: ./backend, target: development}
+    read_only: false
+    environment:
+      NODE_ENV: development
+      TRUST_PROXY: loopback,linklocal,uniquelocal
+    volumes:
+      - ./backend:/app:ro
+      - backend_deps:/app/node_modules
+      - ./data/development/uploads:/app/public/uploads
+  frontend:
+    image: adoptalia/frontend-dev:local
+    build: {context: ./frontend, target: development}
+    init: true
+    networks: [web]
+    environment:
+      NG_CLI_ANALYTICS: "false"
+    ports: ["127.0.0.1:${DEV_PORT:-4200}:4200"]
+    volumes:
+      - ./frontend:/app
+      - frontend_deps:/app/node_modules
+      - angular_cache:/app/.angular
+    depends_on:
+      backend: {condition: service_healthy}
+  phpmyadmin:
+    extends: {file: compose.yaml, service: phpmyadmin}
+    ports: !override ["127.0.0.1:${DEV_PMA_PORT:-8081}:80"]
+networks:
+  web:
+  database: {internal: true}
+  admin:
+volumes:
+  backend_deps:
+  frontend_deps:
+  angular_cache:

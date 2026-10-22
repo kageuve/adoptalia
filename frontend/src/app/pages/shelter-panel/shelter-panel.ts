@@ -75,7 +75,7 @@ export class ShelterPanel implements OnInit {
     this.apiUrl = environment.apiUrl;
     this.passwordForm = this.fb.group({
       passwordActual: ['', Validators.required],
-      passwordNuevo: ['', [Validators.required, Validators.minLength(6)]],
+      passwordNuevo: ['', [Validators.required, Validators.minLength(10)]],
       passwordConfirm: ['', Validators.required]
     });
     this.animalForm = this.fb.group({

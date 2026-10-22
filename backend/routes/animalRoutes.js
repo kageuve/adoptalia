@@ -1,16 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const animalController = require('../controllers/animalController');
+const { animalPropio } = require('../middlewares/ownership');
 const { verificarToken, soloProtectora } = require('../middlewares/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'public/uploads/imagenes/'),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
-});
-
-const upload = multer({ storage });
+const { imageUpload } = require('../middlewares/upload');
+const uploadImage = imageUpload('imagenes');
 
 // Rutas públicas
 router.get('/publicos', animalController.listarAnimalesPublicos);
@@ -19,13 +13,13 @@ router.get('/publico/:id', animalController.obtenerAnimalPublico);
 
 // Rutas protegidas
 router.get('/mi-protectora', verificarToken, animalController.listarAnimalesProtectora);
-router.get('/', verificarToken, animalController.listarAnimales);
-router.get('/:id', verificarToken, animalController.obtenerAnimal);
+router.get('/', verificarToken, soloProtectora, animalController.listarAnimales);
+router.get('/:id', verificarToken, soloProtectora, animalPropio, animalController.obtenerAnimal);
 
 // Crear / modificar / eliminar (solo protectora)
 router.post('/', verificarToken, soloProtectora, animalController.crearAnimal);
-router.put('/:id', verificarToken, soloProtectora, animalController.actualizarAnimal);
-router.delete('/:id', verificarToken, soloProtectora, animalController.eliminarAnimal);
-router.post('/:id/imagen', verificarToken, soloProtectora, upload.single('imagen'), animalController.subirImagen);
+router.put('/:id', verificarToken, soloProtectora, animalPropio, animalController.actualizarAnimal);
+router.delete('/:id', verificarToken, soloProtectora, animalPropio, animalController.eliminarAnimal);
+router.post('/:id/imagen', verificarToken, soloProtectora, animalPropio, uploadImage, animalController.subirImagen);
 
 module.exports = router;

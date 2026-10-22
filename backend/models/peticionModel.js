@@ -128,5 +128,20 @@ async function marcarComoVistas(usuario_id) {
   }
 }
 
-module.exports = { crear, obtenerPorUsuarioYAnimal,obtenerPorId, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar, marcarComoVistas };
+async function resolver(id, estado) {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+    const [rows] = await connection.execute('SELECT animal_id FROM peticion WHERE id = ? FOR UPDATE', [id]);
+    if (!rows[0]) throw new Error('Petición inexistente');
+    await connection.execute('UPDATE peticion SET estado = ? WHERE id = ?', [estado, id]);
+    if (estado === 'aprobada') await connection.execute("UPDATE animal SET estado = 'adoptado' WHERE id = ?", [rows[0].animal_id]);
+    await connection.commit();
+  } catch (error) {
+    await connection.rollback();
+    throw error;
+  } finally { connection.release(); }
+}
+
+module.exports = { resolver, crear, obtenerPorUsuarioYAnimal,obtenerPorId, obtenerPorUsuario, obtenerPorProtectora, actualizarEstado, eliminar, marcarComoVistas };
 

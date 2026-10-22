@@ -73,11 +73,7 @@ async function actualizarPeticion(req, res) {
       return res.status(404).json({ success: false, message: 'Peticion no encontrada' });
     }
 
-    await peticionModel.actualizarEstado(id, estado);
-
-    if (estado === 'aprobada') {
-      await animalModel.actualizarEstado(peticion.animal_id, 'adoptado');
-    }
+    await peticionModel.resolver(id, estado);
 
     res.status(200).json({ success: true, message: 'Peticion actualizada' });
 

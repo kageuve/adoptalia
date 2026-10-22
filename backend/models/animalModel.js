@@ -6,7 +6,7 @@ async function obtenerPorProtectora(protectoraId) {
 
   try {
     const [animales] = await connection.execute(
-      `SELECT id, nombre, tipo, estado
+      `SELECT id, nombre, especie, estado
        FROM animal
        WHERE protectora_id = ?
        ORDER BY creado DESC`,

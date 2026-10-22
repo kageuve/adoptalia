@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const peticionController = require('../controllers/peticionController');
-const { verificarToken } = require('../middlewares/authMiddleware');
+const { verificarToken, soloProtectora } = require('../middlewares/authMiddleware');
+const { peticionPropia, peticionDeProtectora } = require('../middlewares/ownership');
 
 //POSTS
 router.post('/', verificarToken, peticionController.crearPeticion);
@@ -13,7 +14,7 @@ router.get('/protectora', verificarToken, peticionController.listarPeticionesPro
 
 //OTROS
 router.put('/marcar-vistas', verificarToken, peticionController.marcarVistas);
-router.put('/:id', verificarToken, peticionController.actualizarPeticion);
-router.delete('/:id', verificarToken, peticionController.cancelarPeticion);
+router.put('/:id', verificarToken, soloProtectora, peticionDeProtectora, peticionController.actualizarPeticion);
+router.delete('/:id', verificarToken, peticionPropia, peticionController.cancelarPeticion);
 
 module.exports = router;

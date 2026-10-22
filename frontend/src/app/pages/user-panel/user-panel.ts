@@ -68,7 +68,7 @@ export class UserPanel implements OnInit {
     this.usuarioEmail = this.authService.getEmail() ?? 'adoptante@adoptalia.com';
     this.passwordForm = this.fb.group({
       passwordActual: ['', Validators.required],
-      passwordNuevo: ['', [Validators.required, Validators.minLength(6)]],
+      passwordNuevo: ['', [Validators.required, Validators.minLength(10)]],
       passwordConfirm: ['', Validators.required]
     });
   }
